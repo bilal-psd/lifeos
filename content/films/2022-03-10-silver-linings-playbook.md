@@ -1,0 +1,13 @@
+---
+title: "Silver Linings Playbook"
+category: films
+date: 2022-03-10
+tags: [2012, rating-3-5]
+public: true
+metadata:
+  tmdb_id: 82693
+  imdb_id: tt1045658
+  id_status: verified
+---
+
+Watched — rated 3-5/5 on Letterboxd.
