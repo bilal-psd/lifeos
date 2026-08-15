@@ -1,0 +1,12 @@
+---
+title: "Harry Potter and the Sorcerer's Stone"
+category: books
+date: 2021-05-15
+tags: [jk-rowling]
+public: true
+metadata:
+  isbn_13: "9780439554930"
+  id_status: verified
+---
+
+Read.
