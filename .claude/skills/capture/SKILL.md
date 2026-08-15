@@ -10,9 +10,11 @@ this skill turns it into a committed markdown entry.
 
 ## Golden rules
 
-- **Preserve the user's words.** The body of the entry is their note, verbatim.
-  Never summarize, correct grammar, or paraphrase. If they gave a long ramble,
-  it goes in as-is.
+- **Keep the user's voice and substance.** The body is their note. You may
+  lightly edit for readability — fix grammar, add paragraph breaks, tighten
+  rambling phrasing, make a sentence make sense. Never change the essence,
+  opinions, or meaning of what they said, and don't add ideas they didn't
+  express. When in doubt, leave it as they said it.
 - **Frontmatter is machine data; the body is theirs.** Facts Claude looks up
   (IDs) live under `metadata:`, never mixed into the note.
 - **Ask at most one question, and only when you must** (genuine category or ID

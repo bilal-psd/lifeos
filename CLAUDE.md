@@ -17,7 +17,8 @@ You → Claude (capture skill) → category skill → markdown in content/ → g
 - **Git is the version history.** Each capture is its own commit.
 - **Categories are extensible.** Each has a skill in `.claude/skills/<category>/`.
   A meta-skill (`new-category`) creates new ones on demand.
-- **Your words are preserved verbatim.** Claude never rewrites your note.
+- **Your voice is preserved.** Claude may lightly clean up your note for
+  readability, but never changes its meaning or substitutes its own words.
 - **Retrieval is folder + grep + skill instructions.** No database, no embeddings.
 
 ## Repo layout
@@ -70,8 +71,9 @@ untouched.
   `metadata.id_status: unverified` and ask ONE clarifying question only when a
   title is genuinely ambiguous. TMDb/Open Library API wiring is a deferred
   upgrade, not part of MVP.
-- **User's note is verbatim.** Never summarize/rewrite the body. IDs live under
-  `metadata:` so the machine-added part stays separate from the user's words.
+- **User's note, lightly edited.** Clean up grammar/readability but never
+  change meaning, opinions, or voice — and never add ideas they didn't express.
+  IDs live under `metadata:` so machine data stays separate from the user's words.
 - **No DB, no embeddings.** Retrieval is folder + grep + skill instructions.
   Chosen deliberately for a personal-scale archive; don't add infra.
 

@@ -35,7 +35,8 @@ lookup: web        # resolve via web search (MVP), no API key
 - `title` is the book's title; consider adding the author to `tags` or letting
   it live only in the user's note (do not fabricate an author).
 - `date` is when the user finished/read it (today if unspecified).
-- Body = the user's note, verbatim.
+- Body = the user's note, lightly edited for readability but never changed in
+  meaning or voice (see the capture skill's golden rules).
 
 ## Example
 

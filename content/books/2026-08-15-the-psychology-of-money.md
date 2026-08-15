@@ -10,4 +10,4 @@ metadata:
   id_status: verified
 ---
 
-The Psychology of Money specifically was very, very good. It basically made me rethink the way I see money and wealth in general. It has this idea of using money to buy time and to buy opportunities to work with who you want to work with and what you want to work for. I found that really liberating.
+The Psychology of Money was very, very good. It made me rethink the way I see money and wealth in general. It has this idea of using money to buy time — and to buy the opportunity to work with who you want, on what you want. I found that really liberating.

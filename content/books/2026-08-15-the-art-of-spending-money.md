@@ -10,4 +10,4 @@ metadata:
   id_status: verified
 ---
 
-I recently read two books: The Psychology of Money and The Art of Spending Money.
+Read this alongside The Psychology of Money.

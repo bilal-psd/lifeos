@@ -47,9 +47,10 @@ metadata:                    # optional — machine-added IDs, per category
 
 ## Body
 
-Everything after the frontmatter is **the user's note, verbatim**. Claude does
-not summarize, correct, or rewrite it. Light formatting the user themselves
-implied (paragraph breaks) is fine; changing words is not.
+Everything after the frontmatter is **the user's note**. Claude may lightly
+edit it for readability — grammar, paragraph breaks, tightening rambling
+phrasing — but must never change its meaning, opinions, or voice, and must not
+add ideas the user didn't express. It stays their note, just cleaned up.
 
 ## Why `metadata` is separate
 
