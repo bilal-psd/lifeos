@@ -36,6 +36,7 @@ export type PropertyDef = {
   values: PropValue[]; // distinct, sorted
   min?: number;
   max?: number;
+  summary: boolean; // shown under each row title by default
 };
 
 type DefOverride = {
@@ -44,6 +45,7 @@ type DefOverride = {
   min?: number;
   max?: number;
   hidden?: boolean;
+  summary?: boolean;
 };
 
 // The archive lives at repo-root /content, one level up from the web/ app.
@@ -175,6 +177,7 @@ export function getFilters(entries: Entry[]): PropertyDef[] {
       values: sorted,
       min: def.min ?? (nums.length ? Math.min(...nums) : undefined),
       max: def.max ?? (nums.length ? Math.max(...nums) : undefined),
+      summary: def.summary ?? false,
     });
   }
 

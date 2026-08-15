@@ -39,7 +39,7 @@ export default async function CategoryPage({
       <h1 className="mb-8 text-2xl font-semibold capitalize tracking-tight">
         {category}
       </h1>
-      <FilterableList rows={rows} filters={filters} />
+      <FilterableList rows={rows} filters={filters} category={category} />
     </div>
   );
 }
