@@ -17,8 +17,9 @@ conventions; this file tracks progress and what's next.
 - [x] Entry schema contract — [docs/schema.md](docs/schema.md).
 - [x] Skills: `capture`, `new-category` (meta-skill + authorities table),
       `films`, `books` — all under `.claude/skills/`.
-- [x] Two real seed entries (Dune: Part Two, Project Hail Mary) with verified
-      IDs, one commit each.
+- [x] Capture flow proven end-to-end with verified IDs, one commit each. Initial
+      dogfood samples (Dune: Part Two, Project Hail Mary) have since been removed
+      now that real user entries are being logged.
 - [x] Next.js 16 + React 19 + Tailwind 4 site in `web/` — home feed,
       per-category pages, entry pages with markdown + ID link-outs.
 - [x] Deployed to Vercel (see CLAUDE.md "Deployment" for the exact config).
@@ -30,9 +31,9 @@ conventions; this file tracks progress and what's next.
 
 ## Next (unstarted, roughly in priority order)
 
-1. **Capture real entries.** The two existing entries are dogfood samples with
-   Claude-authored bodies. Replace/augment with the user's actual notes as they
-   log things. (Just talk to Claude; the `capture` skill handles it.)
+1. **Keep capturing real entries.** The mock samples are gone; real notes are
+   now flowing in (books, films). Keep logging things as they happen — just talk
+   to Claude and the `capture` skill handles it.
 2. **Exercise `new-category`** on a real third category (music, games, places,
    podcasts…) to confirm the meta-skill flow end-to-end in practice.
 3. **Robust ID lookup (optional upgrade).** MVP resolves IDs via web search at

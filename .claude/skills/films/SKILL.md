@@ -34,7 +34,8 @@ lookup: web        # resolve via web search (MVP), no API key
 - `date` is when the user watched it (today if unspecified).
 - Suggested tags: genre, `rewatch` if they said they'd seen it before, etc. —
   but only tags the user's note actually supports. Do not invent facts.
-- Body = the user's note, verbatim.
+- Body = the user's note, lightly edited for readability but never changed in
+  meaning or voice (see the capture skill's golden rules).
 
 ## Example
 
