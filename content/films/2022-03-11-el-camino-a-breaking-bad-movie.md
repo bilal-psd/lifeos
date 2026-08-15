@@ -2,8 +2,12 @@
 title: "El Camino: A Breaking Bad Movie"
 category: films
 date: 2022-03-11
-tags: [2019, rating-2]
+tags: []
 public: true
+properties:
+  rating: 2
+  year: 2019
+  language: English
 metadata:
   tmdb_id: 559969
   imdb_id: tt9243946

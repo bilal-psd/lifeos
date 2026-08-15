@@ -2,8 +2,12 @@
 title: "The Irishman"
 category: films
 date: 2022-03-10
-tags: [2019, rating-1]
+tags: []
 public: true
+properties:
+  rating: 1
+  year: 2019
+  language: English
 metadata:
   tmdb_id: 398978
   imdb_id: tt1302006

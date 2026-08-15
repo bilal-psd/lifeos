@@ -2,8 +2,12 @@
 title: "The Imitation Game"
 category: films
 date: 2022-03-10
-tags: [2014, rating-3-5]
+tags: []
 public: true
+properties:
+  rating: 3.5
+  year: 2014
+  language: English
 metadata:
   tmdb_id: 205596
   imdb_id: tt2084970

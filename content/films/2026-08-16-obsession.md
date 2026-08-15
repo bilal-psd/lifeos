@@ -2,8 +2,12 @@
 title: "Obsession"
 category: films
 date: 2026-08-16
-tags: [2025, rating-4]
+tags: []
 public: true
+properties:
+  rating: 4
+  year: 2025
+  language: English
 metadata:
   tmdb_id: 1339713
   imdb_id: tt37287335

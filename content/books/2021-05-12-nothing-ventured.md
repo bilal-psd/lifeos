@@ -2,8 +2,11 @@
 title: "Nothing Ventured"
 category: books
 date: 2021-05-12
-tags: [jeffrey-archer, rating-3]
+tags: [jeffrey-archer]
 public: true
+properties:
+  rating: 3
+  language: English
 metadata:
   isbn_13: "9781529014914"
   id_status: verified

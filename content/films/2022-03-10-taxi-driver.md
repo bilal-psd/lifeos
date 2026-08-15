@@ -2,8 +2,12 @@
 title: "Taxi Driver"
 category: films
 date: 2022-03-10
-tags: [1976, rating-1]
+tags: []
 public: true
+properties:
+  rating: 1
+  year: 1976
+  language: English
 metadata:
   tmdb_id: 103
   imdb_id: tt0075314

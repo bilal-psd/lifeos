@@ -2,8 +2,12 @@
 title: "Return of the Jedi"
 category: films
 date: 2022-03-10
-tags: [1983, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 1983
+  language: English
 metadata:
   tmdb_id: 1892
   imdb_id: tt0086190

@@ -2,8 +2,11 @@
 title: "Freedom is a Constant Struggle: Ferguson, Palestine and the Foundations of a Movement"
 category: books
 date: 2021-06-04
-tags: [angela-y-davis, rating-5]
+tags: [angela-y-davis]
 public: true
+properties:
+  rating: 5
+  language: English
 metadata:
   isbn_13: "9781608465644"
   id_status: verified

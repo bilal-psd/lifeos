@@ -13,6 +13,8 @@ export type EntryMeta = {
   [key: string]: unknown;
 };
 
+export type PropValue = string | number | boolean;
+
 export type Entry = {
   slug: string;
   category: string;
@@ -20,8 +22,28 @@ export type Entry = {
   date: string;
   tags: string[];
   public: boolean;
+  properties: Record<string, PropValue[]>;
   metadata: EntryMeta;
   body: string;
+};
+
+// A filterable property, derived from the entries present (values) and merged
+// with any overrides in content/_properties.json (label, type, range).
+export type PropertyDef = {
+  key: string;
+  label: string;
+  type: "number" | "enum" | "boolean";
+  values: PropValue[]; // distinct, sorted
+  min?: number;
+  max?: number;
+};
+
+type DefOverride = {
+  label?: string;
+  type?: PropertyDef["type"];
+  min?: number;
+  max?: number;
+  hidden?: boolean;
 };
 
 // The archive lives at repo-root /content, one level up from the web/ app.
@@ -44,6 +66,35 @@ function toISODate(value: unknown): string {
   return String(value ?? "").slice(0, 10);
 }
 
+// Normalize a frontmatter `properties:` block into arrays of primitives, so a
+// scalar (`rating: 4`) and a list (`language: [Korean]`) filter the same way.
+function parseProperties(raw: unknown): Record<string, PropValue[]> {
+  if (!raw || typeof raw !== "object") return {};
+  const out: Record<string, PropValue[]> = {};
+  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+    const arr = Array.isArray(v) ? v : [v];
+    const vals = arr
+      .filter((x) => x !== null && x !== undefined && x !== "")
+      .map((x): PropValue =>
+        typeof x === "number" || typeof x === "boolean" ? x : String(x)
+      );
+    if (vals.length) out[k] = vals;
+  }
+  return out;
+}
+
+let defsCache: Record<string, DefOverride> | null = null;
+function loadDefs(): Record<string, DefOverride> {
+  if (defsCache) return defsCache;
+  const p = path.join(CONTENT_DIR, "_properties.json");
+  try {
+    defsCache = JSON.parse(fs.readFileSync(p, "utf8"));
+  } catch {
+    defsCache = {};
+  }
+  return defsCache!;
+}
+
 function readCategory(category: string): Entry[] {
   const dir = path.join(CONTENT_DIR, category);
   if (!fs.existsSync(dir)) return [];
@@ -61,6 +112,7 @@ function readCategory(category: string): Entry[] {
         date: toISODate(data.date),
         tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
         public: data.public !== false,
+        properties: parseProperties(data.properties),
         metadata: (data.metadata ?? {}) as EntryMeta,
         body: content.trim(),
       } satisfies Entry;
@@ -78,6 +130,64 @@ export function getEntries(category?: string): Entry[] {
     .flatMap(readCategory)
     .filter((e) => e.public)
     .sort(byDateDesc);
+}
+
+/**
+ * Filterable properties present across a set of entries. Values are derived
+ * from the entries themselves (so a new property becomes a filter the moment
+ * one entry uses it); type/label/range come from content/_properties.json when
+ * present, otherwise inferred. Properties marked `hidden` are omitted.
+ */
+export function getFilters(entries: Entry[]): PropertyDef[] {
+  const defs = loadDefs();
+  const collected = new Map<string, Set<PropValue>>();
+  for (const e of entries) {
+    for (const [k, vals] of Object.entries(e.properties)) {
+      const set = collected.get(k) ?? new Set<PropValue>();
+      vals.forEach((v) => set.add(v));
+      collected.set(k, set);
+    }
+  }
+
+  const out: PropertyDef[] = [];
+  for (const [key, set] of collected) {
+    const def = defs[key] ?? {};
+    if (def.hidden) continue;
+    const values = [...set];
+    const nums = values.filter((v): v is number => typeof v === "number");
+    const type: PropertyDef["type"] =
+      def.type ??
+      (values.every((v) => typeof v === "boolean")
+        ? "boolean"
+        : values.every((v) => typeof v === "number")
+          ? "number"
+          : "enum");
+    const sorted =
+      type === "number"
+        ? nums.slice().sort((a, b) => a - b)
+        : values
+            .slice()
+            .sort((a, b) => String(a).localeCompare(String(b)));
+    out.push({
+      key,
+      label: def.label ?? key[0].toUpperCase() + key.slice(1),
+      type,
+      values: sorted,
+      min: def.min ?? (nums.length ? Math.min(...nums) : undefined),
+      max: def.max ?? (nums.length ? Math.max(...nums) : undefined),
+    });
+  }
+
+  // Order by the definitions file first, then anything else alphabetically.
+  const order = Object.keys(defs);
+  return out.sort((a, b) => {
+    const ia = order.indexOf(a.key);
+    const ib = order.indexOf(b.key);
+    if (ia !== -1 && ib !== -1) return ia - ib;
+    if (ia !== -1) return -1;
+    if (ib !== -1) return 1;
+    return a.label.localeCompare(b.label);
+  });
 }
 
 /** Category names that have at least one public entry, alphabetical. */

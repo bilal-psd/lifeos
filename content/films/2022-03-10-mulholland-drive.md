@@ -2,8 +2,12 @@
 title: "Mulholland Drive"
 category: films
 date: 2022-03-10
-tags: [2001, rating-1]
+tags: []
 public: true
+properties:
+  rating: 1
+  year: 2001
+  language: English
 metadata:
   tmdb_id: 1018
   imdb_id: tt0166924

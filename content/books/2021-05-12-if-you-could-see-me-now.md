@@ -2,8 +2,10 @@
 title: "If You Could See Me Now"
 category: books
 date: 2021-05-12
-tags: [cecelia-ahern, rating-3]
+tags: [cecelia-ahern]
 public: true
+properties:
+  rating: 3
 metadata:
   isbn_13: "9780007300822"
   id_status: verified

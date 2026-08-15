@@ -2,8 +2,13 @@
 title: "Interstellar"
 category: films
 date: 2022-03-10
-tags: [2014, rating-5, liked]
+tags: []
 public: true
+properties:
+  rating: 5
+  year: 2014
+  liked: true
+  language: English
 metadata:
   tmdb_id: 157336
   imdb_id: tt0816692

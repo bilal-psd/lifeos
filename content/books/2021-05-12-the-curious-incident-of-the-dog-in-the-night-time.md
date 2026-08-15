@@ -2,8 +2,10 @@
 title: "The Curious Incident of the Dog in the Night-Time"
 category: books
 date: 2021-05-12
-tags: [mark-haddon, rating-4]
+tags: [mark-haddon]
 public: true
+properties:
+  rating: 4
 metadata:
   isbn_13: "9781400032716"
   id_status: verified

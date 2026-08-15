@@ -2,8 +2,11 @@
 title: "The Lost Symbol"
 category: books
 date: 2021-05-12
-tags: [dan-brown, rating-3]
+tags: [dan-brown]
 public: true
+properties:
+  rating: 3
+  language: English
 metadata:
   isbn_13: "9780385504225"
   id_status: verified

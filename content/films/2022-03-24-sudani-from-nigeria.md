@@ -2,8 +2,12 @@
 title: "Sudani from Nigeria"
 category: films
 date: 2022-03-24
-tags: [2018, liked]
+tags: []
 public: true
+properties:
+  year: 2018
+  liked: true
+  language: Malayalam
 metadata:
   tmdb_id: 504314
   imdb_id: tt7581572

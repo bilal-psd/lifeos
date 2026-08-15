@@ -2,8 +2,12 @@
 title: "GoodFellas"
 category: films
 date: 2022-03-10
-tags: [1990, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 1990
+  language: English
 metadata:
   tmdb_id: 769
   imdb_id: tt0099685

@@ -2,8 +2,12 @@
 title: "Ready or Not"
 category: films
 date: 2022-03-10
-tags: [2019, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 2019
+  language: English
 metadata:
   tmdb_id: 567609
   imdb_id: tt7798634

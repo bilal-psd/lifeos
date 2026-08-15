@@ -2,8 +2,10 @@
 title: "And the Mountains Echoed"
 category: books
 date: 2021-05-12
-tags: [khaled-hosseini, rating-3]
+tags: [khaled-hosseini]
 public: true
+properties:
+  rating: 3
 metadata:
   isbn_13: "9789382951001"
   id_status: verified

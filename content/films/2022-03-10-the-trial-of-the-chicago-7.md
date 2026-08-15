@@ -2,8 +2,12 @@
 title: "The Trial of the Chicago 7"
 category: films
 date: 2022-03-10
-tags: [2020, rating-5]
+tags: []
 public: true
+properties:
+  rating: 5
+  year: 2020
+  language: English
 metadata:
   tmdb_id: 556984
   imdb_id: tt1070874

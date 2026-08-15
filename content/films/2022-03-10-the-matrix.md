@@ -2,8 +2,12 @@
 title: "The Matrix"
 category: films
 date: 2022-03-10
-tags: [1999, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 1999
+  language: English
 metadata:
   tmdb_id: 603
   imdb_id: tt0133093

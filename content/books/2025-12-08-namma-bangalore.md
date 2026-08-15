@@ -2,8 +2,10 @@
 title: "Namma Bangalore: The Soul of a Metropolis"
 category: books
 date: 2025-12-08
-tags: [shoba-narayan, rating-2]
+tags: [shoba-narayan]
 public: true
+properties:
+  rating: 2
 metadata:
   isbn_13: "9789357024785"
   id_status: verified

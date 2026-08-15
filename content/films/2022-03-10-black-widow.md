@@ -2,8 +2,12 @@
 title: "Black Widow"
 category: films
 date: 2022-03-10
-tags: [2021, rating-2]
+tags: []
 public: true
+properties:
+  rating: 2
+  year: 2021
+  language: English
 metadata:
   tmdb_id: 497698
   imdb_id: tt3480822

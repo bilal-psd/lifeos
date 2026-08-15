@@ -2,8 +2,12 @@
 title: "Man of Steel"
 category: films
 date: 2022-03-10
-tags: [2013, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 2013
+  language: English
 metadata:
   tmdb_id: 49521
   imdb_id: tt0770828

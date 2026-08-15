@@ -2,8 +2,12 @@
 title: "All We Imagine as Light"
 category: films
 date: 2025-01-06
-tags: [2024, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 2024
+  language: Malayalam
 metadata:
   tmdb_id: 927547
   imdb_id: tt32086077

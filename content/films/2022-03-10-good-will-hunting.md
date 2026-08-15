@@ -2,8 +2,12 @@
 title: "Good Will Hunting"
 category: films
 date: 2022-03-10
-tags: [1997, rating-4]
+tags: []
 public: true
+properties:
+  rating: 4
+  year: 1997
+  language: English
 metadata:
   tmdb_id: 489
   imdb_id: tt0119217

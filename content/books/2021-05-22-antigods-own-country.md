@@ -2,8 +2,10 @@
 title: "Antigod’s Own Country: A Short History of Brahminical Colonisation of Kerala"
 category: books
 date: 2021-05-22
-tags: [av-sakthidharan, rating-5]
+tags: [av-sakthidharan]
 public: true
+properties:
+  rating: 5
 metadata:
   isbn_13: "9788189059941"
   id_status: verified

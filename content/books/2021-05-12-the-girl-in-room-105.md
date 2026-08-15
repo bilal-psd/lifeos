@@ -2,8 +2,11 @@
 title: "The Girl in Room 105"
 category: books
 date: 2021-05-12
-tags: [chetan-bhagat, rating-1]
+tags: [chetan-bhagat]
 public: true
+properties:
+  rating: 1
+  language: English
 metadata:
   isbn_13: "9781542040464"
   id_status: verified

@@ -28,6 +28,22 @@ lookup: web        # resolve via web search (MVP), no API key
    ambiguous (multiple plausible films, no year given) set `id_status:
    unverified` and ask the user a single clarifying question before committing.
 
+## Properties (filterable facets)
+
+Set these under `properties:` when the info is available (see
+[docs/schema.md](../../../docs/schema.md) for the mechanism):
+
+- `language` — the film's **primary language, full name** (e.g. `Korean`, not
+  `ko`). Infer at capture from the TMDb/Letterboxd lookup you're already doing;
+  don't ask the user.
+- `rating` — a 1–5 number, **only if the user states one**. Never invent it.
+- `year` — release year (number), when known from the lookup.
+- `liked`, `lists` — set when the user says they loved it / is adding it to a
+  named list.
+
+Follow the one-question rule: infer what you can, ask only for a rating the user
+implied but didn't give.
+
 ## Filing notes
 
 - `title` is the film's title (quote it in YAML if it contains a colon).

@@ -2,8 +2,12 @@
 title: "The Devil Wears Prada"
 category: films
 date: 2022-03-10
-tags: [2006, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 2006
+  language: English
 metadata:
   tmdb_id: 350
   imdb_id: tt0458352

@@ -2,8 +2,12 @@
 title: "The Sixth Sense"
 category: films
 date: 2022-03-10
-tags: [1999, rating-4]
+tags: []
 public: true
+properties:
+  rating: 4
+  year: 1999
+  language: English
 metadata:
   tmdb_id: 745
   imdb_id: tt0167404

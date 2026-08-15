@@ -2,8 +2,12 @@
 title: "X-Men: Days of Future Past"
 category: films
 date: 2022-03-10
-tags: [2014, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 2014
+  language: English
 metadata:
   tmdb_id: 127585
   imdb_id: tt1877832

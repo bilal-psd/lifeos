@@ -4,6 +4,8 @@ category: books
 date: 2021-05-15
 tags: [jk-rowling]
 public: true
+properties:
+  language: English
 metadata:
   isbn_13: "9780439139595"
   id_status: verified

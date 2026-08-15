@@ -2,8 +2,12 @@
 title: "I Am Legend"
 category: films
 date: 2022-03-11
-tags: [2007, rating-3-5]
+tags: []
 public: true
+properties:
+  rating: 3.5
+  year: 2007
+  language: English
 metadata:
   tmdb_id: 6479
   imdb_id: tt0480249

@@ -2,8 +2,12 @@
 title: "Moonrise Kingdom"
 category: films
 date: 2022-03-10
-tags: [2012, rating-5]
+tags: []
 public: true
+properties:
+  rating: 5
+  year: 2012
+  language: English
 metadata:
   tmdb_id: 83666
   imdb_id: tt1748122

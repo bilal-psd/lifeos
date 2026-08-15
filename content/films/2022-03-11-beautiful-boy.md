@@ -2,8 +2,12 @@
 title: "Beautiful Boy"
 category: films
 date: 2022-03-11
-tags: [2018, rating-4]
+tags: []
 public: true
+properties:
+  rating: 4
+  year: 2018
+  language: English
 metadata:
   tmdb_id: 451915
   imdb_id: tt1226837

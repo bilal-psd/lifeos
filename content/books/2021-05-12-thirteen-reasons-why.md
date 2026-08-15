@@ -2,8 +2,11 @@
 title: "Thirteen Reasons Why"
 category: books
 date: 2021-05-12
-tags: [jay-asher, rating-3]
+tags: [jay-asher]
 public: true
+properties:
+  rating: 3
+  language: English
 metadata:
   isbn_13: "9780141328294"
   id_status: verified

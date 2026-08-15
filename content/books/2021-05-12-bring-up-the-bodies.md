@@ -2,8 +2,10 @@
 title: "Bring Up the Bodies"
 category: books
 date: 2021-05-12
-tags: [hilary-mantel, rating-4]
+tags: [hilary-mantel]
 public: true
+properties:
+  rating: 4
 metadata:
   isbn_13: "9780805096866"
   olid: OL25238002M

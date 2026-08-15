@@ -2,8 +2,12 @@
 title: "The Hangover"
 category: films
 date: 2022-03-10
-tags: [2009, rating-3-5]
+tags: []
 public: true
+properties:
+  rating: 3.5
+  year: 2009
+  language: English
 metadata:
   tmdb_id: 18785
   imdb_id: tt1119646

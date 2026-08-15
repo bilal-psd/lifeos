@@ -2,8 +2,12 @@
 title: "Kung Fu Panda"
 category: films
 date: 2022-03-11
-tags: [2008, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 2008
+  language: English
 metadata:
   tmdb_id: 9502
   imdb_id: tt0441773

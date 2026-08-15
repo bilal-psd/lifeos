@@ -2,8 +2,12 @@
 title: "WandaVision"
 category: films
 date: 2022-03-10
-tags: [2021, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 2021
+  language: English
 metadata:
   imdb_id: tt9140560
   id_status: verified

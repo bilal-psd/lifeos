@@ -4,6 +4,8 @@ category: books
 date: 2021-05-15
 tags: [mark-manson]
 public: true
+properties:
+  language: English
 metadata:
   isbn_13: "9798804636129"
   id_status: verified

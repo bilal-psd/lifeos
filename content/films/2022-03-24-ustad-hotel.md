@@ -2,8 +2,12 @@
 title: "Ustad Hotel"
 category: films
 date: 2022-03-24
-tags: [2012, liked]
+tags: []
 public: true
+properties:
+  year: 2012
+  liked: true
+  language: Malayalam
 metadata:
   tmdb_id: 117751
   imdb_id: tt2218988

@@ -2,8 +2,13 @@
 title: "Inception"
 category: films
 date: 2022-03-10
-tags: [2010, rating-5, liked]
+tags: []
 public: true
+properties:
+  rating: 5
+  year: 2010
+  liked: true
+  language: English
 metadata:
   tmdb_id: 27205
   imdb_id: tt1375666

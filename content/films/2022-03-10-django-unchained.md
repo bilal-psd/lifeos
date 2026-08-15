@@ -2,8 +2,12 @@
 title: "Django Unchained"
 category: films
 date: 2022-03-10
-tags: [2012, rating-4]
+tags: []
 public: true
+properties:
+  rating: 4
+  year: 2012
+  language: English
 metadata:
   tmdb_id: 68718
   imdb_id: tt1853728

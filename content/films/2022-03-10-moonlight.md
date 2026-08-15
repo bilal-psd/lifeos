@@ -2,8 +2,12 @@
 title: "Moonlight"
 category: films
 date: 2022-03-10
-tags: [2016, rating-5]
+tags: []
 public: true
+properties:
+  rating: 5
+  year: 2016
+  language: English
 metadata:
   tmdb_id: 376867
   imdb_id: tt4975722

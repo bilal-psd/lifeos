@@ -2,8 +2,12 @@
 title: "Back to the Future"
 category: films
 date: 2022-03-10
-tags: [1985, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 1985
+  language: English
 metadata:
   tmdb_id: 105
   imdb_id: tt0088763

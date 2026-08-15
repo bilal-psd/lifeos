@@ -4,6 +4,8 @@ category: films
 date: 2026-08-15
 tags: [epic, adaptation, imax, rewatch, greek-mythology]
 public: true
+properties:
+  language: English
 metadata:
   tmdb_id: 1368337
   imdb_id: tt33764258

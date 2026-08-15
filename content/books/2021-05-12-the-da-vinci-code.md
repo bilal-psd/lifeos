@@ -2,8 +2,10 @@
 title: "The Da Vinci Code"
 category: books
 date: 2021-05-12
-tags: [dan-brown, rating-3]
+tags: [dan-brown]
 public: true
+properties:
+  rating: 3
 metadata:
   isbn_13: "9780552161275"
   id_status: verified

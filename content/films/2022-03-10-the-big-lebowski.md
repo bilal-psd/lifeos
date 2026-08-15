@@ -2,8 +2,12 @@
 title: "The Big Lebowski"
 category: films
 date: 2022-03-10
-tags: [1998, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 1998
+  language: English
 metadata:
   tmdb_id: 115
   imdb_id: tt0118715

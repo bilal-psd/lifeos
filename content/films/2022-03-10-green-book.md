@@ -2,8 +2,12 @@
 title: "Green Book"
 category: films
 date: 2022-03-10
-tags: [2018, rating-4]
+tags: []
 public: true
+properties:
+  rating: 4
+  year: 2018
+  language: English
 metadata:
   tmdb_id: 490132
   imdb_id: tt6966692

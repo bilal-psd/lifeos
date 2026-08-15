@@ -2,8 +2,11 @@
 title: "The Empire Strikes Back"
 category: films
 date: 2026-08-16
-tags: [1980]
+tags: []
 public: true
+properties:
+  year: 1980
+  language: English
 metadata:
   tmdb_id: 1891
   imdb_id: tt0080684

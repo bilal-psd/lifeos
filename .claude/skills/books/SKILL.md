@@ -30,6 +30,19 @@ lookup: web        # resolve via web search (MVP), no API key
    clarifying question) if multiple editions/works are plausible. Prefer the
    original/most common edition when the user didn't specify one.
 
+## Properties (filterable facets)
+
+Set these under `properties:` when available (see
+[docs/schema.md](../../../docs/schema.md) for the mechanism):
+
+- `language` — the edition's **language, full name** (e.g. `English`, `Malayalam`,
+  not `eng`). Open Library editions often omit it; set it when the lookup or the
+  user's note makes it clear, otherwise leave it off rather than guessing.
+- `rating` — a 1–5 number, **only if the user states one**.
+- `lists` — set when the user is adding the book to a named list.
+
+Infer what you can from the lookup; ask only for a rating the user implied.
+
 ## Filing notes
 
 - `title` is the book's title; consider adding the author to `tags` or letting

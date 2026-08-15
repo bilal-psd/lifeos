@@ -2,8 +2,12 @@
 title: "Birdman or (The Unexpected Virtue of Ignorance)"
 category: films
 date: 2022-03-10
-tags: [2014, rating-4]
+tags: []
 public: true
+properties:
+  rating: 4
+  year: 2014
+  language: English
 metadata:
   tmdb_id: 194662
   imdb_id: tt2562232

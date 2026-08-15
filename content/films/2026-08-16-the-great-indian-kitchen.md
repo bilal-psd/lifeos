@@ -2,8 +2,11 @@
 title: "The Great Indian Kitchen"
 category: films
 date: 2026-08-16
-tags: [2021]
+tags: []
 public: true
+properties:
+  year: 2021
+  language: Malayalam
 metadata:
   tmdb_id: 786064
   imdb_id: tt13299890

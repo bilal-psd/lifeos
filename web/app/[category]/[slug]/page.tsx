@@ -51,6 +51,21 @@ export default async function EntryPage({
         ))}
       </div>
 
+      {Object.keys(entry.properties).length > 0 && (
+        <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+          {Object.entries(entry.properties).map(([key, values]) => (
+            <div key={key} className="flex gap-2">
+              <dt className="capitalize text-muted">{key}</dt>
+              <dd className="font-medium">
+                {key === "rating"
+                  ? `${values[0]}/5`
+                  : values.map((v) => (v === true ? "Yes" : String(v))).join(", ")}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      )}
+
       <div className="entry-body mt-8">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{entry.body}</ReactMarkdown>
       </div>

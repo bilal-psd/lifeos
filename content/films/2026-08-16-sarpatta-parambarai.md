@@ -2,8 +2,11 @@
 title: "Sarpatta Parambarai"
 category: films
 date: 2026-08-16
-tags: [2021]
+tags: []
 public: true
+properties:
+  year: 2021
+  language: Tamil
 metadata:
   tmdb_id: 796011
   imdb_id: tt11580854

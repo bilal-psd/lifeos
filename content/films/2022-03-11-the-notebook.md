@@ -2,8 +2,12 @@
 title: "The Notebook"
 category: films
 date: 2022-03-11
-tags: [2004, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 2004
+  language: English
 metadata:
   tmdb_id: 11036
   imdb_id: tt0332280

@@ -28,6 +28,9 @@ this skill turns it into a committed markdown entry.
    - the `date` (when it happened; today — 2026-08-14-style absolute date — if
      unspecified),
    - any `tags` their note genuinely supports,
+   - any `properties` the category defines (typed facets like `rating`,
+     `language` — infer what you can from the lookup, ask only when the user's
+     own input is needed; see the category skill and docs/schema.md),
    - the note body (their exact words).
 
 2. **Resolve the category.**

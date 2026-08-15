@@ -2,8 +2,12 @@
 title: "Men in Black"
 category: films
 date: 2022-03-11
-tags: [1997, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 1997
+  language: English
 metadata:
   tmdb_id: 607
   imdb_id: tt0119654

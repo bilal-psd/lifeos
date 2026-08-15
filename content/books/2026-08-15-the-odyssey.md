@@ -4,6 +4,8 @@ category: books
 date: 2026-08-15
 tags: [fiction, classics, poetry, homer, greek-mythology]
 public: true
+properties:
+  language: English
 metadata:
   isbn_13: "9780140268867"
   olid: OL7351772M

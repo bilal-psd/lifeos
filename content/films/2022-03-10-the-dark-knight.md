@@ -2,8 +2,12 @@
 title: "The Dark Knight"
 category: films
 date: 2022-03-10
-tags: [2008, rating-4-5]
+tags: []
 public: true
+properties:
+  rating: 4.5
+  year: 2008
+  language: English
 metadata:
   tmdb_id: 155
   imdb_id: tt0468569

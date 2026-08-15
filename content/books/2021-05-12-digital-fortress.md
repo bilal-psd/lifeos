@@ -2,8 +2,10 @@
 title: "Digital Fortress"
 category: books
 date: 2021-05-12
-tags: [dan-brown, rating-3]
+tags: [dan-brown]
 public: true
+properties:
+  rating: 3
 metadata:
   isbn_13: "9787020048144"
   id_status: unverified

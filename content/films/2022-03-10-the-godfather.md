@@ -2,8 +2,12 @@
 title: "The Godfather"
 category: films
 date: 2022-03-10
-tags: [1972, rating-4]
+tags: []
 public: true
+properties:
+  rating: 4
+  year: 1972
+  language: English
 metadata:
   tmdb_id: 238
   imdb_id: tt0068646

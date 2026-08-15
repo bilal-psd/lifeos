@@ -2,8 +2,12 @@
 title: "Gladiator"
 category: films
 date: 2022-03-10
-tags: [2000, rating-4]
+tags: []
 public: true
+properties:
+  rating: 4
+  year: 2000
+  language: English
 metadata:
   tmdb_id: 98
   imdb_id: tt0172495

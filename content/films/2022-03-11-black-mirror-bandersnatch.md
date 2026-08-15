@@ -2,8 +2,12 @@
 title: "Black Mirror: Bandersnatch"
 category: films
 date: 2022-03-11
-tags: [2018, rating-3-5]
+tags: []
 public: true
+properties:
+  rating: 3.5
+  year: 2018
+  language: English
 metadata:
   tmdb_id: 569547
   imdb_id: tt9495224

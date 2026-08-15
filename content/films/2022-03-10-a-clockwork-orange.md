@@ -2,8 +2,12 @@
 title: "A Clockwork Orange"
 category: films
 date: 2022-03-10
-tags: [1971, rating-3]
+tags: []
 public: true
+properties:
+  rating: 3
+  year: 1971
+  language: English
 metadata:
   tmdb_id: 185
   imdb_id: tt0066921

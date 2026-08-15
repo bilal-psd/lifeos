@@ -2,8 +2,12 @@
 title: "The Theory of Everything"
 category: films
 date: 2022-03-11
-tags: [2014, rating-4]
+tags: []
 public: true
+properties:
+  rating: 4
+  year: 2014
+  language: English
 metadata:
   tmdb_id: 266856
   imdb_id: tt2980516

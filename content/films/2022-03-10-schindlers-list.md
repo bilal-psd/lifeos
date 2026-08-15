@@ -2,8 +2,12 @@
 title: "Schindler's List"
 category: films
 date: 2022-03-10
-tags: [1993, rating-4]
+tags: []
 public: true
+properties:
+  rating: 4
+  year: 1993
+  language: English
 metadata:
   tmdb_id: 424
   imdb_id: tt0108052

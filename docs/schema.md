@@ -24,6 +24,10 @@ category: films              # required — must match the folder
 date: 2026-08-14             # required — YYYY-MM-DD
 tags: [sci-fi, rewatch]      # optional — list of lowercase strings
 public: true                 # required — website only renders public entries
+properties:                  # optional — typed, filterable facets
+  rating: 4                  # number
+  language: [English]        # scalar or list; filters merge both the same way
+  liked: true                # boolean
 metadata:                    # optional — machine-added IDs, per category
   tmdb_id: 693134
   imdb_id: tt15239678
@@ -40,10 +44,32 @@ metadata:                    # optional — machine-added IDs, per category
 | `date`        | yes      | `YYYY-MM-DD`. Absolute, never relative.                     |
 | `tags`        | no       | Flow list, lowercase. Omit if none.                         |
 | `public`      | yes      | `true` for now (everything is public).                      |
+| `properties`  | no       | Typed, user-facing facets used as filters (see below).      |
 | `metadata`    | no       | ID block; fields defined by the category skill. Omit for    |
 |               |          | categories with no external registry.                       |
 | `id_status`   | no       | Inside `metadata`. `verified` when the ID is confirmed,     |
 |               |          | `unverified` when it was a best guess.                      |
+
+### Properties (filterable facets)
+
+`properties:` holds typed key/values the website turns into **filters** on each
+category page. Unlike `tags` (freeform labels) and `metadata` (machine IDs),
+properties are the facets you'd filter by — `rating`, `language`, `liked`,
+`year`, `lists` (list membership), etc.
+
+- **Generic, used per category.** Any key is allowed; a category just uses the
+  ones that fit (books → `language`; films → `rating`, `language`, `year`).
+  The same key name shared across categories (e.g. `language`) means the same
+  thing.
+- **Value shapes.** A scalar (`rating: 4`) or a list (`language: [English, Hindi]`,
+  `lists: [malayalam-starter-pack]`). The site normalizes both to lists.
+- **Filters are derived from the data.** A property becomes a filter the moment
+  one entry uses it — no separate registration. Type is inferred (all-numeric →
+  range, all-boolean → toggle, else multi-select).
+- **`content/_properties.json` is the optional override** for labels, types, and
+  numeric range when inference isn't enough (e.g. `rating` is pinned to a 1–5
+  scale, `language` gets the "Language" label). Store **full language names**
+  (`English`, not `en`).
 
 ## Body
 
