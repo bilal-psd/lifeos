@@ -46,10 +46,11 @@ this skill turns it into a committed markdown entry.
    - If a file for the same slug/date already exists, tell the user rather than
      overwriting.
 
-5. **Commit** just that file:
+5. **Commit and push** just that file (always push — never ask first):
    ```bash
    git add content/<category>/<file>.md
    git commit -m "Add <category>: <title>"
+   git push
    ```
 
 6. **Report back** briefly: what was filed, the resolved ID (and whether it was

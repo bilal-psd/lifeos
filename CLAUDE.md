@@ -53,6 +53,8 @@ untouched.
 - Dates are absolute (`YYYY-MM-DD`).
 - Everything is `public: true` for now.
 - Package manager for the site is **pnpm** (`cd web && pnpm ...`).
+- **Always `git push` after committing** — never ask first. Pushing to `main`
+  auto-deploys via Vercel, so the push is the final step of every capture.
 
 ## Design decisions (settled — don't re-litigate)
 
