@@ -40,29 +40,38 @@ export default async function EntryPage({
         ← {entry.category}
       </Link>
 
-      <h1 className="mt-4 text-2xl font-semibold tracking-tight">
+      <h1 className="mt-4 text-[22px] font-semibold tracking-[-.012em]">
         {entry.title}
       </h1>
 
-      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
-        <time>{formatDate(entry.date)}</time>
+      <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted">
+        <time className="tabular-nums text-faint">{formatDate(entry.date)}</time>
         {entry.tags.map((t) => (
-          <span key={t}>#{t}</span>
+          <span key={t} className="text-faint">
+            #{t}
+          </span>
         ))}
       </div>
 
       {Object.keys(entry.properties).length > 0 && (
-        <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm">
-          {Object.entries(entry.properties).map(([key, values]) => (
-            <div key={key} className="flex gap-2">
-              <dt className="capitalize text-muted">{key}</dt>
-              <dd className="font-medium">
-                {key === "rating"
-                  ? `${values[0]}/5`
-                  : values.map((v) => (v === true ? "Yes" : String(v))).join(", ")}
-              </dd>
-            </div>
-          ))}
+        <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1.5 text-[13px]">
+          {Object.entries(entry.properties).map(([key, values]) => {
+            const n = typeof values[0] === "number" ? (values[0] as number) : null;
+            return (
+              <div key={key} className="flex items-baseline gap-2">
+                <dt className="capitalize text-muted">{key}</dt>
+                <dd className="font-medium">
+                  {key === "rating" && n != null ? (
+                    <span className="text-star tracking-[1px]">
+                      {"★".repeat(Math.floor(n)) + (n % 1 ? "½" : "")}
+                    </span>
+                  ) : (
+                    values.map((v) => (v === true ? "Yes" : String(v))).join(", ")
+                  )}
+                </dd>
+              </div>
+            );
+          })}
         </dl>
       )}
 

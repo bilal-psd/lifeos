@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { getCategories } from "@/lib/archive";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "LifeOS",
@@ -13,14 +20,17 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const categories = getCategories();
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <body className="min-h-screen antialiased">
         <div className="mx-auto max-w-2xl px-5 py-10 sm:py-14">
-          <header className="mb-12 flex items-baseline justify-between gap-4">
-            <Link href="/" className="text-lg font-semibold tracking-tight">
+          <header className="mb-14 flex items-baseline justify-between gap-4">
+            <Link
+              href="/"
+              className="text-[15px] font-semibold tracking-tight transition-colors hover:text-foreground"
+            >
               LifeOS
             </Link>
-            <nav className="flex flex-wrap gap-4 text-sm text-muted">
+            <nav className="flex flex-wrap gap-5 text-[13px] text-muted">
               {categories.map((c) => (
                 <Link
                   key={c}
@@ -33,7 +43,7 @@ export default function RootLayout({
             </nav>
           </header>
           <main>{children}</main>
-          <footer className="mt-20 border-t border-border pt-6 text-xs text-muted">
+          <footer className="mt-24 border-t border-border pt-6 text-[12px] text-faint">
             A personal archive.
           </footer>
         </div>
