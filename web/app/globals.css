@@ -85,6 +85,25 @@ body {
 .pop-row:hover {
   background: var(--accent-soft);
 }
+/* unfurl: property names fan in on open */
+@keyframes unfurlIn {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.unfurl-name {
+  animation: unfurlIn 0.26s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .unfurl-name {
+    animation: none;
+  }
+}
 .lx-sw {
   width: 30px;
   height: 18px;

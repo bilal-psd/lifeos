@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { formatDate } from "@/lib/format";
 import type { PropertyDef, PropValue } from "@/lib/archive";
@@ -13,15 +13,11 @@ export type Row = {
   properties: Record<string, PropValue[]>;
 };
 
-type FilterState = Record<
-  string,
-  { enum?: PropValue[]; from?: number; to?: number; on?: boolean }
->;
-
 type Sort = "date" | "rating" | "title";
+type FilterState = Record<string, { enum?: PropValue[]; from?: number; on?: boolean }>;
 
-/* ---- icons (16px, stroked to match Linear's line weight) ---- */
-function Ico({ name }: { name: string }) {
+/* ---- icons ---- */
+function Ico({ name, size = 15 }: { name: string; size?: number }) {
   const p: Record<string, React.ReactNode> = {
     filter: <path d="M2 4h12M4.5 8h7M6.5 12h3" strokeLinecap="round" />,
     display: (
@@ -46,46 +42,75 @@ function Ico({ name }: { name: string }) {
         <path d="M2.5 6.4h11M5.4 2.1v2.4M10.6 2.1v2.4" />
       </>
     ),
+    lists: (
+      <>
+        <path d="M5.5 4h8M5.5 8h8M5.5 12h8" strokeLinecap="round" />
+        <circle cx="2.6" cy="4" r="0.9" fill="currentColor" stroke="none" />
+        <circle cx="2.6" cy="8" r="0.9" fill="currentColor" stroke="none" />
+        <circle cx="2.6" cy="12" r="0.9" fill="currentColor" stroke="none" />
+      </>
+    ),
     check: <path d="M3.5 8.5l3 3 6-7" strokeLinecap="round" strokeLinejoin="round" />,
-    back: <path d="M9.5 3.5L5 8l4.5 4.5" strokeLinecap="round" strokeLinejoin="round" />,
-    x: <path d="M4 4l8 8M12 4l-8 8" strokeLinecap="round" />,
+    chevron: <path d="M4 6.5L8 10l4-3.5" strokeLinecap="round" strokeLinejoin="round" />,
   };
   const filled = name === "rating" || name === "liked";
   return (
     <svg
       viewBox="0 0 16 16"
-      width="15"
-      height="15"
+      width={size}
+      height={size}
       fill={filled ? "currentColor" : "none"}
       stroke={filled ? "none" : "currentColor"}
       strokeWidth="1.35"
+      aria-hidden="true"
     >
-      {p[name]}
+      {p[name] ?? p.filter}
     </svg>
   );
 }
 
-function matches(def: PropertyDef, state: FilterState[string], row: Row): boolean {
-  if (!state) return true;
+const stars = (r: number) => "★".repeat(Math.floor(r)) + (r % 1 ? "½" : "");
+
+/* number properties on a small ordinal scale (rating) filter by threshold;
+   wide-range ones (year) bucket into decades. */
+const numberMode = (def: PropertyDef): "threshold" | "decade" =>
+  def.min != null && def.max != null && def.max - def.min <= 10 ? "threshold" : "decade";
+const decadeOf = (y: number) => Math.floor(y / 10) * 10;
+const decadesOf = (def: PropertyDef) =>
+  [...new Set((def.values as number[]).map(decadeOf))].sort((a, b) => a - b);
+
+function isActive(def: PropertyDef, s: FilterState[string]): boolean {
+  if (!s) return false;
+  if (def.type === "boolean") return !!s.on;
+  if (def.type === "number" && numberMode(def) === "threshold") return s.from != null;
+  return (s.enum?.length ?? 0) > 0;
+}
+
+function matchDef(def: PropertyDef, s: FilterState[string], row: Row): boolean {
+  if (!s) return true;
   const vals = row.properties[def.key] ?? [];
   if (def.type === "enum") {
-    const sel = state.enum ?? [];
-    if (sel.length === 0) return true;
-    return vals.some((v) => sel.includes(v));
+    const sel = s.enum ?? [];
+    return sel.length === 0 || vals.some((v) => sel.includes(v));
   }
+  if (def.type === "boolean") return s.on ? vals.includes(true) : true;
   if (def.type === "number") {
-    if (state.from == null && state.to == null) return true;
     const nums = vals.filter((v): v is number => typeof v === "number");
-    return nums.some(
-      (v) => (state.from == null || v >= state.from) && (state.to == null || v <= state.to),
-    );
+    if (numberMode(def) === "threshold") return s.from == null || nums.some((v) => v >= s.from!);
+    const sel = (s.enum ?? []) as number[];
+    return sel.length === 0 || nums.some((v) => sel.includes(decadeOf(v)));
   }
-  if (def.type === "boolean") return state.on ? vals.includes(true) : true;
   return true;
 }
 
-function stars(r: number): string {
-  return "★".repeat(Math.floor(r)) + (r % 1 ? "½" : "");
+function valueLabel(def: PropertyDef, s: FilterState[string]): string {
+  if (!s) return "";
+  if (def.type === "boolean") return "";
+  if (def.type === "number" && numberMode(def) === "threshold") return s.from ? `${s.from}+` : "";
+  const sel = s.enum ?? [];
+  if (sel.length === 0) return "";
+  if (sel.length > 1) return `${sel.length}`;
+  return def.type === "number" ? `${sel[0]}s` : String(sel[0]);
 }
 
 export default function FilterableList({
@@ -98,66 +123,92 @@ export default function FilterableList({
   category: string;
 }) {
   const [fstate, setFstate] = useState<FilterState>({});
-  const [panel, setPanel] = useState<"filter" | "display" | null>(null);
-  const [step, setStep] = useState<string | null>(null);
-  const [display, setDisplay] = useState<string[]>(
-    filters.filter((f) => f.summary).map((f) => f.key),
-  );
+  const [open, setOpen] = useState<"filter" | "display" | null>(null);
+  const [drop, setDrop] = useState<string | null>(null); // open dropdown key (or "__sort__")
+  const [flip, setFlip] = useState(false); // right-align dropdown near the edge
+  const [display, setDisplay] = useState<string[]>(filters.filter((f) => f.summary).map((f) => f.key));
   const [sort, setSort] = useState<Sort>("date");
 
+  const rootRef = useRef<HTMLDivElement>(null);
+  const dropRef = useRef<HTMLDivElement>(null);
   const defByKey = useMemo(
     () => Object.fromEntries(filters.map((d) => [d.key, d])) as Record<string, PropertyDef>,
     [filters],
   );
 
-  // Per-category view preference (what to show + ordering) persists.
+  /* persistence: what's shown + ordering, per category */
   const storeKey = `lifeos:view:${category}`;
   useEffect(() => {
     try {
-      const saved = JSON.parse(localStorage.getItem(storeKey) || "{}");
-      if (Array.isArray(saved.display)) setDisplay(saved.display);
-      if (saved.sort) setSort(saved.sort);
+      const s = JSON.parse(localStorage.getItem(storeKey) || "{}");
+      if (Array.isArray(s.display)) setDisplay(s.display);
+      if (s.sort) setSort(s.sort);
     } catch {
       /* ignore */
     }
   }, [storeKey]);
   const persist = (next: { display?: string[]; sort?: Sort }) => {
     try {
-      localStorage.setItem(
-        storeKey,
-        JSON.stringify({ display, sort, ...next }),
-      );
+      localStorage.setItem(storeKey, JSON.stringify({ display, sort, ...next }));
     } catch {
       /* ignore */
     }
   };
 
-  // Dismiss popovers on outside click / Escape.
-  const filterRef = useRef<HTMLDivElement>(null);
-  const displayRef = useRef<HTMLDivElement>(null);
+  const closeAll = useCallback(() => {
+    setOpen(null);
+    setDrop(null);
+  }, []);
+
+  /* outside-click + two-level Escape (dropdown first, then the unfurl) */
   useEffect(() => {
-    if (!panel) return;
+    if (!open) return;
     const onDown = (e: MouseEvent) => {
-      const t = e.target as Node;
-      if (filterRef.current?.contains(t) || displayRef.current?.contains(t)) return;
-      setPanel(null);
+      if (!rootRef.current?.contains(e.target as Node)) closeAll();
     };
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setPanel(null);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        if (drop) setDrop(null);
+        else setOpen(null);
+      }
+    };
     document.addEventListener("mousedown", onDown);
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("mousedown", onDown);
       document.removeEventListener("keydown", onKey);
     };
-  }, [panel]);
+  }, [open, drop, closeAll]);
 
-  const activeKeys = filters.filter((f) => {
-    const s = fstate[f.key];
-    return s && ((s.enum?.length ?? 0) > 0 || s.from != null || s.to != null || s.on);
-  });
+  /* edge-flip: if the open dropdown would overflow the viewport, right-align it */
+  useLayoutEffect(() => {
+    setFlip(false);
+    if (!drop) return;
+    const el = dropRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    if (r.right > window.innerWidth - 8) setFlip(true);
+  }, [drop]);
 
+  /* roving arrow-key focus inside the open menu */
+  const onMenuKey = (e: React.KeyboardEvent) => {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    const scope = drop
+      ? dropRef.current
+      : (e.currentTarget as HTMLElement).querySelector("[data-names]");
+    if (!scope) return;
+    const items = [...scope.querySelectorAll<HTMLElement>("button:not([disabled])")];
+    const i = items.indexOf(document.activeElement as HTMLElement);
+    if (i === -1) return;
+    e.preventDefault();
+    const next = e.key === "ArrowDown" ? i + 1 : i - 1;
+    items[(next + items.length) % items.length]?.focus();
+  };
+
+  const activeDefs = filters.filter((d) => isActive(d, fstate[d.key]));
   const view = useMemo(() => {
-    let out = rows.filter((r) => filters.every((d) => matches(d, fstate[d.key], r)));
+    let out = rows.filter((r) => filters.every((d) => matchDef(d, fstate[d.key], r)));
     if (sort === "rating") {
       const rt = (r: Row) => (r.properties.rating?.find((v) => typeof v === "number") as number) ?? -1;
       out = [...out].sort((a, b) => rt(b) - rt(a));
@@ -167,177 +218,209 @@ export default function FilterableList({
     return out;
   }, [rows, filters, fstate, sort]);
 
+  /* mutations */
   const toggleEnum = (key: string, v: PropValue) =>
     setFstate((p) => {
       const cur = p[key]?.enum ?? [];
       return { ...p, [key]: { ...p[key], enum: cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v] } };
     });
-  const setMin = (key: string, v: number | undefined) =>
-    setFstate((p) => ({ ...p, [key]: { ...p[key], from: v } }));
-  const setRange = (key: string, edge: "from" | "to", v: number | undefined) =>
-    setFstate((p) => ({ ...p, [key]: { ...p[key], [edge]: v } }));
-  const toggleBool = (key: string) =>
-    setFstate((p) => ({ ...p, [key]: { ...p[key], on: !p[key]?.on } }));
-  const clearKey = (key: string) => setFstate((p) => ({ ...p, [key]: {} }));
+  const setThreshold = (key: string, v: number) =>
+    setFstate((p) => ({ ...p, [key]: { from: p[key]?.from === v ? undefined : v } }));
+  const toggleBool = (key: string) => setFstate((p) => ({ ...p, [key]: { on: !p[key]?.on } }));
+  const clearAll = () => setFstate({});
   const toggleDisplay = (key: string) => {
     const next = display.includes(key) ? display.filter((k) => k !== key) : [...display, key];
     setDisplay(next);
     persist({ display: next });
   };
-  const changeSort = (s: Sort) => {
+  const chooseSort = (s: Sort) => {
     setSort(s);
     persist({ sort: s });
+    setDrop(null);
   };
-
-  const openFilter = (s: string | null) => {
-    setStep(s);
-    setPanel("filter");
-  };
-
-  const pillText = (key: string): string => {
-    const s = fstate[key];
-    if (!s) return "";
-    if (key === "language" || defByKey[key]?.type === "enum") return (s.enum ?? []).join(", ");
-    if (key === "liked") return "Yes";
-    if (defByKey[key]?.key === "rating") return `${s.from}+`;
-    return `${s.from ?? "…"}–${s.to ?? "…"}`;
-  };
+  const openDrop = (key: string) => setDrop((d) => (d === key ? null : key));
 
   const barBtn =
-    "inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted transition-colors hover:bg-surface hover:text-foreground aria-expanded:bg-surface aria-expanded:text-foreground";
+    "inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-strong";
+  const nameBtn = (active: boolean, isOpen: boolean) =>
+    `unfurl-name inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-strong ${
+      isOpen ? "bg-surface text-foreground" : active ? "text-foreground hover:bg-surface" : "text-muted hover:bg-surface hover:text-foreground"
+    }`;
+  const optRow =
+    "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] text-foreground transition-colors hover:bg-accent-soft focus-visible:outline-none focus-visible:bg-accent-soft";
+
+  const ddPos = flip ? "right-0" : "left-0";
+
+  const filterDropdown = (def: PropertyDef) => {
+    if (def.type === "boolean") return null;
+    const s = fstate[def.key];
+    return (
+      <div
+        ref={dropRef}
+        role="menu"
+        className={`pop absolute top-full z-40 mt-1.5 max-h-72 min-w-[180px] overflow-y-auto ${ddPos}`}
+      >
+        {def.type === "enum" &&
+          def.values.map((v) => {
+            const on = (s?.enum ?? []).includes(v);
+            return (
+              <button key={String(v)} type="button" role="menuitemcheckbox" aria-checked={on} className={optRow} onClick={() => toggleEnum(def.key, v)}>
+                <span className="flex-1">{String(v)}</span>
+                {on && <span className="text-accent"><Ico name="check" size={14} /></span>}
+              </button>
+            );
+          })}
+        {def.type === "number" && numberMode(def) === "threshold" &&
+          Array.from({ length: Math.floor(def.max ?? 5) }, (_, i) => Math.floor(def.max ?? 5) - i).map((n) => (
+            <button key={n} type="button" role="menuitemradio" aria-checked={s?.from === n} className={optRow} onClick={() => setThreshold(def.key, n)}>
+              <span className="text-star tracking-[1px]">{"★".repeat(n)}</span>
+              <span className="flex-1 text-[12.5px] text-muted">&amp; up</span>
+              {s?.from === n && <span className="text-accent"><Ico name="check" size={14} /></span>}
+            </button>
+          ))}
+        {def.type === "number" && numberMode(def) === "decade" &&
+          decadesOf(def).map((d) => {
+            const on = ((s?.enum ?? []) as number[]).includes(d);
+            return (
+              <button key={d} type="button" role="menuitemcheckbox" aria-checked={on} className={optRow} onClick={() => toggleEnum(def.key, d)}>
+                <span className="flex-1 tabular-nums">{d}s</span>
+                {on && <span className="text-accent"><Ico name="check" size={14} /></span>}
+              </button>
+            );
+          })}
+      </div>
+    );
+  };
 
   return (
-    <div>
+    <div ref={rootRef}>
       {filters.length > 0 && (
-        <div className="mb-3 flex items-center gap-2">
-          {/* Filter */}
-          <div ref={filterRef} className="relative">
-            <button
-              type="button"
-              aria-expanded={panel === "filter"}
-              onClick={() => (panel === "filter" ? setPanel(null) : openFilter(null))}
-              className={barBtn}
-            >
+        <div className="mb-3 flex flex-wrap items-center gap-1.5" onKeyDown={onMenuKey}>
+          {/* ---- Filter ---- */}
+          {open === "filter" ? (
+            <div className="flex flex-wrap items-center gap-0.5" data-names>
+              <button type="button" className={barBtn} aria-label="Close filters" onClick={closeAll}>
+                <Ico name="filter" />
+              </button>
+              {filters.map((def) => {
+                const active = isActive(def, fstate[def.key]);
+                const isOpen = drop === def.key;
+                const vl = valueLabel(def, fstate[def.key]);
+                return (
+                  <div key={def.key} className="relative">
+                    <button
+                      type="button"
+                      aria-haspopup={def.type !== "boolean"}
+                      aria-expanded={isOpen}
+                      className={nameBtn(active, isOpen)}
+                      onClick={() => (def.type === "boolean" ? toggleBool(def.key) : openDrop(def.key))}
+                    >
+                      {def.label}
+                      {vl && <span className="text-accent">{vl}</span>}
+                      {def.type !== "boolean" && (
+                        <span className={`text-faint transition-transform ${isOpen ? "rotate-180" : ""}`}>
+                          <Ico name="chevron" size={12} />
+                        </span>
+                      )}
+                    </button>
+                    {isOpen && filterDropdown(def)}
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <button type="button" className={barBtn} aria-expanded={false} onClick={() => (setOpen("filter"), setDrop(null))}>
               <Ico name="filter" />
               Filter
+              {activeDefs.length > 0 && (
+                <span className="rounded-full border border-border px-1.5 text-[11px] leading-4 text-faint tabular-nums">
+                  {activeDefs.length}
+                </span>
+              )}
             </button>
-            {panel === "filter" && (
-              <div className="pop absolute left-0 top-full z-40 mt-1.5 min-w-[210px]">
-                {step === null ? (
-                  filters.map((def) => {
-                    const on = activeKeys.some((k) => k.key === def.key);
-                    return (
-                      <button
-                        key={def.key}
-                        type="button"
-                        className="pop-row"
-                        onClick={() => (def.type === "boolean" ? toggleBool(def.key) : setStep(def.key))}
-                      >
-                        <span className="text-muted">
-                          <Ico name={def.key in { rating: 1, language: 1, liked: 1, year: 1 } ? def.key : "filter"} />
-                        </span>
-                        <span className="flex-1">{def.label}</span>
-                        {on && <span className="text-faint">•</span>}
-                      </button>
-                    );
-                  })
-                ) : (
-                  <StepPanel
-                    def={defByKey[step]}
-                    state={fstate[step]}
-                    onBack={() => setStep(null)}
-                    onToggleEnum={(v) => toggleEnum(step, v)}
-                    onSetMin={(v) => setMin(step, v)}
-                    onSetRange={(edge, v) => setRange(step, edge, v)}
-                  />
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* applied pills */}
-          {activeKeys.map((def) => (
-            <span
-              key={def.key}
-              className="inline-flex items-center overflow-hidden rounded-md border border-border-strong bg-surface text-[12.5px]"
-            >
-              <button
-                type="button"
-                onClick={() => openFilter(def.key)}
-                className="flex items-center py-[3px] pl-2 pr-1.5 hover:bg-accent-soft"
-              >
-                <span className="text-muted">{def.label}</span>
-                <span className="ml-1 font-medium tabular-nums">{pillText(def.key)}</span>
-              </button>
-              <button
-                type="button"
-                aria-label={`Remove ${def.label} filter`}
-                onClick={() => clearKey(def.key)}
-                className="flex h-full items-center border-l border-border px-1.5 text-muted hover:bg-accent-soft hover:text-foreground"
-              >
-                <Ico name="x" />
-              </button>
-            </span>
-          ))}
-
-          <span className="flex-1" />
-          {activeKeys.length > 0 && (
-            <span className="text-[12.5px] text-faint tabular-nums">
-              {view.length} of {rows.length}
-            </span>
           )}
 
-          {/* Display */}
-          <div ref={displayRef} className="relative">
-            <button
-              type="button"
-              aria-expanded={panel === "display"}
-              onClick={() => setPanel(panel === "display" ? null : "display")}
-              className={barBtn}
-            >
-              <Ico name="display" />
-              Display
-            </button>
-            {panel === "display" && (
-              <div className="pop absolute right-0 top-full z-40 mt-1.5 min-w-[220px]">
-                <div className="px-2 pb-1 pt-1.5 text-[11px] uppercase tracking-wider text-faint">
-                  Show under each title
-                </div>
-                {filters.map((def) => (
+          <span className="flex-1" />
+
+          {/* result count + clear, when filtering */}
+          {activeDefs.length > 0 && (
+            <>
+              <span className="text-[12.5px] text-faint tabular-nums">
+                {view.length} of {rows.length}
+              </span>
+              <button type="button" onClick={clearAll} className="rounded-md px-2 py-1 text-[12.5px] text-accent hover:bg-surface focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-strong">
+                Clear
+              </button>
+            </>
+          )}
+
+          {/* ---- Display ---- */}
+          {open === "display" ? (
+            <div className="flex flex-wrap items-center justify-end gap-0.5" data-names>
+              {filters.map((def) => {
+                const on = display.includes(def.key);
+                return (
                   <button
                     key={def.key}
                     type="button"
+                    role="switch"
+                    aria-checked={on}
+                    className={nameBtn(on, false)}
                     onClick={() => toggleDisplay(def.key)}
-                    className="pop-row justify-between"
                   >
-                    <span>{def.label}</span>
-                    <span className="lx-sw" data-on={display.includes(def.key)} />
+                    <span className={on ? "text-accent" : "text-faint"}>{on ? "●" : "○"}</span>
+                    {def.label}
                   </button>
-                ))}
-                <div className="mt-1 border-t border-border px-2 pb-1 pt-2 text-[11px] uppercase tracking-wider text-faint">
-                  Ordering
-                </div>
-                <div className="px-2 py-1.5">
-                  <select
-                    value={sort}
-                    onChange={(e) => changeSort(e.target.value as Sort)}
-                    className="lx-select w-full"
-                  >
-                    <option value="date">Newest first</option>
-                    <option value="rating">Highest rated</option>
-                    <option value="title">Title A–Z</option>
-                  </select>
-                </div>
+                );
+              })}
+              <div className="relative">
+                <button
+                  type="button"
+                  aria-haspopup
+                  aria-expanded={drop === "__sort__"}
+                  className={nameBtn(false, drop === "__sort__")}
+                  onClick={() => openDrop("__sort__")}
+                >
+                  Sort
+                  <span className={`text-faint transition-transform ${drop === "__sort__" ? "rotate-180" : ""}`}>
+                    <Ico name="chevron" size={12} />
+                  </span>
+                </button>
+                {drop === "__sort__" && (
+                  <div ref={dropRef} role="menu" className={`pop absolute top-full z-40 mt-1.5 min-w-[160px] ${ddPos}`}>
+                    {([["date", "Newest first"], ["rating", "Highest rated"], ["title", "Title A–Z"]] as [Sort, string][]).map(
+                      ([v, label]) => (
+                        <button key={v} type="button" role="menuitemradio" aria-checked={sort === v} className={optRow} onClick={() => chooseSort(v)}>
+                          <span className="flex-1">{label}</span>
+                          {sort === v && <span className="text-accent"><Ico name="check" size={14} /></span>}
+                        </button>
+                      ),
+                    )}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+              <button type="button" className={barBtn} aria-label="Close display options" onClick={closeAll}>
+                <Ico name="display" />
+              </button>
+            </div>
+          ) : (
+            <button type="button" className={barBtn} aria-expanded={false} onClick={() => (setOpen("display"), setDrop(null))}>
+              <Ico name="display" />
+              Display
+            </button>
+          )}
         </div>
       )}
 
       {view.length === 0 ? (
-        <p className="border-t border-border py-8 text-[14px] text-faint">
+        <div className="border-t border-border py-8 text-[14px] text-faint">
           No entries match these filters.
-        </p>
+          {activeDefs.length > 0 && (
+            <button type="button" onClick={clearAll} className="ml-2 text-accent hover:underline">
+              Clear filters
+            </button>
+          )}
+        </div>
       ) : (
         <ul className="border-t border-border">
           {view.map((e) => {
@@ -348,17 +431,10 @@ export default function FilterableList({
                 const vals = e.properties[def.key];
                 if (def.key === "rating") {
                   const r = vals.find((v) => typeof v === "number") as number | undefined;
-                  return r != null
-                    ? { key: def.key, cls: "text-star tracking-[1px]", text: stars(r) }
-                    : null;
+                  return r != null ? { key: def.key, cls: "text-star tracking-[1px]", text: stars(r) } : null;
                 }
-                if (def.type === "boolean")
-                  return vals.includes(true) ? { key: def.key, cls: "", text: def.label } : null;
-                return {
-                  key: def.key,
-                  cls: def.type === "number" ? "tabular-nums" : "",
-                  text: vals.map(String).join(", "),
-                };
+                if (def.type === "boolean") return vals.includes(true) ? { key: def.key, cls: "", text: def.label } : null;
+                return { key: def.key, cls: def.type === "number" ? "tabular-nums" : "", text: vals.map(String).join(", ") };
               })
               .filter((x): x is { key: string; cls: string; text: string } => !!x && !!x.text);
             return (
@@ -368,9 +444,7 @@ export default function FilterableList({
                     <span className="text-[15px] font-medium tracking-[-.006em] transition-colors group-hover:text-accent">
                       {e.title}
                     </span>
-                    <time className="shrink-0 text-[12.5px] text-faint tabular-nums">
-                      {formatDate(e.date)}
-                    </time>
+                    <time className="shrink-0 text-[12.5px] text-faint tabular-nums">{formatDate(e.date)}</time>
                   </div>
                   {shown.length > 0 && (
                     <div className="mt-1.5 flex flex-wrap items-center gap-x-3 text-[12.5px] text-muted">
@@ -386,97 +460,6 @@ export default function FilterableList({
             );
           })}
         </ul>
-      )}
-    </div>
-  );
-}
-
-/* value picker for one property (rating / language / year) */
-function StepPanel({
-  def,
-  state,
-  onBack,
-  onToggleEnum,
-  onSetMin,
-  onSetRange,
-}: {
-  def: PropertyDef;
-  state: FilterState[string];
-  onBack: () => void;
-  onToggleEnum: (v: PropValue) => void;
-  onSetMin: (v: number | undefined) => void;
-  onSetRange: (edge: "from" | "to", v: number | undefined) => void;
-}) {
-  return (
-    <div>
-      <div className="mb-1 flex items-center gap-1.5 border-b border-border px-1.5 pb-1.5 pt-0.5 text-[11px] uppercase tracking-wider text-faint">
-        <button type="button" onClick={onBack} className="flex items-center gap-1 hover:text-foreground">
-          <Ico name="back" />
-          {def.label}
-        </button>
-      </div>
-
-      {def.key === "rating" &&
-        [5, 4, 3, 2, 1].map((n) => (
-          <button
-            key={n}
-            type="button"
-            className="pop-row"
-            onClick={() => onSetMin(state?.from === n ? undefined : n)}
-          >
-            <span className="text-star tracking-[1px]">{"★".repeat(n)}</span>
-            <span className="flex-1 text-[12.5px] text-muted">{n} &amp; up</span>
-            {state?.from === n && (
-              <span className="text-accent">
-                <Ico name="check" />
-              </span>
-            )}
-          </button>
-        ))}
-
-      {def.type === "enum" &&
-        def.values.map((v) => {
-          const on = (state?.enum ?? []).includes(v);
-          return (
-            <button key={String(v)} type="button" className="pop-row" onClick={() => onToggleEnum(v)}>
-              <span className="flex-1">{String(v)}</span>
-              {on && (
-                <span className="text-accent">
-                  <Ico name="check" />
-                </span>
-              )}
-            </button>
-          );
-        })}
-
-      {def.key === "year" && (
-        <div className="flex items-center gap-2 px-2 py-1.5">
-          <select
-            value={state?.from ?? ""}
-            onChange={(e) => onSetRange("from", e.target.value ? Number(e.target.value) : undefined)}
-            className="lx-select"
-          >
-            <option value="">Any</option>
-            {(def.values as number[]).map((v) => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
-          </select>
-          <span className="text-[12px] text-faint">to</span>
-          <select
-            value={state?.to ?? ""}
-            onChange={(e) => onSetRange("to", e.target.value ? Number(e.target.value) : undefined)}
-            className="lx-select"
-          >
-            <option value="">Any</option>
-            {(def.values as number[]).map((v) => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
-          </select>
-        </div>
       )}
     </div>
   );
