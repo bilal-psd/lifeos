@@ -37,7 +37,11 @@ export type PropertyDef = {
   min?: number;
   max?: number;
   summary: boolean; // shown under each row title by default
+  // slug -> display label, for properties whose values are slugs (e.g. `lists`)
+  valueLabels?: Record<string, string>;
 };
+
+export type ListDef = { name?: string; description?: string };
 
 type DefOverride = {
   label?: string;
@@ -95,6 +99,28 @@ function loadDefs(): Record<string, DefOverride> {
     defsCache = {};
   }
   return defsCache!;
+}
+
+// Custom lists: slug -> { name, description }. Membership lives on entries as
+// `properties.lists: [slug]`; this registry just names them.
+let listsCache: Record<string, ListDef> | null = null;
+export function getLists(): Record<string, ListDef> {
+  if (listsCache) return listsCache;
+  try {
+    listsCache = JSON.parse(fs.readFileSync(path.join(CONTENT_DIR, "_lists.json"), "utf8"));
+  } catch {
+    listsCache = {};
+  }
+  return listsCache!;
+}
+
+function humanizeSlug(s: string): string {
+  return s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/** Display name for a list slug: registry name, else a humanized slug. */
+export function listLabel(slug: string): string {
+  return getLists()[slug]?.name ?? humanizeSlug(slug);
 }
 
 function readCategory(category: string): Entry[] {
@@ -164,12 +190,17 @@ export function getFilters(entries: Entry[]): PropertyDef[] {
         : values.every((v) => typeof v === "number")
           ? "number"
           : "enum");
+    // Values whose slugs resolve to a display name (currently `lists`) sort and
+    // render by that name; everything else by its own string.
+    const labelOf = key === "lists" ? (v: PropValue) => listLabel(String(v)) : (v: PropValue) => String(v);
     const sorted =
       type === "number"
         ? nums.slice().sort((a, b) => a - b)
-        : values
-            .slice()
-            .sort((a, b) => String(a).localeCompare(String(b)));
+        : values.slice().sort((a, b) => labelOf(a).localeCompare(labelOf(b)));
+    const valueLabels =
+      key === "lists"
+        ? Object.fromEntries(values.map((v) => [String(v), listLabel(String(v))]))
+        : undefined;
     out.push({
       key,
       label: def.label ?? key[0].toUpperCase() + key.slice(1),
@@ -178,6 +209,7 @@ export function getFilters(entries: Entry[]): PropertyDef[] {
       min: def.min ?? (nums.length ? Math.min(...nums) : undefined),
       max: def.max ?? (nums.length ? Math.max(...nums) : undefined),
       summary: def.summary ?? false,
+      valueLabels,
     });
   }
 

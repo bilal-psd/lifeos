@@ -71,6 +71,30 @@ properties are the facets you'd filter by — `rating`, `language`, `liked`,
   scale, `language` gets the "Language" label). Store **full language names**
   (`English`, not `en`).
 
+### Custom lists (the `lists` property)
+
+Lists are just a **shared property** with a name registry — they work in any
+category with no per-category setup.
+
+- **Membership** is the `lists` property on an entry, holding list **slugs**:
+  ```yaml
+  properties:
+    lists: [malayalam-starter-pack, best-of-2024]
+  ```
+  An entry can be in several lists; a slug can be used across categories.
+- **Names live in `content/_lists.json`** — slug → `{ name, description }`:
+  ```json
+  { "malayalam-starter-pack": { "name": "Malayalam Cinema Starter Pack",
+                                "description": "A gateway into modern Malayalam film." } }
+  ```
+  A slug with no registry entry falls back to a humanized label; register it so
+  the filter reads nicely.
+- **It filters for free.** Because filters derive from the data, the moment one
+  entry has a `lists` value the category page shows a **List** filter, labelled
+  by the registry name. No code changes per list.
+- **To add a list:** register it in `_lists.json` (once), then add its slug to
+  each member entry's `lists` property. See the `lists` skill.
+
 ## Body
 
 Everything after the frontmatter is **the user's note**. Claude may lightly

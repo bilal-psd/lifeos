@@ -70,6 +70,8 @@ function Ico({ name, size = 15 }: { name: string; size?: number }) {
 }
 
 const stars = (r: number) => "★".repeat(Math.floor(r)) + (r % 1 ? "½" : "");
+// display label for a value (list slugs resolve to their registered name)
+const labelFor = (def: PropertyDef, v: PropValue) => def.valueLabels?.[String(v)] ?? String(v);
 
 /* number properties on a small ordinal scale (rating) filter by threshold;
    wide-range ones (year) bucket into decades. */
@@ -110,7 +112,7 @@ function valueLabel(def: PropertyDef, s: FilterState[string]): string {
   const sel = s.enum ?? [];
   if (sel.length === 0) return "";
   if (sel.length > 1) return `${sel.length}`;
-  return def.type === "number" ? `${sel[0]}s` : String(sel[0]);
+  return def.type === "number" ? `${sel[0]}s` : labelFor(def, sel[0]);
 }
 
 export default function FilterableList({
@@ -265,7 +267,7 @@ export default function FilterableList({
             const on = (s?.enum ?? []).includes(v);
             return (
               <button key={String(v)} type="button" role="menuitemcheckbox" aria-checked={on} className={optRow} onClick={() => toggleEnum(def.key, v)}>
-                <span className="flex-1">{String(v)}</span>
+                <span className="flex-1">{labelFor(def, v)}</span>
                 {on && <span className="text-accent"><Ico name="check" size={14} /></span>}
               </button>
             );
@@ -434,7 +436,7 @@ export default function FilterableList({
                   return r != null ? { key: def.key, cls: "text-star tracking-[1px]", text: stars(r) } : null;
                 }
                 if (def.type === "boolean") return vals.includes(true) ? { key: def.key, cls: "", text: def.label } : null;
-                return { key: def.key, cls: def.type === "number" ? "tabular-nums" : "", text: vals.map(String).join(", ") };
+                return { key: def.key, cls: def.type === "number" ? "tabular-nums" : "", text: vals.map((v) => labelFor(def, v)).join(", ") };
               })
               .filter((x): x is { key: string; cls: string; text: string } => !!x && !!x.text);
             return (

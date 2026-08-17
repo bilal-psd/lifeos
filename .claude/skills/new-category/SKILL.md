@@ -35,6 +35,11 @@ just follows the recorded convention — the user is never asked again.
 
 6. **Hand back to `capture`** to file the actual entry.
 
+**Shared properties come free.** Don't build per-category filtering or lists —
+`properties` (rating, language, …) and custom **lists** are generic: any entry
+in any category can use them and they become filters automatically. See
+[docs/schema.md](../../../docs/schema.md) and the `lists` skill.
+
 ## Known-authorities table
 
 | category (examples)        | id_source     | id_fields                | link-out base                                  |

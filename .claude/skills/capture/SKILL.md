@@ -67,3 +67,7 @@ this skill turns it into a committed markdown entry.
 - Never fabricate metadata the user didn't imply and you couldn't verify.
 - The website reads these files directly; a well-formed frontmatter block is
   what makes an entry show up correctly.
+- **Lists.** If the user says to add the entry to a named list ("add this to my
+  Malayalam starter pack"), set its slug in `properties.lists` and make sure the
+  list is registered in `content/_lists.json` — see the **`lists`** skill. Lists
+  work in any category and become a filter automatically.
