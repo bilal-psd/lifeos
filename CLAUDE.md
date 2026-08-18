@@ -27,9 +27,12 @@ You → Claude (capture skill) → category skill → markdown in content/ → g
 content/            # the archive (source of truth), one folder per category
   films/
   books/
+  _properties.json  # optional filter overrides (label/type/range) per property
+  _lists.json       # custom-list registry: slug -> {name, description}
 .claude/skills/
   capture/          # entry point — files what you tell Claude
   new-category/     # meta-skill — creates a new category skill
+  lists/            # create/manage custom lists (a shared, filterable property)
   films/  books/    # category skills (filing + ID conventions)
 web/                # Next.js site that renders the archive
 docs/schema.md      # the entry file format (the core contract)
@@ -43,10 +46,11 @@ an external ID, writes the markdown file, and commits it.
 
 ## The entry format
 
-See [docs/schema.md](docs/schema.md). In short: one markdown file per entry,
-YAML frontmatter holds machine data (`title`, `category`, `date`, `tags`,
-`public`, and a `metadata:` block for IDs); the body is the user's note,
-untouched.
+See [docs/schema.md](docs/schema.md). In short: one markdown file per entry.
+YAML frontmatter holds `title`, `category`, `date`, `tags`, `public`, an
+optional `properties:` block (typed, filterable facets like `rating`,
+`language`, and list membership), and a `metadata:` block for IDs; the body is
+the user's note. schema.md documents `properties` and custom lists in full.
 
 ## Conventions
 
@@ -76,6 +80,13 @@ untouched.
   IDs live under `metadata:` so machine data stays separate from the user's words.
 - **No DB, no embeddings.** Retrieval is folder + grep + skill instructions.
   Chosen deliberately for a personal-scale archive; don't add infra.
+- **Properties & lists are generic and data-derived.** Filterable facets live in
+  a `properties:` block; the site builds each category's filter bar from whatever
+  properties its entries actually use (refined by `content/_properties.json` for
+  labels/types/range). Custom **lists** are just a shared `lists` property with a
+  name registry (`content/_lists.json`) — they work in any category and become a
+  filter automatically, with no per-category code. Don't hardcode per-category
+  filters or a bespoke lists table. See docs/schema.md and the `lists` skill.
 
 ## Gotchas
 
@@ -87,6 +98,11 @@ untouched.
   `../content` (`CONTENT_DIR` env overrides). This is why the Vercel project
   needs `sourceFilesOutsideRootDirectory: true` (see Deployment). A `vercel
   build` from inside `web/` alone would NOT see `content/`.
+- **Edit frontmatter surgically.** When bulk-editing YAML (e.g. stamping a list
+  onto many entries), use exact string replacement, not a broad regex — a greedy
+  pattern can eat an adjacent key like `metadata:`. Re-validate after bulk edits
+  by parsing every file with gray-matter (the same parser `web/lib/archive.ts`
+  uses).
 
 ## Deployment (Vercel + Netlify DNS)
 

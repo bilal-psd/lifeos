@@ -1,6 +1,6 @@
 # LifeOS — Work Plan
 
-Status as of 2026-08-15. See [CLAUDE.md](CLAUDE.md) for architecture and
+Status as of 2026-08-18. See [CLAUDE.md](CLAUDE.md) for architecture and
 conventions; this file tracks progress and what's next.
 
 ## Where things stand
@@ -24,6 +24,16 @@ conventions; this file tracks progress and what's next.
       per-category pages, entry pages with markdown + ID link-outs.
 - [x] Deployed to Vercel (see CLAUDE.md "Deployment" for the exact config).
 - [x] Custom domain wired via Netlify DNS CNAME.
+- [x] Bulk imports: Goodreads read shelf (67 books) and Letterboxd watched
+      (369 films), IDs resolved, one commit per import.
+- [x] Filterable **properties** — a typed `properties:` block (rating, language,
+      year, liked, lists); the site derives each category's filter bar from the
+      data, refined by `content/_properties.json`. Existing entries backfilled.
+- [x] Custom **lists** — generic shared property + `content/_lists.json` registry
+      + `lists` skill. Malayalam Cinema Starter Pack (12 films) populated.
+- [x] Site redesign: dark, monochrome, Linear-idiom, Inter. Filter/Display are
+      icon-only on the title line, unfurling into dropdowns; per-category display
+      config + sort, persisted to localStorage.
 
 ## In progress
 
@@ -40,8 +50,10 @@ conventions; this file tracks progress and what's next.
    capture time. Later: wire real TMDb (needs free API key) + Open Library API
    calls into the category skills for exact matches. Store keys as Vercel env
    vars, not in the repo.
-4. **Site polish (optional).** Tag filtering, per-entry OpenGraph images, an
-   RSS/JSON feed, search. None required for MVP.
+4. **Site polish (optional).** Per-entry OpenGraph images, an RSS/JSON feed,
+   full-text search, and a dedicated list page (a list currently surfaces only as
+   a filter; a `/lists/<slug>` view is a possible next step). Filtering, sort,
+   and display config are already done.
 
 ## Open decisions / not yet settled
 
