@@ -8,6 +8,7 @@ properties:
   year: 2016
   liked: true
   language: Malayalam
+  lists: [malayalam-starter-pack]
 metadata:
   tmdb_id: 381691
   imdb_id: tt4851630

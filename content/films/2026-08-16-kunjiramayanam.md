@@ -7,6 +7,7 @@ public: true
 properties:
   year: 2015
   language: Malayalam
+  lists: [malayalam-starter-pack]
 metadata:
   tmdb_id: 356783
   imdb_id: tt4589628

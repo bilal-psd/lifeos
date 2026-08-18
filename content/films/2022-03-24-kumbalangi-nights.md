@@ -8,6 +8,7 @@ properties:
   year: 2019
   liked: true
   language: Malayalam
+  lists: [malayalam-starter-pack]
 metadata:
   tmdb_id: 575351
   imdb_id: tt8413338

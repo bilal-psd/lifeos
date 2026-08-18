@@ -7,6 +7,7 @@ public: true
 properties:
   year: 2022
   language: Malayalam
+  lists: [malayalam-starter-pack]
 metadata:
   tmdb_id: 880018
   imdb_id: tt15546822
