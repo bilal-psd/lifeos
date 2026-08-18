@@ -34,15 +34,5 @@ export default async function CategoryPage({
     properties: e.properties,
   }));
 
-  return (
-    <div>
-      <div className="mb-6 flex items-baseline gap-2.5">
-        <h1 className="text-[19px] font-semibold capitalize tracking-[-.01em]">
-          {category}
-        </h1>
-        <span className="text-[13px] text-faint tabular-nums">{entries.length}</span>
-      </div>
-      <FilterableList rows={rows} filters={filters} category={category} />
-    </div>
-  );
+  return <FilterableList rows={rows} filters={filters} category={category} />;
 }

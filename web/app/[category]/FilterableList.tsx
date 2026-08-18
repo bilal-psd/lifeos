@@ -242,8 +242,10 @@ export default function FilterableList({
   };
   const openDrop = (key: string) => setDrop((d) => (d === key ? null : key));
 
-  const barBtn =
-    "inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-strong";
+  const iconBtn =
+    "inline-flex h-7 w-8 items-center justify-center rounded-md text-muted transition-colors hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-strong";
+  const clearBtn =
+    "rounded-md px-2 py-1 text-[12.5px] text-accent transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-strong";
   const nameBtn = (active: boolean, isOpen: boolean) =>
     `unfurl-name inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-strong ${
       isOpen ? "bg-surface text-foreground" : active ? "text-foreground hover:bg-surface" : "text-muted hover:bg-surface hover:text-foreground"
@@ -296,123 +298,126 @@ export default function FilterableList({
 
   return (
     <div ref={rootRef}>
-      {filters.length > 0 && (
-        <div className="mb-3 flex flex-wrap items-center gap-1.5" onKeyDown={onMenuKey}>
-          {/* ---- Filter ---- */}
-          {open === "filter" ? (
-            <div className="flex flex-wrap items-center gap-0.5" data-names>
-              <button type="button" className={barBtn} aria-label="Close filters" onClick={closeAll}>
-                <Ico name="filter" />
-              </button>
-              {filters.map((def) => {
-                const active = isActive(def, fstate[def.key]);
-                const isOpen = drop === def.key;
-                const vl = valueLabel(def, fstate[def.key]);
-                return (
-                  <div key={def.key} className="relative">
-                    <button
-                      type="button"
-                      aria-haspopup={def.type !== "boolean"}
-                      aria-expanded={isOpen}
-                      className={nameBtn(active, isOpen)}
-                      onClick={() => (def.type === "boolean" ? toggleBool(def.key) : openDrop(def.key))}
-                    >
-                      {def.label}
-                      {vl && <span className="text-accent">{vl}</span>}
-                      {def.type !== "boolean" && (
-                        <span className={`text-faint transition-transform ${isOpen ? "rotate-180" : ""}`}>
-                          <Ico name="chevron" size={12} />
-                        </span>
-                      )}
-                    </button>
-                    {isOpen && filterDropdown(def)}
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <button type="button" className={barBtn} aria-expanded={false} onClick={() => (setOpen("filter"), setDrop(null))}>
-              <Ico name="filter" />
-              Filter
-              {activeDefs.length > 0 && (
-                <span className="rounded-full border border-border px-1.5 text-[11px] leading-4 text-faint tabular-nums">
-                  {activeDefs.length}
-                </span>
-              )}
-            </button>
-          )}
+      {/* Header line — title, count, and the icon-only controls on the right. */}
+      <div className="mb-6 flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
+        <h1 className="text-[19px] font-semibold capitalize tracking-[-.01em]">{category}</h1>
+        <span className="text-[13px] text-faint tabular-nums">
+          {activeDefs.length > 0 ? `${view.length} of ${rows.length}` : rows.length}
+        </span>
 
-          <span className="flex-1" />
+        {filters.length > 0 && (
+          <>
+            <span className="flex-1" />
 
-          {/* result count + clear, when filtering */}
-          {activeDefs.length > 0 && (
-            <>
-              <span className="text-[12.5px] text-faint tabular-nums">
-                {view.length} of {rows.length}
-              </span>
-              <button type="button" onClick={clearAll} className="rounded-md px-2 py-1 text-[12.5px] text-accent hover:bg-surface focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-strong">
-                Clear
-              </button>
-            </>
-          )}
-
-          {/* ---- Display ---- */}
-          {open === "display" ? (
-            <div className="flex flex-wrap items-center justify-end gap-0.5" data-names>
-              {filters.map((def) => {
-                const on = display.includes(def.key);
-                return (
-                  <button
-                    key={def.key}
-                    type="button"
-                    role="switch"
-                    aria-checked={on}
-                    className={nameBtn(on, false)}
-                    onClick={() => toggleDisplay(def.key)}
-                  >
-                    <span className={on ? "text-accent" : "text-faint"}>{on ? "●" : "○"}</span>
-                    {def.label}
+            {open === "filter" ? (
+              <div className="flex flex-wrap items-center justify-end gap-0.5" data-names onKeyDown={onMenuKey}>
+                {filters.map((def) => {
+                  const active = isActive(def, fstate[def.key]);
+                  const isOpen = drop === def.key;
+                  const vl = valueLabel(def, fstate[def.key]);
+                  return (
+                    <div key={def.key} className="relative">
+                      <button
+                        type="button"
+                        aria-haspopup={def.type !== "boolean"}
+                        aria-expanded={isOpen}
+                        className={nameBtn(active, isOpen)}
+                        onClick={() => (def.type === "boolean" ? toggleBool(def.key) : openDrop(def.key))}
+                      >
+                        {def.label}
+                        {vl && <span className="text-accent">{vl}</span>}
+                        {def.type !== "boolean" && (
+                          <span className={`text-faint transition-transform ${isOpen ? "rotate-180" : ""}`}>
+                            <Ico name="chevron" size={12} />
+                          </span>
+                        )}
+                      </button>
+                      {isOpen && filterDropdown(def)}
+                    </div>
+                  );
+                })}
+                {activeDefs.length > 0 && (
+                  <button type="button" onClick={clearAll} className={clearBtn}>
+                    Clear
                   </button>
-                );
-              })}
-              <div className="relative">
+                )}
+                <button type="button" className={`${iconBtn} bg-surface text-foreground`} aria-label="Close filters" onClick={closeAll}>
+                  <Ico name="filter" />
+                </button>
+              </div>
+            ) : open === "display" ? (
+              <div className="flex flex-wrap items-center justify-end gap-0.5" data-names onKeyDown={onMenuKey}>
+                {filters.map((def) => {
+                  const on = display.includes(def.key);
+                  return (
+                    <button key={def.key} type="button" role="switch" aria-checked={on} className={nameBtn(on, false)} onClick={() => toggleDisplay(def.key)}>
+                      <span className={on ? "text-accent" : "text-faint"}>{on ? "●" : "○"}</span>
+                      {def.label}
+                    </button>
+                  );
+                })}
+                <div className="relative">
+                  <button
+                    type="button"
+                    aria-haspopup
+                    aria-expanded={drop === "__sort__"}
+                    className={nameBtn(false, drop === "__sort__")}
+                    onClick={() => openDrop("__sort__")}
+                  >
+                    Sort
+                    <span className={`text-faint transition-transform ${drop === "__sort__" ? "rotate-180" : ""}`}>
+                      <Ico name="chevron" size={12} />
+                    </span>
+                  </button>
+                  {drop === "__sort__" && (
+                    <div ref={dropRef} role="menu" className={`pop absolute top-full z-40 mt-1.5 min-w-[160px] ${ddPos}`}>
+                      {([["date", "Newest first"], ["rating", "Highest rated"], ["title", "Title A–Z"]] as [Sort, string][]).map(
+                        ([v, label]) => (
+                          <button key={v} type="button" role="menuitemradio" aria-checked={sort === v} className={optRow} onClick={() => chooseSort(v)}>
+                            <span className="flex-1">{label}</span>
+                            {sort === v && <span className="text-accent"><Ico name="check" size={14} /></span>}
+                          </button>
+                        ),
+                      )}
+                    </div>
+                  )}
+                </div>
+                <button type="button" className={`${iconBtn} bg-surface text-foreground`} aria-label="Close display options" onClick={closeAll}>
+                  <Ico name="display" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-0.5">
+                {activeDefs.length > 0 && (
+                  <button type="button" onClick={clearAll} className={clearBtn}>
+                    Clear
+                  </button>
+                )}
                 <button
                   type="button"
-                  aria-haspopup
-                  aria-expanded={drop === "__sort__"}
-                  className={nameBtn(false, drop === "__sort__")}
-                  onClick={() => openDrop("__sort__")}
+                  title="Filter"
+                  aria-label="Filter"
+                  aria-expanded={false}
+                  className={`${iconBtn}${activeDefs.length > 0 ? " text-foreground" : ""}`}
+                  onClick={() => (setOpen("filter"), setDrop(null))}
                 >
-                  Sort
-                  <span className={`text-faint transition-transform ${drop === "__sort__" ? "rotate-180" : ""}`}>
-                    <Ico name="chevron" size={12} />
-                  </span>
+                  <Ico name="filter" />
                 </button>
-                {drop === "__sort__" && (
-                  <div ref={dropRef} role="menu" className={`pop absolute top-full z-40 mt-1.5 min-w-[160px] ${ddPos}`}>
-                    {([["date", "Newest first"], ["rating", "Highest rated"], ["title", "Title A–Z"]] as [Sort, string][]).map(
-                      ([v, label]) => (
-                        <button key={v} type="button" role="menuitemradio" aria-checked={sort === v} className={optRow} onClick={() => chooseSort(v)}>
-                          <span className="flex-1">{label}</span>
-                          {sort === v && <span className="text-accent"><Ico name="check" size={14} /></span>}
-                        </button>
-                      ),
-                    )}
-                  </div>
-                )}
+                <button
+                  type="button"
+                  title="Display"
+                  aria-label="Display"
+                  aria-expanded={false}
+                  className={iconBtn}
+                  onClick={() => (setOpen("display"), setDrop(null))}
+                >
+                  <Ico name="display" />
+                </button>
               </div>
-              <button type="button" className={barBtn} aria-label="Close display options" onClick={closeAll}>
-                <Ico name="display" />
-              </button>
-            </div>
-          ) : (
-            <button type="button" className={barBtn} aria-expanded={false} onClick={() => (setOpen("display"), setDrop(null))}>
-              <Ico name="display" />
-              Display
-            </button>
-          )}
-        </div>
-      )}
+            )}
+          </>
+        )}
+      </div>
 
       {view.length === 0 ? (
         <div className="border-t border-border py-8 text-[14px] text-faint">
