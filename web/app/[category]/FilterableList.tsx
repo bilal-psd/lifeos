@@ -221,13 +221,17 @@ export default function FilterableList({
   }, [rows, filters, fstate, sort]);
 
   /* mutations */
+  // enum / decade are multi-select — keep the dropdown open so values can be stacked.
   const toggleEnum = (key: string, v: PropValue) =>
     setFstate((p) => {
       const cur = p[key]?.enum ?? [];
       return { ...p, [key]: { ...p[key], enum: cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v] } };
     });
-  const setThreshold = (key: string, v: number) =>
+  // rating threshold is single-select — one pick is the answer, so close (like Sort).
+  const setThreshold = (key: string, v: number) => {
     setFstate((p) => ({ ...p, [key]: { from: p[key]?.from === v ? undefined : v } }));
+    setDrop(null);
+  };
   const toggleBool = (key: string) => setFstate((p) => ({ ...p, [key]: { on: !p[key]?.on } }));
   const clearAll = () => setFstate({});
   const toggleDisplay = (key: string) => {
