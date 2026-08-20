@@ -2,5 +2,10 @@
   "malayalam-starter-pack": {
     "name": "Malayalam Cinema Starter Pack",
     "description": "A curated starter pack of Malayalam films from the 21st century — perfect for anyone new to the industry or looking to finally dive in."
+  },
+  "perfect-films": {
+    "name": "Perfect Films",
+    "description": "Films that landed the full five stars.",
+    "rule": { "category": "films", "property": "rating", "value": 5 }
   }
 }

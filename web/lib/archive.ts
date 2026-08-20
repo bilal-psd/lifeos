@@ -42,7 +42,13 @@ export type PropertyDef = {
   valueLabels?: Record<string, string>;
 };
 
-export type ListDef = { name?: string; description?: string };
+// A rule-based list has no manual `lists:` tags — membership is computed from
+// a property match instead (e.g. every film with rating 5). Evaluated once at
+// read time (see applyDynamicLists) and merged into `properties.lists`, so
+// everywhere else — filter chip, Featured card, click-to-filter — sees it as
+// an ordinary list.
+export type ListRule = { category: string; property: string; value: PropValue };
+export type ListDef = { name?: string; description?: string; rule?: ListRule };
 
 type DefOverride = {
   label?: string;
@@ -176,6 +182,8 @@ function readCategory(category: string): Entry[] {
       const raw = fs.readFileSync(path.join(dir, file), "utf8");
       const { data, content } = matter(raw);
       const slug = file.replace(/\.md$/, "");
+      const properties = parseProperties(data.properties);
+      applyDynamicLists(category, properties);
       return {
         slug,
         category,
@@ -183,12 +191,25 @@ function readCategory(category: string): Entry[] {
         date: toISODate(data.date),
         tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
         public: data.public !== false,
-        properties: parseProperties(data.properties),
+        properties,
         metadata: (data.metadata ?? {}) as EntryMeta,
         body: content.trim(),
         cover: coverUrl(category, slug),
       } satisfies Entry;
     });
+}
+
+// Merge in slugs for any registered rule-based list whose rule matches this
+// entry's category + properties. Runs after parseProperties, so `value` and
+// the stored property values are already the same normalized PropValue type.
+function applyDynamicLists(category: string, properties: Record<string, PropValue[]>): void {
+  for (const [slug, def] of Object.entries(getLists())) {
+    const rule = def.rule;
+    if (!rule || rule.category !== category) continue;
+    if (!(properties[rule.property] ?? []).includes(rule.value)) continue;
+    const cur = properties.lists ?? [];
+    if (!cur.includes(slug)) properties.lists = [...cur, slug];
+  }
 }
 
 function byDateDesc(a: Entry, b: Entry): number {
