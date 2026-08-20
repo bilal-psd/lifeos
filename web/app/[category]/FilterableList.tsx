@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatDate } from "@/lib/format";
 import { coverArt, monogram } from "@/lib/cover";
-import type { PropertyDef, PropValue } from "@/lib/archive";
+import type { ListCard, PropertyDef, PropValue } from "@/lib/archive";
 
 export type Row = {
   slug: string;
@@ -57,6 +57,13 @@ function Ico({ name, size = 15 }: { name: string; size?: number }) {
     ),
     check: <path d="M3.5 8.5l3 3 6-7" strokeLinecap="round" strokeLinejoin="round" />,
     chevron: <path d="M4 6.5L8 10l4-3.5" strokeLinecap="round" strokeLinejoin="round" />,
+    sort: (
+      <path
+        d="M4.5 3v9M4.5 12L2.4 9.7M4.5 12l2.1-2.3M11.5 13V4M11.5 4L9.4 6.3M11.5 4l2.1 2.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    ),
     grid: (
       <>
         <rect x="2.3" y="2.3" width="4.6" height="4.6" rx="1" />
@@ -158,45 +165,124 @@ function valueLabel(def: PropertyDef, s: FilterState[string]): string {
   return def.type === "number" ? `${sel[0]}s` : labelFor(def, sel[0]);
 }
 
+/* ---- featured lists ---- */
+// A small fanned stack of member covers; missing covers fall back to the tile.
+function ListFan({ covers, title }: { covers: (string | null)[]; title: string }) {
+  const items = covers.length ? covers.slice(0, 3) : [null];
+  const layout =
+    items.length >= 3
+      ? [
+          { l: 0, t: 6, r: -8, z: 1 },
+          { l: 20, t: 6, r: 8, z: 2 },
+          { l: 10, t: 0, r: 0, z: 3 },
+        ]
+      : items.length === 2
+        ? [
+            { l: 3, t: 4, r: -6, z: 1 },
+            { l: 17, t: 0, r: 6, z: 2 },
+          ]
+        : [{ l: 10, t: 0, r: 0, z: 1 }];
+  return (
+    <div className="relative h-[72px] w-[64px] shrink-0">
+      {items.map((c, i) => (
+        <div
+          key={i}
+          className="absolute aspect-[2/3] w-[44px] overflow-hidden rounded-[4px] border border-border-strong shadow-md"
+          style={{ left: layout[i].l, top: layout[i].t, transform: `rotate(${layout[i].r}deg)`, zIndex: layout[i].z }}
+        >
+          <Cover cover={c} title={title} variant="thumb" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function FeaturedLists({
+  lists,
+  selected,
+  onSelect,
+}: {
+  lists: ListCard[];
+  selected: (slug: string) => boolean;
+  onSelect: (slug: string) => void;
+}) {
+  return (
+    <section className="mb-7" aria-label="Lists">
+      <h2 className="mb-3 text-[11px] font-medium uppercase tracking-[.16em] text-muted">Lists</h2>
+      <div className="-mx-1 flex snap-x gap-3 overflow-x-auto px-1 pb-1.5">
+        {lists.map((l) => {
+          const on = selected(l.slug);
+          return (
+            <button
+              key={l.slug}
+              type="button"
+              aria-pressed={on}
+              onClick={() => onSelect(l.slug)}
+              className={`flex w-[min(300px,82vw)] shrink-0 snap-start gap-3.5 rounded-xl border p-3.5 text-left transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-strong ${
+                on
+                  ? "border-star bg-[rgba(224,164,85,.07)]"
+                  : "border-border hover:-translate-y-0.5 hover:border-border-strong hover:bg-surface"
+              }`}
+            >
+              <ListFan covers={l.covers} title={l.name} />
+              <div className="flex min-w-0 flex-1 flex-col">
+                <div className="line-clamp-1 text-[14px] font-semibold leading-snug tracking-[-.005em]">{l.name}</div>
+                {l.description && (
+                  <div className="mt-1 line-clamp-2 text-[12px] leading-snug text-muted">{l.description}</div>
+                )}
+                <div className="mt-auto pt-2 text-[11.5px] tabular-nums text-faint">
+                  {l.count} {l.count === 1 ? "entry" : "entries"}
+                  {on && <span className="text-star"> · selected</span>}
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 export default function FilterableList({
   rows,
   filters,
+  lists,
   category,
 }: {
   rows: Row[];
   filters: PropertyDef[];
+  lists: ListCard[];
   category: string;
 }) {
   const [fstate, setFstate] = useState<FilterState>({});
-  const [open, setOpen] = useState<"filter" | "display" | null>(null);
-  const [drop, setDrop] = useState<string | null>(null); // open dropdown key (or "__sort__")
+  const [open, setOpen] = useState<"filter" | null>(null);
+  const [sortOpen, setSortOpen] = useState(false);
+  const [drop, setDrop] = useState<string | null>(null); // open filter-property dropdown key
   const [flip, setFlip] = useState(false); // right-align dropdown near the edge
-  const [display, setDisplay] = useState<string[]>(filters.filter((f) => f.summary).map((f) => f.key));
   const [sort, setSort] = useState<Sort>("date");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   const rootRef = useRef<HTMLDivElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
-  const defByKey = useMemo(
-    () => Object.fromEntries(filters.map((d) => [d.key, d])) as Record<string, PropertyDef>,
-    [filters],
-  );
+  // Lists drive the featured section, not a filter chip — keep them out of the bar.
+  const facetDefs = useMemo(() => filters.filter((d) => d.key !== "lists"), [filters]);
+  // List view shows a fixed default set of facets (the `summary` properties).
+  const summaryDefs = useMemo(() => filters.filter((d) => d.summary), [filters]);
 
-  /* persistence: what's shown + ordering, per category */
+  /* persistence: sort + view mode, per category */
   const storeKey = `lifeos:view:${category}`;
   useEffect(() => {
     try {
       const s = JSON.parse(localStorage.getItem(storeKey) || "{}");
-      if (Array.isArray(s.display)) setDisplay(s.display);
       if (s.sort) setSort(s.sort);
       if (s.viewMode === "grid" || s.viewMode === "list") setViewMode(s.viewMode);
     } catch {
       /* ignore */
     }
   }, [storeKey]);
-  const persist = (next: { display?: string[]; sort?: Sort; viewMode?: ViewMode }) => {
+  const persist = (next: { sort?: Sort; viewMode?: ViewMode }) => {
     try {
-      localStorage.setItem(storeKey, JSON.stringify({ display, sort, viewMode, ...next }));
+      localStorage.setItem(storeKey, JSON.stringify({ sort, viewMode, ...next }));
     } catch {
       /* ignore */
     }
@@ -208,12 +294,13 @@ export default function FilterableList({
 
   const closeAll = useCallback(() => {
     setOpen(null);
+    setSortOpen(false);
     setDrop(null);
   }, []);
 
-  /* outside-click + two-level Escape (dropdown first, then the unfurl) */
+  /* outside-click + two-level Escape (dropdown first, then the unfurl/menu) */
   useEffect(() => {
-    if (!open) return;
+    if (!open && !sortOpen) return;
     const onDown = (e: MouseEvent) => {
       if (!rootRef.current?.contains(e.target as Node)) closeAll();
     };
@@ -221,6 +308,7 @@ export default function FilterableList({
       if (e.key === "Escape") {
         e.preventDefault();
         if (drop) setDrop(null);
+        else if (sortOpen) setSortOpen(false);
         else setOpen(null);
       }
     };
@@ -230,7 +318,7 @@ export default function FilterableList({
       document.removeEventListener("mousedown", onDown);
       document.removeEventListener("keydown", onKey);
     };
-  }, [open, drop, closeAll]);
+  }, [open, sortOpen, drop, closeAll]);
 
   /* edge-flip: if the open dropdown would overflow the viewport, right-align it */
   useLayoutEffect(() => {
@@ -283,15 +371,16 @@ export default function FilterableList({
   };
   const toggleBool = (key: string) => setFstate((p) => ({ ...p, [key]: { on: !p[key]?.on } }));
   const clearAll = () => setFstate({});
-  const toggleDisplay = (key: string) => {
-    const next = display.includes(key) ? display.filter((k) => k !== key) : [...display, key];
-    setDisplay(next);
-    persist({ display: next });
+  // Featured lists are single-select: picking one is the whole filter; picking it again clears.
+  const listSelected = (slug: string) => (fstate.lists?.enum ?? []).includes(slug);
+  const selectList = (slug: string) => {
+    setFstate((p) => ({ ...p, lists: { enum: listSelected(slug) ? [] : [slug] } }));
+    setSortOpen(false);
   };
   const chooseSort = (s: Sort) => {
     setSort(s);
     persist({ sort: s });
-    setDrop(null);
+    setSortOpen(false);
   };
   const openDrop = (key: string) => setDrop((d) => (d === key ? null : key));
 
@@ -372,117 +461,93 @@ export default function FilterableList({
           </button>
         </div>
 
-        {filters.length > 0 && (
-          <>
-            {open === "filter" ? (
-              <div className="flex flex-wrap items-center justify-end gap-0.5" data-names onKeyDown={onMenuKey}>
-                {filters.map((def) => {
-                  const active = isActive(def, fstate[def.key]);
-                  const isOpen = drop === def.key;
-                  const vl = valueLabel(def, fstate[def.key]);
-                  return (
-                    <div key={def.key} className="relative">
-                      <button
-                        type="button"
-                        aria-haspopup={def.type !== "boolean"}
-                        aria-expanded={isOpen}
-                        className={nameBtn(active, isOpen)}
-                        onClick={() => (def.type === "boolean" ? toggleBool(def.key) : openDrop(def.key))}
-                      >
-                        {def.label}
-                        {vl && <span className="text-accent">{vl}</span>}
-                        {def.type !== "boolean" && (
-                          <span className={`text-faint transition-transform ${isOpen ? "rotate-180" : ""}`}>
-                            <Ico name="chevron" size={12} />
-                          </span>
-                        )}
-                      </button>
-                      {isOpen && filterDropdown(def)}
-                    </div>
-                  );
-                })}
-                {activeDefs.length > 0 && (
-                  <button type="button" onClick={clearAll} className={clearBtn}>
-                    Clear
-                  </button>
-                )}
-                <button type="button" className={`${iconBtn} bg-surface text-foreground`} aria-label="Close filters" onClick={closeAll}>
-                  <Ico name="filter" />
-                </button>
-              </div>
-            ) : open === "display" ? (
-              <div className="flex flex-wrap items-center justify-end gap-0.5" data-names onKeyDown={onMenuKey}>
-                {filters.map((def) => {
-                  const on = display.includes(def.key);
-                  return (
-                    <button key={def.key} type="button" role="switch" aria-checked={on} className={nameBtn(on, false)} onClick={() => toggleDisplay(def.key)}>
-                      <span className={on ? "text-accent" : "text-faint"}>{on ? "●" : "○"}</span>
-                      {def.label}
-                    </button>
-                  );
-                })}
-                <div className="relative">
+        {open === "filter" ? (
+          <div className="flex flex-wrap items-center justify-end gap-0.5" data-names onKeyDown={onMenuKey}>
+            {facetDefs.map((def) => {
+              const active = isActive(def, fstate[def.key]);
+              const isOpen = drop === def.key;
+              const vl = valueLabel(def, fstate[def.key]);
+              return (
+                <div key={def.key} className="relative">
                   <button
                     type="button"
-                    aria-haspopup
-                    aria-expanded={drop === "__sort__"}
-                    className={nameBtn(false, drop === "__sort__")}
-                    onClick={() => openDrop("__sort__")}
+                    aria-haspopup={def.type !== "boolean"}
+                    aria-expanded={isOpen}
+                    className={nameBtn(active, isOpen)}
+                    onClick={() => (def.type === "boolean" ? toggleBool(def.key) : openDrop(def.key))}
                   >
-                    Sort
-                    <span className={`text-faint transition-transform ${drop === "__sort__" ? "rotate-180" : ""}`}>
-                      <Ico name="chevron" size={12} />
-                    </span>
+                    {def.label}
+                    {vl && <span className="text-accent">{vl}</span>}
+                    {def.type !== "boolean" && (
+                      <span className={`text-faint transition-transform ${isOpen ? "rotate-180" : ""}`}>
+                        <Ico name="chevron" size={12} />
+                      </span>
+                    )}
                   </button>
-                  {drop === "__sort__" && (
-                    <div ref={dropRef} role="menu" className={`pop absolute top-full z-40 mt-1.5 min-w-[160px] ${ddPos}`}>
-                      {([["date", "Newest first"], ["rating", "Highest rated"], ["title", "Title A–Z"]] as [Sort, string][]).map(
-                        ([v, label]) => (
-                          <button key={v} type="button" role="menuitemradio" aria-checked={sort === v} className={optRow} onClick={() => chooseSort(v)}>
-                            <span className="flex-1">{label}</span>
-                            {sort === v && <span className="text-accent"><Ico name="check" size={14} /></span>}
-                          </button>
-                        ),
-                      )}
-                    </div>
+                  {isOpen && filterDropdown(def)}
+                </div>
+              );
+            })}
+            {activeDefs.length > 0 && (
+              <button type="button" onClick={clearAll} className={clearBtn}>
+                Clear
+              </button>
+            )}
+            <button type="button" className={`${iconBtn} bg-surface text-foreground`} aria-label="Close filters" onClick={closeAll}>
+              <Ico name="filter" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-0.5">
+            {activeDefs.length > 0 && (
+              <button type="button" onClick={clearAll} className={clearBtn}>
+                Clear
+              </button>
+            )}
+            {facetDefs.length > 0 && (
+              <button
+                type="button"
+                title="Filter"
+                aria-label="Filter"
+                aria-expanded={false}
+                className={`${iconBtn}${activeDefs.length > 0 ? " text-foreground" : ""}`}
+                onClick={() => (setOpen("filter"), setSortOpen(false), setDrop(null))}
+              >
+                <Ico name="filter" />
+              </button>
+            )}
+            <div className="relative">
+              <button
+                type="button"
+                title="Sort"
+                aria-label="Sort"
+                aria-haspopup
+                aria-expanded={sortOpen}
+                className={`${iconBtn}${sortOpen ? " bg-surface text-foreground" : ""}`}
+                onClick={() => (setSortOpen((v) => !v), setDrop(null))}
+              >
+                <Ico name="sort" />
+              </button>
+              {sortOpen && (
+                <div role="menu" className="pop absolute right-0 top-full z-40 mt-1.5 min-w-[176px]">
+                  {([["date", "Newest first"], ["rating", "Highest rated"], ["title", "Title A–Z"]] as [Sort, string][]).map(
+                    ([v, label]) => (
+                      <button key={v} type="button" role="menuitemradio" aria-checked={sort === v} className={optRow} onClick={() => chooseSort(v)}>
+                        <span className="flex-1">{label}</span>
+                        {sort === v && <span className="text-accent"><Ico name="check" size={14} /></span>}
+                      </button>
+                    ),
                   )}
                 </div>
-                <button type="button" className={`${iconBtn} bg-surface text-foreground`} aria-label="Close display options" onClick={closeAll}>
-                  <Ico name="display" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-0.5">
-                {activeDefs.length > 0 && (
-                  <button type="button" onClick={clearAll} className={clearBtn}>
-                    Clear
-                  </button>
-                )}
-                <button
-                  type="button"
-                  title="Filter"
-                  aria-label="Filter"
-                  aria-expanded={false}
-                  className={`${iconBtn}${activeDefs.length > 0 ? " text-foreground" : ""}`}
-                  onClick={() => (setOpen("filter"), setDrop(null))}
-                >
-                  <Ico name="filter" />
-                </button>
-                <button
-                  type="button"
-                  title="Display"
-                  aria-label="Display"
-                  aria-expanded={false}
-                  className={iconBtn}
-                  onClick={() => (setOpen("display"), setDrop(null))}
-                >
-                  <Ico name="display" />
-                </button>
-              </div>
-            )}
-          </>
+              )}
+            </div>
+          </div>
         )}
       </div>
+
+      {lists.length > 0 && (
+        <FeaturedLists lists={lists} selected={listSelected} onSelect={selectList} />
+      )}
 
       {view.length === 0 ? (
         <div className="border-t border-border py-8 text-[14px] text-faint">
@@ -521,9 +586,8 @@ export default function FilterableList({
       ) : (
         <ul className="border-t border-border">
           {view.map((e) => {
-            const shown = display
-              .map((k) => defByKey[k])
-              .filter((def): def is PropertyDef => !!def && (e.properties[def.key]?.length ?? 0) > 0)
+            const shown = summaryDefs
+              .filter((def) => (e.properties[def.key]?.length ?? 0) > 0)
               .map((def) => {
                 const vals = e.properties[def.key];
                 if (def.key === "rating") {

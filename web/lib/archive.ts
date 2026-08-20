@@ -135,6 +135,32 @@ export function listLabel(slug: string): string {
   return getLists()[slug]?.name ?? humanizeSlug(slug);
 }
 
+export type ListCard = {
+  slug: string;
+  name: string;
+  description: string;
+  count: number;
+  covers: (string | null)[]; // up to 3 members' covers, for the poster fan
+};
+
+/** Registered lists with at least one member among `entries`, as featured cards. */
+export function getListCards(entries: Entry[]): ListCard[] {
+  const reg = getLists();
+  return Object.entries(reg)
+    .map(([slug, def]): ListCard | null => {
+      const members = entries.filter((e) => (e.properties.lists ?? []).includes(slug));
+      if (members.length === 0) return null;
+      return {
+        slug,
+        name: def.name ?? humanizeSlug(slug),
+        description: def.description ?? "",
+        count: members.length,
+        covers: members.slice(0, 3).map((m) => m.cover),
+      };
+    })
+    .filter((c): c is ListCard => c !== null);
+}
+
 function readCategory(category: string): Entry[] {
   const dir = path.join(CONTENT_DIR, category);
   if (!fs.existsSync(dir)) return [];

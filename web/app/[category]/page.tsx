@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getCategories, getEntries, getFilters } from "@/lib/archive";
+import { getCategories, getEntries, getFilters, getListCards } from "@/lib/archive";
 import FilterableList from "./FilterableList";
 
 export function generateStaticParams() {
@@ -26,6 +26,7 @@ export default async function CategoryPage({
   if (entries.length === 0) notFound();
 
   const filters = getFilters(entries);
+  const lists = getListCards(entries);
   const rows = entries.map((e) => ({
     slug: e.slug,
     category: e.category,
@@ -35,5 +36,5 @@ export default async function CategoryPage({
     cover: e.cover,
   }));
 
-  return <FilterableList rows={rows} filters={filters} category={category} />;
+  return <FilterableList rows={rows} filters={filters} lists={lists} category={category} />;
 }
