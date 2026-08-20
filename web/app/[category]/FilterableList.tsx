@@ -269,8 +269,9 @@ export default function FilterableList({
   // List view shows a fixed default set of facets (the `summary` properties).
   const summaryDefs = useMemo(() => filters.filter((d) => d.summary), [filters]);
 
-  /* persistence: sort + view mode, per category */
-  const storeKey = `lifeos:view:${category}`;
+  /* persistence: sort + view mode, per category.
+     v2 bumps past saved prefs so the new grid/rating default takes over. */
+  const storeKey = `lifeos:view:${category}:v2`;
   useEffect(() => {
     try {
       const s = JSON.parse(localStorage.getItem(storeKey) || "{}");
