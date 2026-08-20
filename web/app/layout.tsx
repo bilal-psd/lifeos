@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="min-h-screen antialiased">
-        <div className="mx-auto max-w-2xl px-5 py-10 sm:py-14">
+        <div className="mx-auto max-w-6xl px-5 py-10 sm:py-14">
           <header className="mb-14 flex items-baseline justify-between gap-4">
             <Link
               href="/"

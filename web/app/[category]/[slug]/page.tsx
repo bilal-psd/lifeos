@@ -34,7 +34,7 @@ export default async function EntryPage({
   const link = linkOut(entry);
 
   return (
-    <article>
+    <article className="max-w-2xl">
       <Link
         href={`/${entry.category}`}
         className="text-sm capitalize text-muted transition-colors hover:text-foreground"
