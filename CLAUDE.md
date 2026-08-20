@@ -103,23 +103,47 @@ rot-proof.
   `/covers/<category>/<slug>.<ext>`. We copy (not a runtime route) because
   serverless functions can't reliably read `../content` at request time; static
   files under `public/` always work. `web/public/covers/` is gitignored.
-- **Sources (keyless where possible):**
-  - **Books** — Open Library: `https://covers.openlibrary.org/b/isbn/<isbn_13>-L.jpg`
-    (or `/b/olid/<olid>-L.jpg`). No key. Add `?default=false` to get a 404 on a
-    miss instead of a blank image.
-  - **Films** — TMDb poster: `https://image.tmdb.org/t/p/w500<poster_path>`. The
-    image host is keyless, but `poster_path` is **not** derivable from `tmdb_id` —
-    it comes from the TMDb API (needs a key) or the web lookup. New-film capture
-    grabs it during the web lookup; the batch backfill script uses `TMDB_API_KEY`
-    (env only, never committed). Store `poster_path` under `metadata` too.
+- **UI:** category pages have a **grid (default) / list** toggle in the header,
+  persisted per-category in localStorage alongside display+sort. Grid is a poster
+  wall (2:3, title + rating/year caption); list adds a small row thumbnail. Entry
+  detail pages show a cover hero beside the title. Fallback tile + monogram live
+  in `web/lib/cover.ts` (shared by the client list and the server detail page);
+  `entry.cover` is set in `web/lib/archive.ts`.
+- **Sources — the backfill uses a quality waterfall, not one source:**
+  - **Books** — 1) **Google Books** by ISBN for the precise *identity* (canonical
+    title + author) — its own image is often only a ~128px thumbnail, so it's used
+    for metadata, not the picture; 2) **iTunes/Apple Books** search by that title,
+    validated against the Google author (rejects wrong-author hits like *Divergent*
+    quiz books), upscaled to `…/1200x1200bb.jpg` — this is the high-res image;
+    3) **Open Library** `…/b/isbn/<isbn>-L.jpg?default=false` (≈500px) as fallback.
+    Google Books needs a free API key; iTunes + OL are keyless.
+  - **Films** — TMDb poster `https://image.tmdb.org/t/p/w500<poster_path>`. Image
+    host is keyless but `poster_path` is **not** derivable from `tmdb_id` — the
+    backfill resolves it from the TMDb API (needs `TMDB_API_KEY`); new-film capture
+    grabs it during the web lookup. Store `poster_path` under `metadata` too.
+- **API keys** live in **`web/.env.local`** (gitignored via `.env*`), which
+  `fetch-covers.mjs` auto-loads (tiny inline parser, no dotenv dep): `TMDB_API_KEY`
+  and `GOOGLE_BOOKS_API_KEY`. Never commit them. Real env vars override the file.
 - **Missing covers** render a deterministic duotone fallback tile (title +
-  monogram) in the UI — nothing looks broken when a source has no cover.
-- **Backfill:** `web/scripts/fetch-covers.mjs` fetches covers for existing
-  entries by their stored IDs. Idempotent; skips entries that already have a
-  cover file.
+  monogram) — nothing looks broken when a source has no cover (TV series, obscure
+  editions).
+- **Backfill:** `cd web && pnpm fetch-covers` (or `node scripts/fetch-covers.mjs`).
+  Idempotent — skips entries that already have a cover; `--force` refetches,
+  `--category films|books` and `--limit N` scope it. After it runs, `pnpm covers`
+  (or restart dev) re-syncs `public/`. Paces itself ~200ms/request.
+- **NOT YET WIRED INTO CAPTURE.** The `films`/`books` SKILL.md files don't yet
+  download a cover for a *new* entry — only the backfill script does. So after
+  capturing a new film/book, run `pnpm fetch-covers` to give it a cover (until
+  the skills are updated to do it inline). See PLAN.md.
 
 ## Gotchas
 
+- **Covers serve through `next/image`, which caches hard.** After refetching a
+  cover to the *same* path, the file on disk changes but the URL doesn't, so the
+  dev preview (and a browser tab) can keep showing the old image. The disk/public
+  file is the truth — verify with `md5`/dimensions, not the preview. To force the
+  preview: clear `web/.next/cache/images` and restart dev. Production serves the
+  correct file on a fresh build.
 - **YAML dates parse to `Date` objects.** gray-matter turns an unquoted
   `date: 2026-08-01` into a JS `Date`, so `String()` yields the full
   `toString()`. `web/lib/archive.ts` normalizes via `toISODate()` — keep dates

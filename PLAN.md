@@ -1,6 +1,6 @@
 # LifeOS — Work Plan
 
-Status as of 2026-08-18. See [CLAUDE.md](CLAUDE.md) for architecture and
+Status as of 2026-08-20. See [CLAUDE.md](CLAUDE.md) for architecture and
 conventions; this file tracks progress and what's next.
 
 ## Where things stand
@@ -34,26 +34,49 @@ conventions; this file tracks progress and what's next.
 - [x] Site redesign: dark, monochrome, Linear-idiom, Inter. Filter/Display are
       icon-only on the title line, unfurling into dropdowns; per-category display
       config + sort, persisted to localStorage.
+- [x] Filter dropdown behavior fix: multi-select filters keep their menu open to
+      stack values; single-select (rating threshold, sort) close on pick.
+- [x] **Cover images for films & books** (commit `9f7b1bf`). Self-contained in
+      `content/<cat>/covers/`, synced to `public/` at predev/prebuild. Grid
+      (default) / list toggle + detail-page hero + duotone fallback tiles. Type
+      system kept as **Inter + Mono** (the serif option was mocked and rejected).
+      Backfill script with a Google-Books-identity → author-validated-iTunes →
+      Open-Library waterfall (books) and TMDb (films). Backfilled **358/371
+      films** and **69/70 books**; keys in gitignored `web/.env.local`. See the
+      **Covers** section in CLAUDE.md.
 
 ## In progress
 
-- Nothing mid-flight. Tree is clean, all work committed and pushed.
+- Nothing mid-flight. Tree clean, covers commit pushed (Vercel auto-deploying —
+  worth a glance that it went green).
 
 ## Next (unstarted, roughly in priority order)
 
-1. **Keep capturing real entries.** The mock samples are gone; real notes are
+1. **Wire cover-fetching into capture.** Covers are backfill-only right now — a
+   newly captured film/book gets **no cover** until someone runs `pnpm
+   fetch-covers`. Update the `films`/`books` SKILL.md (and/or `capture`) so a new
+   entry pulls its cover inline: films grab `poster_path` during the web lookup
+   and download the TMDb poster; books run the same waterfall as the backfill
+   (`web/scripts/fetch-covers.mjs` has the reusable logic — Google-Books identity
+   → author-validated iTunes → Open Library). Note the keys live in
+   `web/.env.local`, which is local-only (fine for a local capture flow; not
+   available in CI).
+2. **The 14 uncovered entries** (13 films like *Agatha All Along* — a TV series —
+   + 1 book, *Ambedkar's India*) show fallback tiles. Optional: hand-place a
+   cover by dropping a file at `content/<cat>/covers/<slug>.jpg`, or leave them.
+3. **Keep capturing real entries.** The mock samples are gone; real notes are
    now flowing in (books, films). Keep logging things as they happen — just talk
-   to Claude and the `capture` skill handles it.
-2. **Exercise `new-category`** on a real third category (music, games, places,
+   to Claude and the `capture` skill handles it (then see item 1 re: its cover).
+4. **Exercise `new-category`** on a real third category (music, games, places,
    podcasts…) to confirm the meta-skill flow end-to-end in practice.
-3. **Robust ID lookup (optional upgrade).** MVP resolves IDs via web search at
-   capture time. Later: wire real TMDb (needs free API key) + Open Library API
-   calls into the category skills for exact matches. Store keys as Vercel env
-   vars, not in the repo.
-4. **Site polish (optional).** Per-entry OpenGraph images, an RSS/JSON feed,
+5. **Robust ID lookup (optional upgrade).** MVP resolves IDs via web search at
+   capture time. Later: wire real TMDb + Open Library API calls into the category
+   skills for exact matches (TMDb/Google Books keys now exist in
+   `web/.env.local`). Store keys as Vercel env vars, not in the repo.
+6. **Site polish (optional).** Per-entry OpenGraph images, an RSS/JSON feed,
    full-text search, and a dedicated list page (a list currently surfaces only as
    a filter; a `/lists/<slug>` view is a possible next step). Filtering, sort,
-   and display config are already done.
+   display config, and covers are already done.
 
 ## Open decisions / not yet settled
 
@@ -63,8 +86,10 @@ conventions; this file tracks progress and what's next.
 - **`public` flag is currently always true.** The schema + site already filter
   on it, so private entries are a flip away if ever wanted — no decision needed
   until the user wants something private.
-- **Enrichment stays ID-only** by explicit user decision — do NOT add
-  cast/runtime/summaries. Revisit only if the user asks.
+- **Enrichment is ID-only + a cover image** (amended 2026-08-20). Covers are now
+  in; still do NOT add cast/runtime/summaries. See CLAUDE.md "Covers".
+- **Type system for the covers UI is Inter + Mono.** A serif option
+  (Instrument Serif) was mocked and rejected — don't reintroduce it.
 
 ## How to resume
 
