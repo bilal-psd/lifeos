@@ -15,42 +15,53 @@ export type RateGroup = { category: string; entries: RateItem[] };
 
 const keyOf = (it: RateItem) => `${it.category}/${it.slug}`;
 
-function Star({ on, size = 22 }: { on: boolean; size?: number }) {
+const STAR_PATH = "M8 2l1.7 3.7 4 .5-3 2.8.8 4L8 11l-3.5 2 .8-4-3-2.8 4-.5z";
+
+// A single star filled 0 / half / full, drawn by clipping a filled star over an outline.
+function Star({ fill, size = 22 }: { fill: number; size?: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 16 16"
-      fill={on ? "var(--star)" : "none"}
-      stroke={on ? "none" : "var(--faint)"}
-      strokeWidth="1.2"
-      aria-hidden="true"
-    >
-      <path d="M8 2l1.7 3.7 4 .5-3 2.8.8 4L8 11l-3.5 2 .8-4-3-2.8 4-.5z" />
-    </svg>
+    <span className="relative block" style={{ width: size, height: size }} aria-hidden="true">
+      <svg width={size} height={size} viewBox="0 0 16 16" className="block">
+        <path d={STAR_PATH} fill="none" stroke="var(--faint)" strokeWidth="1.2" />
+      </svg>
+      {fill > 0 && (
+        <span className="absolute inset-y-0 left-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
+          <svg width={size} height={size} viewBox="0 0 16 16" className="block">
+            <path d={STAR_PATH} fill="var(--star)" />
+          </svg>
+        </span>
+      )}
+    </span>
   );
 }
 
+// Five stars, each half clickable → 0.5-step ratings (0.5–5.0).
 function StarRow({ value, onSet }: { value?: number; onSet: (r: number) => void }) {
   const [hover, setHover] = useState(0);
   const shown = hover || value || 0;
   return (
     <div className="flex gap-0.5" onMouseLeave={() => setHover(0)}>
-      {[1, 2, 3, 4, 5].map((n) => (
-        <button
-          key={n}
-          type="button"
-          aria-label={`${n} star${n > 1 ? "s" : ""}`}
-          className="rounded p-0.5 transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-strong"
-          onMouseEnter={() => setHover(n)}
-          onClick={(e) => {
-            e.stopPropagation();
-            onSet(n);
-          }}
-        >
-          <Star on={n <= shown} />
-        </button>
-      ))}
+      {[1, 2, 3, 4, 5].map((n) => {
+        const fill = shown >= n ? 1 : shown >= n - 0.5 ? 0.5 : 0;
+        return (
+          <span key={n} className="relative inline-block" style={{ width: 22, height: 22 }}>
+            <Star fill={fill} />
+            {[n - 0.5, n].map((v, half) => (
+              <button
+                key={v}
+                type="button"
+                aria-label={`${v} star${v > 1 ? "s" : ""}`}
+                className={`absolute inset-y-0 ${half === 0 ? "left-0" : "right-0"} w-1/2 focus-visible:outline-none`}
+                onMouseEnter={() => setHover(v)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSet(v);
+                }}
+              />
+            ))}
+          </span>
+        );
+      })}
     </div>
   );
 }
@@ -113,9 +124,11 @@ export default function RateBoard({ groups }: { groups: RateGroup[] }) {
     const onKey = (e: KeyboardEvent) => {
       const it = items[focus];
       if (!it) return;
-      if (e.key >= "1" && e.key <= "5") {
+      if (/^[0-9]$/.test(e.key)) {
+        // 0–10 scale on the number row: 1–9 = that score, 0 = 10. Store score/2.
         e.preventDefault();
-        apply(it, Number(e.key));
+        const score = e.key === "0" ? 10 : Number(e.key);
+        apply(it, score / 2);
         setFocus((f) => {
           for (let i = f + 1; i < items.length; i++) if (ratings[keyOf(items[i])] == null) return i;
           return Math.min(items.length - 1, f + 1);
@@ -126,7 +139,7 @@ export default function RateBoard({ groups }: { groups: RateGroup[] }) {
       } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
         e.preventDefault();
         setFocus((f) => Math.max(0, f - 1));
-      } else if (e.key === "Backspace" || e.key === "0") {
+      } else if (e.key === "Backspace") {
         e.preventDefault();
         apply(it, 0);
       }
@@ -158,10 +171,11 @@ export default function RateBoard({ groups }: { groups: RateGroup[] }) {
         </span>
       </div>
       <p className="mb-5 text-[12.5px] text-muted">
-        <kbd className="kbd">1</kbd>–<kbd className="kbd">5</kbd> rate ·{" "}
+        <kbd className="kbd">1</kbd>–<kbd className="kbd">9</kbd>,<kbd className="kbd">0</kbd> rate on a
+        0–10 scale (<span className="text-foreground">7 = 3½★</span>, <kbd className="kbd">0</kbd> = 10) ·{" "}
         <kbd className="kbd">←</kbd>
-        <kbd className="kbd">→</kbd> move · <kbd className="kbd">⌫</kbd> clear. Saves straight to the
-        markdown — this page is local-only.
+        <kbd className="kbd">→</kbd> move · <kbd className="kbd">⌫</kbd> clear. Half-stars are clickable
+        too. Saves straight to the markdown — this page is local-only.
       </p>
 
       {groups.length > 1 && (

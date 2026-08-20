@@ -70,8 +70,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unknown category." }, { status: 400 });
   if (!slug || !/^[a-z0-9][a-z0-9-]*$/.test(slug)) // kebab slugs only — no path traversal
     return NextResponse.json({ error: "Bad slug." }, { status: 400 });
-  if (!Number.isFinite(r) || r < 0 || r > 5)
-    return NextResponse.json({ error: "Rating must be 0–5." }, { status: 400 });
+  if (!Number.isFinite(r) || r < 0 || r > 5 || (r * 2) % 1 !== 0)
+    return NextResponse.json({ error: "Rating must be 0–5 in half steps." }, { status: 400 });
 
   const file = path.join(contentDir(), category, `${slug}.md`);
   if (!fs.existsSync(file)) return NextResponse.json({ error: "Entry not found." }, { status: 404 });
