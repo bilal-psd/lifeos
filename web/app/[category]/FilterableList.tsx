@@ -6,6 +6,7 @@ import Image from "next/image";
 import { formatDate } from "@/lib/format";
 import { coverArt, monogram } from "@/lib/cover";
 import type { ListCard, PropertyDef, PropValue } from "@/lib/archive";
+import { numProp, stars } from "./rowHelpers";
 
 export type Row = {
   slug: string;
@@ -89,12 +90,10 @@ function Ico({ name, size = 15 }: { name: string; size?: number }) {
   );
 }
 
-const stars = (r: number) => "★".repeat(Math.floor(r)) + (r % 1 ? "½" : "");
-
 /* ---- cover ---- */
 // Missing covers fall back to a deterministic duotone tile + monogram
 // (see @/lib/cover), so a gap never looks broken.
-function Cover({ cover, title, variant }: { cover: string | null; title: string; variant: "poster" | "thumb" }) {
+export function Cover({ cover, title, variant }: { cover: string | null; title: string; variant: "poster" | "thumb" }) {
   if (cover)
     return (
       <Image
@@ -117,8 +116,6 @@ function Cover({ cover, title, variant }: { cover: string | null; title: string;
     </div>
   );
 }
-const numProp = (row: Row, key: string) =>
-  row.properties[key]?.find((v) => typeof v === "number") as number | undefined;
 // display label for a value (list slugs resolve to their registered name)
 const labelFor = (def: PropertyDef, v: PropValue) => def.valueLabels?.[String(v)] ?? String(v);
 

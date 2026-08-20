@@ -71,3 +71,9 @@ this skill turns it into a committed markdown entry.
   Malayalam starter pack"), set its slug in `properties.lists` and make sure the
   list is registered in `content/_lists.json` — see the **`lists`** skill. Lists
   work in any category and become a filter automatically.
+- **Editing an existing entry, not creating one.** A category skill can define
+  its own in-place-edit flow for something the user describes as a status
+  change on an entry they already filed, rather than a new thing to file (e.g.
+  books: finishing a book that's `status: reading` edits that entry instead of
+  creating a duplicate). Check the category skill before assuming every capture
+  is a new file.
