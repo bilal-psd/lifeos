@@ -259,7 +259,7 @@ export default function FilterableList({
   const [sortOpen, setSortOpen] = useState(false);
   const [drop, setDrop] = useState<string | null>(null); // open filter-property dropdown key
   const [flip, setFlip] = useState(false); // right-align dropdown near the edge
-  const [sort, setSort] = useState<Sort>("date");
+  const [sort, setSort] = useState<Sort>("rating");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   const rootRef = useRef<HTMLDivElement>(null);
