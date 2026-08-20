@@ -5,7 +5,7 @@ date: 2022-03-10
 tags: []
 public: true
 properties:
-  rating: 5
+  rating: 4.5
   year: 2012
   language: English
 metadata:

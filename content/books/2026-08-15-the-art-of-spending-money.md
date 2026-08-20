@@ -5,6 +5,7 @@ date: 2026-08-15
 tags: [nonfiction, finance, morgan-housel]
 public: true
 properties:
+  rating: 4
   language: English
 metadata:
   isbn_13: "9781804091890"

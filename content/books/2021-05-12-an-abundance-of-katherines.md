@@ -5,7 +5,7 @@ date: 2021-05-12
 tags: [john-green]
 public: true
 properties:
-  rating: 3
+  rating: 4
 metadata:
   isbn_13: "9780525555728"
   olid: OL17209849M

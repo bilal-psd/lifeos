@@ -5,6 +5,7 @@ date: 2026-08-16
 tags: []
 public: true
 properties:
+  rating: 3.5
   year: 2002
   language: English
 metadata:

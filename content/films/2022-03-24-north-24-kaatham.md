@@ -5,6 +5,7 @@ date: 2022-03-24
 tags: []
 public: true
 properties:
+  rating: 3.5
   year: 2013
   language: Malayalam
 metadata:

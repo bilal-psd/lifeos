@@ -5,6 +5,7 @@ date: 2026-08-15
 tags: [fiction, classics, poetry, homer, greek-mythology]
 public: true
 properties:
+  rating: 4.5
   language: English
 metadata:
   isbn_13: "9780140268867"

@@ -5,6 +5,7 @@ date: 2022-03-24
 tags: []
 public: true
 properties:
+  rating: 4
   year: 2014
   liked: true
   language: Malayalam

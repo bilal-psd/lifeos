@@ -4,6 +4,8 @@ category: books
 date: 2026-08-15
 tags: [nonfiction, finance, morgan-housel]
 public: true
+properties:
+  rating: 5
 metadata:
   isbn_13: "9780857197689"
   olid: OL29412746M

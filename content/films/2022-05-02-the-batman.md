@@ -5,7 +5,7 @@ date: 2022-05-02
 tags: []
 public: true
 properties:
-  rating: 4
+  rating: 3.5
   year: 2022
   liked: true
   language: English

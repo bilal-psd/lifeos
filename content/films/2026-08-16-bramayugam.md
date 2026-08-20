@@ -5,6 +5,7 @@ date: 2026-08-16
 tags: []
 public: true
 properties:
+  rating: 4.5
   year: 2024
   language: Malayalam
   lists: [malayalam-starter-pack]

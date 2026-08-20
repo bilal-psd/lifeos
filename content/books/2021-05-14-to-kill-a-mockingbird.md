@@ -5,6 +5,7 @@ date: 2021-05-14
 tags: [harper-lee]
 public: true
 properties:
+  rating: 4
   language: English
 metadata:
   isbn_13: "9780060935467"
