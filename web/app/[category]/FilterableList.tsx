@@ -40,7 +40,6 @@ function Ico({ name, size = 15 }: { name: string; size?: number }) {
         <path d="M2 8h12M8 2c2 2.3 2 9.7 0 12M8 2C6 4.3 6 11.7 8 14" />
       </>
     ),
-    liked: <path d="M8 13.7S2.3 10.2 2.3 6.3A3 3 0 018 4.2a3 3 0 015.7 2.1C13.7 10.2 8 13.7 8 13.7z" />,
     year: (
       <>
         <rect x="2.3" y="3.3" width="11.4" height="10.4" rx="1.6" />
@@ -74,7 +73,7 @@ function Ico({ name, size = 15 }: { name: string; size?: number }) {
     ),
     rows: <path d="M2.5 4h11M2.5 8h11M2.5 12h11" strokeLinecap="round" />,
   };
-  const filled = name === "rating" || name === "liked";
+  const filled = name === "rating";
   return (
     <svg
       viewBox="0 0 16 16"

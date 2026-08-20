@@ -7,7 +7,6 @@ public: true
 properties:
   rating: 4
   year: 2019
-  liked: true
   language: English
 metadata:
   tmdb_id: 546554

@@ -7,7 +7,6 @@ public: true
 properties:
   rating: 4.5
   year: 2016
-  liked: true
   language: Malayalam
   lists: [malayalam-starter-pack]
 metadata:

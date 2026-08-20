@@ -41,8 +41,7 @@ Set these under `properties:` when the info is available (see
   `rating: 3` (the midpoint) and **tell them you defaulted it** so they can
   change it. Never silently invent a non-midpoint rating.
 - `year` — release year (number), when known from the lookup.
-- `liked`, `lists` — set when the user says they loved it / is adding it to a
-  named list.
+- `lists` — set when the user says they're adding it to a named list.
 
 Follow the one-question rule: infer what you can; the rating is the one thing
 always worth asking, because it's required — prompt for it, and fall back to the

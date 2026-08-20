@@ -7,7 +7,6 @@ public: true
 properties:
   rating: 5
   year: 2014
-  liked: true
   language: English
 metadata:
   tmdb_id: 157336

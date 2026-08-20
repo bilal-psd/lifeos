@@ -7,7 +7,6 @@ public: true
 properties:
   rating: 3.5
   year: 2022
-  liked: true
   language: English
 metadata:
   tmdb_id: 414906

@@ -27,7 +27,6 @@ public: true                 # required — website only renders public entries
 properties:                  # optional — typed, filterable facets
   rating: 4                  # number
   language: [English]        # scalar or list; filters merge both the same way
-  liked: true                # boolean
 metadata:                    # optional — machine-added IDs, per category
   tmdb_id: 693134
   imdb_id: tt15239678
@@ -54,8 +53,8 @@ metadata:                    # optional — machine-added IDs, per category
 
 `properties:` holds typed key/values the website turns into **filters** on each
 category page. Unlike `tags` (freeform labels) and `metadata` (machine IDs),
-properties are the facets you'd filter by — `rating`, `language`, `liked`,
-`year`, `lists` (list membership), etc.
+properties are the facets you'd filter by — `rating`, `language`, `year`,
+`lists` (list membership), etc.
 
 - **Generic, used per category.** Any key is allowed; a category just uses the
   ones that fit (books → `language`; films → `rating`, `language`, `year`).

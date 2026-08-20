@@ -7,7 +7,6 @@ public: true
 properties:
   rating: 4
   year: 2012
-  liked: true
   language: Malayalam
 metadata:
   tmdb_id: 117751
