@@ -207,8 +207,8 @@ function FeaturedLists({
   onSelect: (slug: string) => void;
 }) {
   return (
-    <section className="mb-7" aria-label="Lists">
-      <h2 className="mb-3 text-[11px] font-medium uppercase tracking-[.16em] text-muted">Lists</h2>
+    <section className="mb-7" aria-label="Featured">
+      <h2 className="mb-3 text-[11px] font-medium uppercase tracking-[.16em] text-muted">Featured</h2>
       <div className="-mx-1 flex snap-x gap-3 overflow-x-auto px-1 pb-1.5">
         {lists.map((l) => {
           const on = selected(l.slug);
