@@ -14,17 +14,17 @@ const numProp = (vals: (string | number | boolean)[] | undefined) =>
 export default function RatePage() {
   if (process.env.NODE_ENV === "production") notFound();
 
+  // Everything — rated and unrated — so ratings can be set or re-evaluated.
   const groups: RateGroup[] = CATEGORIES.map((category) => ({
     category,
-    entries: getEntries(category)
-      .filter((e) => !(e.properties.rating ?? []).some((v) => typeof v === "number"))
-      .map((e) => ({
-        slug: e.slug,
-        category: e.category,
-        title: e.title,
-        cover: e.cover,
-        year: numProp(e.properties.year),
-      })),
+    entries: getEntries(category).map((e) => ({
+      slug: e.slug,
+      category: e.category,
+      title: e.title,
+      cover: e.cover,
+      year: numProp(e.properties.year),
+      rating: numProp(e.properties.rating),
+    })),
   })).filter((g) => g.entries.length > 0);
 
   return <RateBoard groups={groups} />;
