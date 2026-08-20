@@ -36,33 +36,27 @@ function Star({ fill, size = 22 }: { fill: number; size?: number }) {
   );
 }
 
-// Five stars, each half clickable → 0.5-step ratings (0.5–5.0).
-function StarRow({ value, onSet }: { value?: number; onSet: (r: number) => void }) {
+// Ten stars, scored 1–10 (whole). The caller halves it to the 0–5 stored value.
+function StarRow({ score, onSet }: { score: number; onSet: (score: number) => void }) {
   const [hover, setHover] = useState(0);
-  const shown = hover || value || 0;
+  const shown = hover || score || 0;
   return (
-    <div className="flex gap-0.5" onMouseLeave={() => setHover(0)}>
-      {[1, 2, 3, 4, 5].map((n) => {
-        const fill = shown >= n ? 1 : shown >= n - 0.5 ? 0.5 : 0;
-        return (
-          <span key={n} className="relative inline-block" style={{ width: 22, height: 22 }}>
-            <Star fill={fill} />
-            {[n - 0.5, n].map((v, half) => (
-              <button
-                key={v}
-                type="button"
-                aria-label={`${v} star${v > 1 ? "s" : ""}`}
-                className={`absolute inset-y-0 ${half === 0 ? "left-0" : "right-0"} w-1/2 focus-visible:outline-none`}
-                onMouseEnter={() => setHover(v)}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSet(v);
-                }}
-              />
-            ))}
-          </span>
-        );
-      })}
+    <div className="flex gap-px" onMouseLeave={() => setHover(0)}>
+      {Array.from({ length: 10 }, (_, k) => k + 1).map((n) => (
+        <button
+          key={n}
+          type="button"
+          aria-label={`${n} of 10`}
+          className="rounded p-0.5 transition-transform hover:scale-110 focus-visible:outline-none"
+          onMouseEnter={() => setHover(n)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onSet(n);
+          }}
+        >
+          <Star fill={n <= shown ? 1 : 0} size={18} />
+        </button>
+      ))}
     </div>
   );
 }
@@ -173,11 +167,10 @@ export default function RateBoard({ groups }: { groups: RateGroup[] }) {
         </span>
       </div>
       <p className="mb-5 text-[12.5px] text-muted">
-        <kbd className="kbd">1</kbd>–<kbd className="kbd">9</kbd>,<kbd className="kbd">0</kbd> rate on a
-        0–10 scale (<span className="text-foreground">7 = 3½★</span>, <kbd className="kbd">0</kbd> = 10) ·{" "}
-        <kbd className="kbd">←</kbd>
-        <kbd className="kbd">→</kbd> move · <kbd className="kbd">⌫</kbd> clear. Half-stars are clickable
-        too. Saves straight to the markdown — this page is local-only.
+        <kbd className="kbd">1</kbd>–<kbd className="kbd">9</kbd>,<kbd className="kbd">0</kbd> rate out of
+        10 (<kbd className="kbd">0</kbd> = 10) · <kbd className="kbd">↑</kbd>
+        <kbd className="kbd">↓</kbd> move · <kbd className="kbd">⌫</kbd> clear. Stored as ÷2 (so 7/10 →
+        3.5★). Local-only — saves straight to the markdown.
       </p>
 
       {groups.length > 1 && (
@@ -232,10 +225,10 @@ export default function RateBoard({ groups }: { groups: RateGroup[] }) {
                 <div className="mt-0.5 text-[12px] text-faint tabular-nums">{it.year ?? ""}</div>
               </div>
               <div className="flex shrink-0 items-center gap-3">
-                <span className="w-9 text-right text-[13px] font-medium text-star tabular-nums">
-                  {r != null ? `${r}★` : ""}
+                <span className="w-11 text-right text-[13px] font-medium text-star tabular-nums">
+                  {r != null ? `${r * 2}/10` : ""}
                 </span>
-                <StarRow value={r} onSet={(v) => apply(it, v)} />
+                <StarRow score={(r ?? 0) * 2} onSet={(s) => apply(it, s / 2)} />
               </div>
             </div>
           );
