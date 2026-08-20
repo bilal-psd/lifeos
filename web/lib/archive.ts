@@ -25,6 +25,7 @@ export type Entry = {
   properties: Record<string, PropValue[]>;
   metadata: EntryMeta;
   body: string;
+  cover: string | null; // serving URL, or null → UI shows a fallback tile
 };
 
 // A filterable property, derived from the entries present (values) and merged
@@ -118,6 +119,17 @@ function humanizeSlug(s: string): string {
   return s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+// Covers live at content/<category>/covers/<slug>.<ext>. Presence of the file
+// is the cover; we return its served URL (see web/scripts/sync-covers.mjs).
+const COVER_EXTS = ["jpg", "jpeg", "webp", "png"] as const;
+function coverUrl(category: string, slug: string): string | null {
+  for (const ext of COVER_EXTS) {
+    if (fs.existsSync(path.join(CONTENT_DIR, category, "covers", `${slug}.${ext}`)))
+      return `/covers/${category}/${slug}.${ext}`;
+  }
+  return null;
+}
+
 /** Display name for a list slug: registry name, else a humanized slug. */
 export function listLabel(slug: string): string {
   return getLists()[slug]?.name ?? humanizeSlug(slug);
@@ -143,6 +155,7 @@ function readCategory(category: string): Entry[] {
         properties: parseProperties(data.properties),
         metadata: (data.metadata ?? {}) as EntryMeta,
         body: content.trim(),
+        cover: coverUrl(category, slug),
       } satisfies Entry;
     });
 }

@@ -63,9 +63,10 @@ the user's note. schema.md documents `properties` and custom lists in full.
 
 ## Design decisions (settled — don't re-litigate)
 
-- **Enrichment is ID-only.** Attach a stable external index (IMDb/TMDb id,
-  ISBN/OLID, etc.) and nothing else — no cast, runtime, posters, or summaries.
-  This was an explicit user call.
+- **Enrichment is ID-only, plus a cover image.** Attach a stable external index
+  (IMDb/TMDb id, ISBN/OLID, etc.) and a **cover** — nothing else (no cast,
+  runtime, or summaries). The cover was a deliberate amendment to the original
+  ID-only rule; see **Covers** below for how it's stored and served.
 - **The category skill owns its ID convention.** `new-category` makes the
   ID-source decision **once per category**, with a single user confirmation,
   from the authorities table in its SKILL.md, and freezes it into the new
@@ -87,6 +88,35 @@ the user's note. schema.md documents `properties` and custom lists in full.
   name registry (`content/_lists.json`) — they work in any category and become a
   filter automatically, with no per-category code. Don't hardcode per-category
   filters or a bespoke lists table. See docs/schema.md and the `lists` skill.
+
+## Covers
+
+Films and books carry a cover image. It's **self-contained** — downloaded into
+the repo at capture time, never hotlinked — so the archive stays complete and
+rot-proof.
+
+- **Storage:** `content/<category>/covers/<slug>.<ext>` (jpg/webp/png). Same
+  `<slug>` as the entry file. This is the source of truth; no cover field in the
+  frontmatter — presence of the file *is* the cover.
+- **Serving:** `web/scripts/sync-covers.mjs` copies `content/**/covers/*` into
+  `web/public/covers/<category>/` at `predev`/`prebuild`. The site references
+  `/covers/<category>/<slug>.<ext>`. We copy (not a runtime route) because
+  serverless functions can't reliably read `../content` at request time; static
+  files under `public/` always work. `web/public/covers/` is gitignored.
+- **Sources (keyless where possible):**
+  - **Books** — Open Library: `https://covers.openlibrary.org/b/isbn/<isbn_13>-L.jpg`
+    (or `/b/olid/<olid>-L.jpg`). No key. Add `?default=false` to get a 404 on a
+    miss instead of a blank image.
+  - **Films** — TMDb poster: `https://image.tmdb.org/t/p/w500<poster_path>`. The
+    image host is keyless, but `poster_path` is **not** derivable from `tmdb_id` —
+    it comes from the TMDb API (needs a key) or the web lookup. New-film capture
+    grabs it during the web lookup; the batch backfill script uses `TMDB_API_KEY`
+    (env only, never committed). Store `poster_path` under `metadata` too.
+- **Missing covers** render a deterministic duotone fallback tile (title +
+  monogram) in the UI — nothing looks broken when a source has no cover.
+- **Backfill:** `web/scripts/fetch-covers.mjs` fetches covers for existing
+  entries by their stored IDs. Idempotent; skips entries that already have a
+  cover file.
 
 ## Gotchas
 

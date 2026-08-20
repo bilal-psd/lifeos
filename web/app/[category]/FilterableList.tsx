@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { formatDate } from "@/lib/format";
+import { coverArt, monogram } from "@/lib/cover";
 import type { PropertyDef, PropValue } from "@/lib/archive";
 
 export type Row = {
@@ -11,7 +13,10 @@ export type Row = {
   title: string;
   date: string;
   properties: Record<string, PropValue[]>;
+  cover: string | null;
 };
+
+type ViewMode = "grid" | "list";
 
 type Sort = "date" | "rating" | "title";
 type FilterState = Record<string, { enum?: PropValue[]; from?: number; on?: boolean }>;
@@ -52,6 +57,15 @@ function Ico({ name, size = 15 }: { name: string; size?: number }) {
     ),
     check: <path d="M3.5 8.5l3 3 6-7" strokeLinecap="round" strokeLinejoin="round" />,
     chevron: <path d="M4 6.5L8 10l4-3.5" strokeLinecap="round" strokeLinejoin="round" />,
+    grid: (
+      <>
+        <rect x="2.3" y="2.3" width="4.6" height="4.6" rx="1" />
+        <rect x="9.1" y="2.3" width="4.6" height="4.6" rx="1" />
+        <rect x="2.3" y="9.1" width="4.6" height="4.6" rx="1" />
+        <rect x="9.1" y="9.1" width="4.6" height="4.6" rx="1" />
+      </>
+    ),
+    rows: <path d="M2.5 4h11M2.5 8h11M2.5 12h11" strokeLinecap="round" />,
   };
   const filled = name === "rating" || name === "liked";
   return (
@@ -70,6 +84,35 @@ function Ico({ name, size = 15 }: { name: string; size?: number }) {
 }
 
 const stars = (r: number) => "★".repeat(Math.floor(r)) + (r % 1 ? "½" : "");
+
+/* ---- cover ---- */
+// Missing covers fall back to a deterministic duotone tile + monogram
+// (see @/lib/cover), so a gap never looks broken.
+function Cover({ cover, title, variant }: { cover: string | null; title: string; variant: "poster" | "thumb" }) {
+  if (cover)
+    return (
+      <Image
+        src={cover}
+        alt=""
+        fill
+        sizes={variant === "poster" ? "(max-width:560px) 30vw, 160px" : "48px"}
+        className="object-cover"
+      />
+    );
+  return (
+    <div className="absolute inset-0 flex items-center justify-center" style={{ background: coverArt(title) }}>
+      <span
+        className="select-none font-semibold leading-none text-white/[.10]"
+        style={{ fontSize: variant === "poster" ? "clamp(38px,7vw,54px)" : "22px" }}
+        aria-hidden="true"
+      >
+        {monogram(title)}
+      </span>
+    </div>
+  );
+}
+const numProp = (row: Row, key: string) =>
+  row.properties[key]?.find((v) => typeof v === "number") as number | undefined;
 // display label for a value (list slugs resolve to their registered name)
 const labelFor = (def: PropertyDef, v: PropValue) => def.valueLabels?.[String(v)] ?? String(v);
 
@@ -130,6 +173,7 @@ export default function FilterableList({
   const [flip, setFlip] = useState(false); // right-align dropdown near the edge
   const [display, setDisplay] = useState<string[]>(filters.filter((f) => f.summary).map((f) => f.key));
   const [sort, setSort] = useState<Sort>("date");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   const rootRef = useRef<HTMLDivElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
@@ -145,16 +189,21 @@ export default function FilterableList({
       const s = JSON.parse(localStorage.getItem(storeKey) || "{}");
       if (Array.isArray(s.display)) setDisplay(s.display);
       if (s.sort) setSort(s.sort);
+      if (s.viewMode === "grid" || s.viewMode === "list") setViewMode(s.viewMode);
     } catch {
       /* ignore */
     }
   }, [storeKey]);
-  const persist = (next: { display?: string[]; sort?: Sort }) => {
+  const persist = (next: { display?: string[]; sort?: Sort; viewMode?: ViewMode }) => {
     try {
-      localStorage.setItem(storeKey, JSON.stringify({ display, sort, ...next }));
+      localStorage.setItem(storeKey, JSON.stringify({ display, sort, viewMode, ...next }));
     } catch {
       /* ignore */
     }
+  };
+  const chooseView = (v: ViewMode) => {
+    setViewMode(v);
+    persist({ viewMode: v });
   };
 
   const closeAll = useCallback(() => {
@@ -256,6 +305,10 @@ export default function FilterableList({
     }`;
   const optRow =
     "flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] text-foreground transition-colors hover:bg-accent-soft focus-visible:outline-none focus-visible:bg-accent-soft";
+  const viewSeg = (on: boolean) =>
+    `inline-flex h-6 w-7 items-center justify-center rounded text-muted transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border-strong ${
+      on ? "bg-surface text-foreground" : "hover:text-foreground"
+    }`;
 
   const ddPos = flip ? "right-0" : "left-0";
 
@@ -309,10 +362,18 @@ export default function FilterableList({
           {activeDefs.length > 0 ? `${view.length} of ${rows.length}` : rows.length}
         </span>
 
+        <span className="flex-1" />
+        <div className="inline-flex items-center gap-0.5 rounded-md border border-border p-0.5" role="group" aria-label="View">
+          <button type="button" aria-pressed={viewMode === "grid"} aria-label="Grid view" title="Grid" className={viewSeg(viewMode === "grid")} onClick={() => chooseView("grid")}>
+            <Ico name="grid" size={14} />
+          </button>
+          <button type="button" aria-pressed={viewMode === "list"} aria-label="List view" title="List" className={viewSeg(viewMode === "list")} onClick={() => chooseView("list")}>
+            <Ico name="rows" size={15} />
+          </button>
+        </div>
+
         {filters.length > 0 && (
           <>
-            <span className="flex-1" />
-
             {open === "filter" ? (
               <div className="flex flex-wrap items-center justify-end gap-0.5" data-names onKeyDown={onMenuKey}>
                 {filters.map((def) => {
@@ -432,6 +493,31 @@ export default function FilterableList({
             </button>
           )}
         </div>
+      ) : viewMode === "grid" ? (
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(104px,1fr))] gap-x-4 gap-y-7 sm:grid-cols-[repeat(auto-fill,minmax(142px,1fr))]">
+          {view.map((e) => {
+            const r = numProp(e, "rating");
+            const yr = numProp(e, "year");
+            return (
+              <Link key={e.slug} href={`/${e.category}/${e.slug}`} className="group block">
+                <div className="relative aspect-[2/3] overflow-hidden rounded-md border border-border bg-surface shadow-sm transition-all duration-200 group-hover:-translate-y-1 group-hover:border-border-strong group-hover:shadow-lg">
+                  <Cover cover={e.cover} title={e.title} variant="poster" />
+                </div>
+                <div className="mt-2">
+                  <div className="line-clamp-2 text-[13px] font-medium leading-snug tracking-[-.006em] transition-colors group-hover:text-accent">
+                    {e.title}
+                  </div>
+                  {(r != null || yr != null) && (
+                    <div className="mt-1 flex items-center gap-2">
+                      {r != null && <span className="text-[12px] text-star tracking-[1px]">{stars(r)}</span>}
+                      {yr != null && <span className="text-[11px] text-faint tabular-nums">{yr}</span>}
+                    </div>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       ) : (
         <ul className="border-t border-border">
           {view.map((e) => {
@@ -450,22 +536,27 @@ export default function FilterableList({
               .filter((x): x is { key: string; cls: string; text: string } => !!x && !!x.text);
             return (
               <li key={e.slug} className="border-b border-border">
-                <Link href={`/${e.category}/${e.slug}`} className="group block py-3">
-                  <div className="flex items-baseline justify-between gap-4">
-                    <span className="text-[15px] font-medium tracking-[-.006em] transition-colors group-hover:text-accent">
-                      {e.title}
-                    </span>
-                    <time className="shrink-0 text-[12.5px] text-faint tabular-nums">{formatDate(e.date)}</time>
+                <Link href={`/${e.category}/${e.slug}`} className="group flex items-center gap-3.5 py-2.5">
+                  <div className="relative aspect-[2/3] w-[38px] shrink-0 overflow-hidden rounded-[4px] border border-border bg-surface">
+                    <Cover cover={e.cover} title={e.title} variant="thumb" />
                   </div>
-                  {shown.length > 0 && (
-                    <div className="mt-1.5 flex flex-wrap items-center gap-x-3 text-[12.5px] text-muted">
-                      {shown.map((s) => (
-                        <span key={s.key} className={s.cls}>
-                          {s.text}
-                        </span>
-                      ))}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline justify-between gap-4">
+                      <span className="truncate text-[15px] font-medium tracking-[-.006em] transition-colors group-hover:text-accent">
+                        {e.title}
+                      </span>
+                      <time className="shrink-0 text-[12.5px] text-faint tabular-nums">{formatDate(e.date)}</time>
                     </div>
-                  )}
+                    {shown.length > 0 && (
+                      <div className="mt-1 flex flex-wrap items-center gap-x-3 text-[12.5px] text-muted">
+                        {shown.map((s) => (
+                          <span key={s.key} className={s.cls}>
+                            {s.text}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </Link>
               </li>
             );

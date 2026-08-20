@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/sync-covers.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/sync-covers.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "covers": "node scripts/sync-covers.mjs",
+    "fetch-covers": "node scripts/fetch-covers.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

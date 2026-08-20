@@ -1,10 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getEntries, getEntry, linkOut } from "@/lib/archive";
 import { formatDate } from "@/lib/format";
+import { coverArt, monogram } from "@/lib/cover";
 
 export function generateStaticParams() {
   return getEntries().map((e) => ({ category: e.category, slug: e.slug }));
@@ -40,40 +42,56 @@ export default async function EntryPage({
         ← {entry.category}
       </Link>
 
-      <h1 className="mt-4 text-[22px] font-semibold tracking-[-.012em]">
-        {entry.title}
-      </h1>
+      <div className="mt-5 flex gap-5">
+        <div className="relative aspect-[2/3] w-28 shrink-0 overflow-hidden rounded-lg border border-border bg-surface shadow-md sm:w-36">
+          {entry.cover ? (
+            <Image src={entry.cover} alt={`${entry.title} cover`} fill sizes="(max-width:640px) 112px, 144px" className="object-cover" priority />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center" style={{ background: coverArt(entry.title) }}>
+              <span className="select-none text-5xl font-semibold text-white/[.10]" aria-hidden="true">
+                {monogram(entry.title)}
+              </span>
+            </div>
+          )}
+        </div>
 
-      <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted">
-        <time className="tabular-nums text-faint">{formatDate(entry.date)}</time>
-        {entry.tags.map((t) => (
-          <span key={t} className="text-faint">
-            #{t}
-          </span>
-        ))}
+        <div className="min-w-0 flex-1">
+          <h1 className="text-[22px] font-semibold tracking-[-.012em] text-balance">
+            {entry.title}
+          </h1>
+
+          <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted">
+            <time className="tabular-nums text-faint">{formatDate(entry.date)}</time>
+            {entry.tags.map((t) => (
+              <span key={t} className="text-faint">
+                #{t}
+              </span>
+            ))}
+          </div>
+
+          {Object.keys(entry.properties).length > 0 && (
+            <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1.5 text-[13px]">
+              {Object.entries(entry.properties).map(([key, values]) => {
+                const n = typeof values[0] === "number" ? (values[0] as number) : null;
+                return (
+                  <div key={key} className="flex items-baseline gap-2">
+                    <dt className="capitalize text-muted">{key}</dt>
+                    <dd className="font-medium">
+                      {key === "rating" && n != null ? (
+                        <span className="text-star tracking-[1px]">
+                          {"★".repeat(Math.floor(n)) + (n % 1 ? "½" : "")}
+                        </span>
+                      ) : (
+                        values.map((v) => (v === true ? "Yes" : String(v))).join(", ")
+                      )}
+                    </dd>
+                  </div>
+                );
+              })}
+            </dl>
+          )}
+        </div>
       </div>
-
-      {Object.keys(entry.properties).length > 0 && (
-        <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1.5 text-[13px]">
-          {Object.entries(entry.properties).map(([key, values]) => {
-            const n = typeof values[0] === "number" ? (values[0] as number) : null;
-            return (
-              <div key={key} className="flex items-baseline gap-2">
-                <dt className="capitalize text-muted">{key}</dt>
-                <dd className="font-medium">
-                  {key === "rating" && n != null ? (
-                    <span className="text-star tracking-[1px]">
-                      {"★".repeat(Math.floor(n)) + (n % 1 ? "½" : "")}
-                    </span>
-                  ) : (
-                    values.map((v) => (v === true ? "Yes" : String(v))).join(", ")
-                  )}
-                </dd>
-              </div>
-            );
-          })}
-        </dl>
-      )}
 
       <div className="entry-body mt-8">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{entry.body}</ReactMarkdown>

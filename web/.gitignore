@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# covers: build copy synced from ../content/**/covers (source of truth is content/)
+/public/covers/
+
 # production
 /build
 

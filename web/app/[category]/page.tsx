@@ -32,6 +32,7 @@ export default async function CategoryPage({
     title: e.title,
     date: e.date,
     properties: e.properties,
+    cover: e.cover,
   }));
 
   return <FilterableList rows={rows} filters={filters} category={category} />;
