@@ -47,6 +47,21 @@ body {
 }
 
 /* ---- popover + control primitives (used by FilterableList) ---- */
+.kbd {
+  display: inline-block;
+  min-width: 1.1em;
+  padding: 1px 5px;
+  margin: 0 1px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--foreground);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: center;
+}
+
 .pop {
   background: var(--pop);
   border: 1px solid var(--border-strong);

@@ -36,13 +36,17 @@ Set these under `properties:` when the info is available (see
 - `language` — the film's **primary language, full name** (e.g. `Korean`, not
   `ko`). Infer at capture from the TMDb/Letterboxd lookup you're already doing;
   don't ask the user.
-- `rating` — a 1–5 number, **only if the user states one**. Never invent it.
+- `rating` — a **required** 1–5 number. Every film must be rated. If the user's
+  note doesn't give one, ask for it. If they decline or don't answer, set
+  `rating: 3` (the midpoint) and **tell them you defaulted it** so they can
+  change it. Never silently invent a non-midpoint rating.
 - `year` — release year (number), when known from the lookup.
 - `liked`, `lists` — set when the user says they loved it / is adding it to a
   named list.
 
-Follow the one-question rule: infer what you can, ask only for a rating the user
-implied but didn't give.
+Follow the one-question rule: infer what you can; the rating is the one thing
+always worth asking, because it's required — prompt for it, and fall back to the
+midpoint only if the user won't give one.
 
 ## Filing notes
 

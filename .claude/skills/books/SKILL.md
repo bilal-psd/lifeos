@@ -38,10 +38,14 @@ Set these under `properties:` when available (see
 - `language` — the edition's **language, full name** (e.g. `English`, `Malayalam`,
   not `eng`). Open Library editions often omit it; set it when the lookup or the
   user's note makes it clear, otherwise leave it off rather than guessing.
-- `rating` — a 1–5 number, **only if the user states one**.
+- `rating` — a **required** 1–5 number. Every book must be rated. If the user's
+  note doesn't give one, ask for it. If they decline or don't answer, set
+  `rating: 3` (the midpoint) and **tell them you defaulted it** so they can
+  change it later.
 - `lists` — set when the user is adding the book to a named list.
 
-Infer what you can from the lookup; ask only for a rating the user implied.
+Infer what you can from the lookup; always prompt for the rating (it's required),
+falling back to the midpoint only if the user won't give one.
 
 ## Filing notes
 

@@ -58,6 +58,11 @@ type DefOverride = {
 const CONTENT_DIR =
   process.env.CONTENT_DIR ?? path.join(process.cwd(), "..", "content");
 
+/** Absolute path to the archive root — the write side (rate API) needs it. */
+export function contentDir(): string {
+  return CONTENT_DIR;
+}
+
 function listCategoryDirs(): string[] {
   if (!fs.existsSync(CONTENT_DIR)) return [];
   return fs
