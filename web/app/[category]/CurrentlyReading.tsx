@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Cover, type Row } from "./FilterableList";
+import type { Row } from "./FilterableList";
+import { Cover } from "./Cover";
 import { numProp } from "./rowHelpers";
 
 /**
@@ -12,7 +13,7 @@ export default function CurrentlyReading({ entries }: { entries: Row[] }) {
   return (
     <section className="mb-7" aria-label="Currently reading">
       <h2 className="mb-3 text-[11px] font-medium uppercase tracking-[.16em] text-muted">Currently reading</h2>
-      <div className="-mx-1 flex snap-x gap-4 overflow-x-auto px-1 pb-1.5">
+      <div className="scroll-x-clean -mx-1 flex snap-x gap-4 overflow-x-auto px-1 pb-1.5">
         {entries.map((e) => {
           const yr = numProp(e, "year");
           return (

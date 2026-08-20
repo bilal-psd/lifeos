@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getCategories, getEntries, getFilters, getListCards } from "@/lib/archive";
 import FilterableList from "./FilterableList";
-import CurrentlyReading from "./CurrentlyReading";
 
 export function generateStaticParams() {
   return getCategories().map((category) => ({ category }));
@@ -43,9 +42,12 @@ export default async function CategoryPage({
   });
 
   return (
-    <>
-      <CurrentlyReading entries={reading.map(toRow)} />
-      <FilterableList rows={finished.map(toRow)} filters={filters} lists={lists} category={category} />
-    </>
+    <FilterableList
+      rows={finished.map(toRow)}
+      filters={filters}
+      lists={lists}
+      category={category}
+      reading={reading.map(toRow)}
+    />
   );
 }

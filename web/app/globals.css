@@ -205,3 +205,13 @@ body {
   color: var(--muted);
   font-style: italic;
 }
+
+/* Horizontal snap-scroll strips (Featured, Currently reading) — the raw OS
+   scrollbar reads as broken chrome on a dark UI; swipe/drag scroll still works. */
+.scroll-x-clean {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge */
+}
+.scroll-x-clean::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}

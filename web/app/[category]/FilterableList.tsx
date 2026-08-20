@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { formatDate } from "@/lib/format";
-import { coverArt, monogram } from "@/lib/cover";
 import type { ListCard, PropertyDef, PropValue } from "@/lib/archive";
 import { numProp, stars } from "./rowHelpers";
+import { Cover } from "./Cover";
+import CurrentlyReading from "./CurrentlyReading";
 
 export type Row = {
   slug: string;
@@ -90,32 +90,6 @@ function Ico({ name, size = 15 }: { name: string; size?: number }) {
   );
 }
 
-/* ---- cover ---- */
-// Missing covers fall back to a deterministic duotone tile + monogram
-// (see @/lib/cover), so a gap never looks broken.
-export function Cover({ cover, title, variant }: { cover: string | null; title: string; variant: "poster" | "thumb" }) {
-  if (cover)
-    return (
-      <Image
-        src={cover}
-        alt=""
-        fill
-        sizes={variant === "poster" ? "(max-width:560px) 30vw, 160px" : "48px"}
-        className="object-cover"
-      />
-    );
-  return (
-    <div className="absolute inset-0 flex items-center justify-center" style={{ background: coverArt(title) }}>
-      <span
-        className="select-none font-semibold leading-none text-white/[.10]"
-        style={{ fontSize: variant === "poster" ? "clamp(38px,7vw,54px)" : "22px" }}
-        aria-hidden="true"
-      >
-        {monogram(title)}
-      </span>
-    </div>
-  );
-}
 // display label for a value (list slugs resolve to their registered name)
 const labelFor = (def: PropertyDef, v: PropValue) => def.valueLabels?.[String(v)] ?? String(v);
 
@@ -205,7 +179,7 @@ function FeaturedLists({
   return (
     <section className="mb-7" aria-label="Featured">
       <h2 className="mb-3 text-[11px] font-medium uppercase tracking-[.16em] text-muted">Featured</h2>
-      <div className="-mx-1 flex snap-x gap-3 overflow-x-auto px-1 pb-1.5">
+      <div className="scroll-x-clean -mx-1 flex snap-x gap-3 overflow-x-auto px-1 pb-1.5">
         {lists.map((l) => {
           const on = selected(l.slug);
           return (
@@ -244,11 +218,13 @@ export default function FilterableList({
   filters,
   lists,
   category,
+  reading = [],
 }: {
   rows: Row[];
   filters: PropertyDef[];
   lists: ListCard[];
   category: string;
+  reading?: Row[];
 }) {
   const [fstate, setFstate] = useState<FilterState>({});
   const [open, setOpen] = useState<"filter" | null>(null);
@@ -541,6 +517,8 @@ export default function FilterableList({
           </div>
         )}
       </div>
+
+      {reading.length > 0 && <CurrentlyReading entries={reading} />}
 
       {lists.length > 0 && (
         <FeaturedLists lists={lists} selected={listSelected} onSelect={selectList} />
