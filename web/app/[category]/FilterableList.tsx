@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { formatDate } from "@/lib/format";
+import { formatDate, formatMonthYear } from "@/lib/format";
 import type { ListCard, PropertyDef, PropValue } from "@/lib/archive";
 import { numProp, stars } from "./rowHelpers";
 import { Cover } from "./Cover";
@@ -177,8 +177,8 @@ function FeaturedLists({
   onSelect: (slug: string) => void;
 }) {
   return (
-    <section className="mb-7" aria-label="Featured">
-      <h2 className="mb-3 text-[11px] font-medium uppercase tracking-[.16em] text-muted">Featured</h2>
+    <section className="shelf mb-8 rounded-2xl p-5" aria-label="Featured">
+      <h2 className="font-display mb-4 text-[15px] font-medium italic text-foreground/[.85]">Featured</h2>
       <div className="scroll-x-clean -mx-1 flex snap-x gap-3 overflow-x-auto px-1 pb-1.5">
         {lists.map((l) => {
           const on = selected(l.slug);
@@ -417,22 +417,18 @@ export default function FilterableList({
 
   return (
     <div ref={rootRef}>
-      {/* Header line — title, count, and the icon-only controls on the right. */}
-      <div className="mb-6 flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
-        <h1 className="text-[19px] font-semibold capitalize tracking-[-.01em]">{category}</h1>
-        <span className="text-[13px] text-faint tabular-nums">
+      {reading.length > 0 && <CurrentlyReading entries={reading} />}
+      {lists.length > 0 && (
+        <FeaturedLists lists={lists} selected={listSelected} onSelect={selectList} />
+      )}
+
+      {/* Header line — category, count, and every control, all on one line above the grid. */}
+      <div className="mb-6 flex flex-wrap items-center gap-x-3.5 gap-y-1.5">
+        <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[.12em] text-faint">
+          <span className="capitalize">{category}</span> ·{" "}
           {activeDefs.length > 0 ? `${view.length} of ${rows.length}` : rows.length}
         </span>
-
-        <span className="flex-1" />
-        <div className="inline-flex items-center gap-0.5 rounded-md border border-border p-0.5" role="group" aria-label="View">
-          <button type="button" aria-pressed={viewMode === "grid"} aria-label="Grid view" title="Grid" className={viewSeg(viewMode === "grid")} onClick={() => chooseView("grid")}>
-            <Ico name="grid" size={14} />
-          </button>
-          <button type="button" aria-pressed={viewMode === "list"} aria-label="List view" title="List" className={viewSeg(viewMode === "list")} onClick={() => chooseView("list")}>
-            <Ico name="rows" size={15} />
-          </button>
-        </div>
+        <span className="h-px flex-1 bg-border" />
 
         {open === "filter" ? (
           <div className="flex flex-wrap items-center justify-end gap-0.5" data-names onKeyDown={onMenuKey}>
@@ -471,58 +467,62 @@ export default function FilterableList({
             </button>
           </div>
         ) : (
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-2.5">
             {activeDefs.length > 0 && (
               <button type="button" onClick={clearAll} className={clearBtn}>
                 Clear
               </button>
             )}
-            {facetDefs.length > 0 && (
-              <button
-                type="button"
-                title="Filter"
-                aria-label="Filter"
-                aria-expanded={false}
-                className={`${iconBtn}${activeDefs.length > 0 ? " text-foreground" : ""}`}
-                onClick={() => (setOpen("filter"), setSortOpen(false), setDrop(null))}
-              >
-                <Ico name="filter" />
+            <div className="inline-flex items-center gap-0.5 rounded-md border border-border-strong p-0.5" role="group" aria-label="View">
+              <button type="button" aria-pressed={viewMode === "grid"} aria-label="Grid view" title="Grid" className={viewSeg(viewMode === "grid")} onClick={() => chooseView("grid")}>
+                <Ico name="grid" size={14} />
               </button>
-            )}
-            <div className="relative">
-              <button
-                type="button"
-                title="Sort"
-                aria-label="Sort"
-                aria-haspopup
-                aria-expanded={sortOpen}
-                className={`${iconBtn}${sortOpen ? " bg-surface text-foreground" : ""}`}
-                onClick={() => (setSortOpen((v) => !v), setDrop(null))}
-              >
-                <Ico name="sort" />
+              <button type="button" aria-pressed={viewMode === "list"} aria-label="List view" title="List" className={viewSeg(viewMode === "list")} onClick={() => chooseView("list")}>
+                <Ico name="rows" size={15} />
               </button>
-              {sortOpen && (
-                <div role="menu" className="pop absolute right-0 top-full z-40 mt-1.5 min-w-[176px]">
-                  {([["date", "Newest first"], ["rating", "Highest rated"], ["title", "Title A–Z"]] as [Sort, string][]).map(
-                    ([v, label]) => (
-                      <button key={v} type="button" role="menuitemradio" aria-checked={sort === v} className={optRow} onClick={() => chooseSort(v)}>
-                        <span className="flex-1">{label}</span>
-                        {sort === v && <span className="text-accent"><Ico name="check" size={14} /></span>}
-                      </button>
-                    ),
-                  )}
-                </div>
+            </div>
+            <div className="inline-flex items-center gap-0.5 rounded-md border border-border-strong p-0.5">
+              {facetDefs.length > 0 && (
+                <button
+                  type="button"
+                  title="Filter"
+                  aria-label="Filter"
+                  aria-expanded={false}
+                  className={`${iconBtn}${activeDefs.length > 0 ? " text-foreground" : ""}`}
+                  onClick={() => (setOpen("filter"), setSortOpen(false), setDrop(null))}
+                >
+                  <Ico name="filter" />
+                </button>
               )}
+              <div className="relative">
+                <button
+                  type="button"
+                  title="Sort"
+                  aria-label="Sort"
+                  aria-haspopup
+                  aria-expanded={sortOpen}
+                  className={`${iconBtn}${sortOpen ? " bg-surface text-foreground" : ""}`}
+                  onClick={() => (setSortOpen((v) => !v), setDrop(null))}
+                >
+                  <Ico name="sort" />
+                </button>
+                {sortOpen && (
+                  <div role="menu" className="pop absolute right-0 top-full z-40 mt-1.5 min-w-[176px]">
+                    {([["date", "Newest first"], ["rating", "Highest rated"], ["title", "Title A–Z"]] as [Sort, string][]).map(
+                      ([v, label]) => (
+                        <button key={v} type="button" role="menuitemradio" aria-checked={sort === v} className={optRow} onClick={() => chooseSort(v)}>
+                          <span className="flex-1">{label}</span>
+                          {sort === v && <span className="text-accent"><Ico name="check" size={14} /></span>}
+                        </button>
+                      ),
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
       </div>
-
-      {reading.length > 0 && <CurrentlyReading entries={reading} />}
-
-      {lists.length > 0 && (
-        <FeaturedLists lists={lists} selected={listSelected} onSelect={selectList} />
-      )}
 
       {view.length === 0 ? (
         <div className="border-t border-border py-8 text-[14px] text-faint">
@@ -537,20 +537,28 @@ export default function FilterableList({
         <div className="grid grid-cols-[repeat(auto-fill,minmax(104px,1fr))] gap-x-4 gap-y-7 sm:grid-cols-[repeat(auto-fill,minmax(142px,1fr))]">
           {view.map((e) => {
             const r = numProp(e, "rating");
+            // films carry their own release year; other categories fall back
+            // to the entry's logged date — either way, real data, not invented.
             const yr = numProp(e, "year");
+            const dateline = yr != null ? String(yr) : formatMonthYear(e.date);
             return (
               <Link key={e.slug} href={`/${e.category}/${e.slug}`} className="group block">
                 <div className="relative aspect-[2/3] overflow-hidden rounded-md border border-border bg-surface shadow-sm transition-all duration-200 group-hover:-translate-y-1 group-hover:border-border-strong group-hover:shadow-lg">
                   <Cover cover={e.cover} title={e.title} variant="poster" />
+                  {r != null && (
+                    <span className="absolute right-1.5 top-1.5 flex items-center gap-[3px] rounded-md border border-star/40 bg-background/80 px-1.5 py-0.5 text-[11px] font-semibold text-star tabular-nums backdrop-blur-sm">
+                      <Ico name="rating" size={9} />
+                      {Number.isInteger(r) ? r : r.toFixed(1)}
+                    </span>
+                  )}
                 </div>
                 <div className="mt-2">
-                  <div className="line-clamp-2 text-[13px] font-medium leading-snug tracking-[-.006em] transition-colors group-hover:text-accent">
+                  <div className="line-clamp-2 min-h-[calc(1.32em*2)] text-[13px] font-medium leading-snug tracking-[-.006em] transition-colors group-hover:text-accent">
                     {e.title}
                   </div>
-                  {(r != null || yr != null) && (
-                    <div className="mt-1 flex items-center gap-2">
-                      {r != null && <span className="text-[12px] text-star tracking-[1px]">{stars(r)}</span>}
-                      {yr != null && <span className="text-[11px] text-faint tabular-nums">{yr}</span>}
+                  {dateline && (
+                    <div className="mt-1 text-[10.5px] font-semibold uppercase tracking-[.06em] text-faint">
+                      {dateline}
                     </div>
                   )}
                 </div>

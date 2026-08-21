@@ -13,6 +13,8 @@
   --accent: #f7f8f8; /* mono: near-white emphasis */
   --accent-soft: rgba(255, 255, 255, 0.1);
   --star: #e0a455;
+  --shelf-top: #18130f;
+  --shelf-bottom: #0c0a08;
 }
 
 @theme inline {
@@ -29,6 +31,7 @@
   --color-star: var(--star);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
 }
 
 html {
@@ -204,6 +207,26 @@ body {
   padding-left: 1rem;
   color: var(--muted);
   font-style: italic;
+}
+
+/* ---- shelf panel (Currently reading / Featured) — a warm-tinted raised
+   surface distinguishing "things you're actively engaged with" from the
+   plain-dark archive grid below. ::after is the light-catching bottom edge. */
+.shelf {
+  background: linear-gradient(175deg, var(--shelf-top), var(--shelf-bottom));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+.shelf::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(224, 164, 85, 0.5), transparent);
 }
 
 /* Horizontal snap-scroll strips (Featured, Currently reading) — the raw OS
