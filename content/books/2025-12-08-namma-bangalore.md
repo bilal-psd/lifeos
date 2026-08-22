@@ -6,6 +6,7 @@ tags: [shoba-narayan]
 public: true
 properties:
   rating: 2
+  author: "Shoba Narayan"
 metadata:
   isbn_13: "9789357024785"
   id_status: verified
