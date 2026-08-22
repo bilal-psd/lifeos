@@ -245,6 +245,30 @@ same content.
   positioned: making it `static` at a breakpoint re-parents the glow to the
   panel and floods the whole thing, wrecking text contrast on mobile.
 
+## Writing archive content in bulk (the subagent workflow)
+
+Used to write 433 synopses. Worth repeating for any future bulk content pass.
+
+- **Gather grounding centrally, once, to a file.** Agents read the file from
+  disk rather than receiving it in a prompt. Keeps the source material out of
+  the main session's context and out of N prompt payloads.
+- **Agents make no network calls.** Wikipedia throttles hard; several agents
+  hitting it at once turns into silent empty responses that look exactly like
+  "no article exists". One paced pass up front avoids that entirely.
+- **Skills do not propagate to subagents.** A cold agent has not loaded
+  `unslop` or anything else. Every rule must be written into the prompt or a
+  brief file it reads. This is the single easiest thing to get wrong.
+- **Keep series inside one agent.** Partition cluster-aware, or eight agents
+  produce eight near-identical Harry Potter blurbs with no way to notice.
+- **Three at a time, not eight.** Eight parallel Sonnet agents at ~150K tokens
+  each hit the session limit and seven died mid-flight.
+- **Have agents write in chunks, not at the end.** The ones that drafted
+  everything then wrote lost all of it when they were killed; the ones that
+  wrote incrementally kept their work.
+- **Ask agents to report anomalies, not just counts.** They found nine bad
+  grounding records that the automated title check missed.
+- **Verify mechanically, read a sample.** `pnpm --dir web lint-synopses`.
+
 ## Editorial design system (books/films pages)
 
 Settled after several mockup rounds (published as Claude artifacts, reviewed
@@ -334,11 +358,44 @@ and cut, so it doesn't get re-proposed without new information.
   `cleanName()` in `web/scripts/lib/sources.mjs` strips surrounding
   commas/semicolons but deliberately leaves trailing periods alone, so
   "Martin Luther King Jr." survives.
+- **Most entries have an empty body, on purpose.** 354 of 358 films had their
+  Letterboxd import stub ("Watched.", "Watched — rated 3/5 on Letterboxd.")
+  removed, because a fake note reads worse than none now that every entry has a
+  synopsis. `EntryView` renders nothing rather than an empty block, and the
+  synopsis drops its top rule via `.synopsis-lead` when it is the first prose on
+  the page. **Books still carry their equivalent stubs** ("Read — rated 3/5 on
+  Goodreads."); removing them is a one-line change to the same pattern.
+  Watch for two spellings of a half star in the old data: `3.5/5` and `3-5/5`.
 - **Page width is intentionally split.** The root shell
   (`web/app/layout.tsx`) is `max-w-6xl` (1152px) so the poster grid gets real
   columns; entry detail pages (`web/app/[category]/[slug]/page.tsx`)
   override to `max-w-2xl` on purpose so prose doesn't stretch full-width.
   Don't "fix" the detail page to match the shell width.
+
+## Working alongside another Claude session
+
+More than one session has worked this repo at the same time, and it caused real
+problems. If you are not the only session:
+
+- **Use a git worktree, not the main checkout.** `git worktree add /tmp/<name>
+  <branch>`, then `pnpm install` inside it (a symlinked `node_modules` fails:
+  Turbopack rejects a symlink pointing outside the project root). One directory
+  can only have one branch checked out, so sharing it means one session's files
+  vanish under the other.
+- **Untracked files follow you across branches; commits do not.** If the other
+  session's work is uncommitted, rewinding or switching a branch does not touch
+  it. If it is committed, you must rebase rather than assume they will.
+- **Never edit a file inside a running agent's working set.** A style fix to a
+  synopsis was silently overwritten minutes later by the subagent still writing
+  that slice. Wait for the agent to report, then edit.
+- **A merge can destroy a fix with no conflict marker.** The other session fixed
+  one line in `[slug]/page.tsx` while this session had gutted that file and moved
+  its contents to `EntryView.tsx`. Git resolves that as "file deleted vs file
+  modified" and takes the deletion, so their fix disappeared with no warning.
+  **After any merge or rebase that spans a refactor, re-read the other side's
+  commits and confirm each change still exists somewhere.**
+- Before fast-forwarding a shared checkout, check `git status` first and skip if
+  anything is uncommitted.
 
 ## Deployment (Vercel + Netlify DNS)
 

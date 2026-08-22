@@ -5,12 +5,19 @@ conventions; this file tracks progress and what's next.
 
 ## Where things stand
 
-**MVP is complete and deployed to production; the books/films UI just went
-through a full editorial redesign.**
-- Live: https://lifeos.bilaldoesstuff.in (custom domain, SSL live)
-  - also https://lifeos-tan-two.vercel.app
-- Repo: https://github.com/bilal-psd/lifeos (public), git-connected to Vercel →
-  every push to `main` auto-deploys. Latest: `674a8a4`.
+Status as of 2026-08-22. See [CLAUDE.md](CLAUDE.md) for architecture and
+conventions; this file tracks progress and what's next.
+
+**Everything below is shipped and live.** Latest: `db4948a` on `main`, deployed.
+- Live: https://lifeos.bilaldoesstuff.in
+- 434 entries: 358 films, 75 books, 1 project.
+- Every film and book has a credit and a synopsis. Entries open in a modal.
+
+**Another Claude session works this repo too** (it added the `projects`
+category). Read "Working alongside another Claude session" in CLAUDE.md before
+touching shared files. As of this writing that session had uncommitted edits to
+`web/app/globals.css`, which this session also rewrote heavily, so expect a
+conflict there when it pulls.
 
 ## Done
 
@@ -106,8 +113,7 @@ through a full editorial redesign.**
 
 ## In progress
 
-- Nothing mid-flight. Worth a look at whether the home feed (`/`) should also
-  open entries in the modal; it still links straight to pages.
+- Nothing mid-flight. Working tree clean, `main` pushed, deploy green.
 
 ## Rejected directions (don't re-propose without new information)
 
@@ -133,53 +139,57 @@ through a full editorial redesign.**
 
 ## Next (unstarted, roughly in priority order)
 
-1. **Keep capturing real entries** — books, films, and now the
-   currently-reading lifecycle (start = normal capture with `status: reading`,
-   finish = tell Claude, it edits the entry in place).
-2. **Exercise `new-category`** on a real third category to confirm the
-   meta-skill flow end-to-end in practice.
-3. **Robust ID lookup (optional upgrade).** Wire real TMDb + Open Library API
-   calls into the category skills for exact matches instead of web search.
-4. **Site polish (optional).** OpenGraph images, an RSS/JSON feed, full-text
+1. **`projects` has no cover and no synopsis.** The one entry (Marquee) renders
+   noticeably thinner than films and books. The pipeline is category-generic, so
+   the work is mostly deciding what a project's "cover" is (screenshot? repo OG
+   image? generated tile?) and what its ID source gives you for grounding.
+   `creditOf()` in `rowHelpers.ts` also has no mapping for `projects`.
+2. **Strip the stub bodies from books.** 75 entries still say "Read — rated 3/5
+   on Goodreads." Same treatment films got. Watch for `3-5/5` as well as
+   `3.5/5`. See the gotcha in CLAUDE.md.
+3. **The home feed (`/`) still links straight to full pages**, not the modal,
+   and is still a plain title+date list untouched by the redesign. Making it
+   open modals means intercepting from the root, so the slot goes in
+   `app/@modal/` with `(.)` matchers one level up.
+4. **Six synopses are under 50 words** because their sources were genuinely
+   thin: The Notebook (28), Mother (31), Eternals (42), Another Round (45),
+   Age of Ultron (46), Zack Snyder's Justice League (48). Each needs research
+   rather than padding. `pnpm --dir web lint-synopses` lists them.
+5. **Exercise `new-category`** on a fourth category to confirm the meta-skill
+   flow (projects was created by the other session, so this is partly done).
+6. **Robust ID lookup (optional).** Real TMDb + Open Library API calls in the
+   category skills instead of web search.
+7. **Site polish (optional).** OpenGraph images, RSS/JSON feed, full-text
    search, a dedicated `/lists/<slug>` page.
-5. **Extend the rule-based list pattern** — the engine (`_lists.json` +
-   `applyDynamicLists` in `web/lib/archive.ts`) already supports any
-   `{category, property, value}` rule with zero new code. A "Perfect Books"
-   (books, rating=5) is a one-line registration away, same for anything else
-   that's a pure function of existing properties.
-6. **Home page and list-view mode weren't touched by the redesign** — the
-   home feed (`/`) is still a plain title+date list, and the alternate
-   row-based "list" view on category pages still uses the pre-redesign style.
-   Not a bug, just out of scope; worth a deliberate look if the new visual
-   language should extend there too.
 
 ## Open decisions / not yet settled
 
+- **Synopsis length in the modal.** The 60-80 word target was set for a full
+  page. In a panel a shorter blurb might read better. Never re-decided after the
+  modal shipped; current median is 75 words.
+- **Whether `projects` entries should get synopses at all.** A project the user
+  built is not a work someone else described, so external grounding may not
+  exist or make sense.
 - **Non-media categories with no registry** (ideas, journal, recipes): schema
-  supports `id_source: none`, but we haven't created one yet.
-- **`public` flag is currently always true.** A flip away from private
-  entries if ever wanted — no decision needed until then.
-- **Enrichment is ID + cover + credit + synopsis.** Amended deliberately (see
-  CLAUDE.md "Design decisions"). Still do NOT add cast, runtime, budget, or
-  crew beyond the director.
-- **Dateline fallback (year vs. logged date) is a judgment call, not a firm
-  rule.** Films show release `year`; books (which have no `year` property)
-  fall back to when the entry was logged. If books ever want a "published
-  year" distinct from "date I read it," that's a new property, not a reuse of
-  `date`.
-- **The pull-quote/marginalia idea isn't dead, just blocked** on a real
-  "choose a featured quote" mechanism not existing yet. See "Rejected
-  directions."
+  supports `id_source: none`, still untested.
+- **`public` flag is always true.** No decision needed until private entries are
+  wanted.
+- **Enrichment is ID + cover + credit + synopsis.** Amended deliberately twice
+  (see CLAUDE.md). Still do NOT add cast, runtime, budget, or crew beyond the
+  director.
+- **Dateline year-vs-logged-date** is a judgment call, not a firm rule.
 
 ## How to resume
 
-- Run the site locally: `pnpm --dir web dev` (or the `lifeos-web` launch
-  config).
-- Deploy is automatic on `git push`. Manual: `vercel deploy --prod --yes` from
-  repo root (CLI logged in as `bilal-psd`).
-- To log something: just tell Claude; it invokes the `capture` skill (or, for
-  a book already `status: reading`, tell Claude you finished it).
-- The redesign's design exploration lived in published Claude artifacts
-  (mockups + inline comments) rather than in this repo — the *decisions* and
-  *reasons* are captured above and in CLAUDE.md; the artifacts themselves
-  aren't a durable reference, treat this file as the source of truth.
+- **If another session is active, work in a worktree.** `git worktree add
+  /tmp/lifeos-wt <branch>` then `pnpm install` inside it (a symlinked
+  `node_modules` breaks Turbopack). See CLAUDE.md.
+- Run the site: `pnpm --dir web dev`.
+- Check synopsis quality: `pnpm --dir web lint-synopses` (exits non-zero on
+  failure).
+- Enrich one entry: `pnpm --dir web enrich --category films --slug <slug>`.
+  That fetches the cover and credit, and **prints grounding facts for you to
+  write the synopsis from**. There is no API key and no script that writes it.
+  Rules: [docs/synopsis-brief.md](docs/synopsis-brief.md).
+- To log something: tell Claude; it invokes the `capture` skill.
+- Deploy is automatic on push to `main`.
