@@ -215,6 +215,36 @@ Both are produced by **`pnpm --dir web enrich`**
   vague attribution, verdict language, length, and near-duplicate openings across
   the archive. Re-run it after any bulk edit.
 
+## The entry modal ("shelf view")
+
+Clicking a tile opens the entry over the grid. Visiting the URL directly,
+refreshing, or following a shared link renders the full page. Both show the
+same content.
+
+- **Built on Next's intercepting + parallel routes.** `app/[category]/@modal/`
+  is the slot, `@modal/(.)[slug]/page.tsx` does the interception, and
+  `@modal/default.tsx` returns null when nothing is intercepted. `(.)` is
+  correct here because `@modal` is a *slot, not a route segment*, so `[slug]`
+  counts as the same level. `app/[category]/layout.tsx` exists only to host the
+  slot. All 433 entry pages still prerender as static; only the intercepted
+  route is dynamic.
+- **`EntryView.tsx` is shared by the page and the modal** so the two cannot
+  drift apart. The wrappers supply their own chrome: a back link on the page, a
+  close button and flip controls in the modal.
+- **Flip order comes from `sessionStorage`, not props.** The grid is a client
+  component that knows the *filtered and sorted* order, and it lives in a
+  sibling route slot, so there is no shared React tree to read it from.
+  `FilterableList` writes `lifeos:order:<category>`; `EntryModal` reads it.
+  With nothing stored (a direct visit) the chevrons hide, which is correct —
+  there is no browsing session to flip through.
+- **Flips use `router.replace`, not `push`.** Otherwise Escape walks back
+  through every entry you flipped past instead of returning to the grid.
+- **The poster casts its own light.** `.entry-glow` is a blurred copy of the
+  cover behind it, so each panel is tinted by its own artwork while everything
+  else stays monochrome. It is anchored to `.entry-art`, which must stay
+  positioned: making it `static` at a breakpoint re-parents the glow to the
+  panel and floods the whole thing, wrecking text contrast on mobile.
+
 ## Editorial design system (books/films pages)
 
 Settled after several mockup rounds (published as Claude artifacts, reviewed

@@ -66,6 +66,12 @@ through a full editorial redesign.**
       single entry point for cover + credits + synopsis, including the
       `--slug` path the capture skills now call. **This closes the old
       "wire cover-fetching into capture" item.**
+- [x] **Entry modal ("shelf view").** Clicking a tile opens the entry over the
+      grid; a direct visit or refresh still serves the real page, so
+      `/films/<slug>` stays a shareable link. Built on intercepting + parallel
+      routes, with arrow keys flipping through the grid's current filtered
+      order. Direction was approved from a published interactive mockup first.
+      See CLAUDE.md "The entry modal".
 - [x] **Synopses for all 433 entries.** Sidecar files at
       `content/<cat>/synopses/<slug>.md`, rendered on entry pages below the
       user's note and labelled AI-generated with sources linked.
@@ -100,11 +106,8 @@ through a full editorial redesign.**
 
 ## In progress
 
-- **The modal / "shelf view".** Direction approved from a published mockup
-  (poster casts its own light, arrow keys flip between entries). Not built.
-  Implementation is Next's intercepting routes so a click from the grid opens
-  a modal while a direct visit or refresh still serves a real page and
-  `/films/<slug>` stays a shareable link.
+- Nothing mid-flight. Worth a look at whether the home feed (`/`) should also
+  open entries in the modal; it still links straight to pages.
 
 ## Rejected directions (don't re-propose without new information)
 

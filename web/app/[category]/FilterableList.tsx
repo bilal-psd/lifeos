@@ -7,6 +7,7 @@ import type { ListCard, PropertyDef, PropValue } from "@/lib/archive";
 import { numProp, stars, creditOf } from "./rowHelpers";
 import { Cover } from "./Cover";
 import CurrentlyReading from "./CurrentlyReading";
+import { orderKey } from "./EntryModal";
 
 export type Row = {
   slug: string;
@@ -332,6 +333,18 @@ export default function FilterableList({
     }
     return out;
   }, [rows, filters, fstate, sort]);
+
+  /* Publish the current order for the entry modal. It renders in a sibling
+     route slot, so it cannot read this component's state directly, and it needs
+     the *filtered and sorted* order rather than the raw list. */
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(orderKey(category), JSON.stringify(view.map((r) => r.slug)));
+    } catch {
+      /* storage unavailable — the modal just hides its flip controls */
+    }
+  }, [view, category]);
+
 
   /* mutations */
   // enum / decade are multi-select — keep the dropdown open so values can be stacked.
