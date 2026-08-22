@@ -113,6 +113,14 @@ function loadDefs(): Record<string, DefOverride> {
   return defsCache!;
 }
 
+// Display label for a property key: the _properties.json override, or the
+// key capitalized. Shared by the filter bar and the entry detail page so a
+// label override applies everywhere, not just in filters.
+export function propertyLabel(key: string): string {
+  const def = loadDefs()[key] ?? {};
+  return def.label ?? key[0].toUpperCase() + key.slice(1);
+}
+
 // Custom lists: slug -> { name, description }. Membership lives on entries as
 // `properties.lists: [slug]`; this registry just names them.
 let listsCache: Record<string, ListDef> | null = null;
@@ -268,7 +276,7 @@ export function getFilters(entries: Entry[]): PropertyDef[] {
         : undefined;
     out.push({
       key,
-      label: def.label ?? key[0].toUpperCase() + key.slice(1),
+      label: propertyLabel(key),
       type,
       values: sorted,
       min: def.min ?? (nums.length ? Math.min(...nums) : undefined),

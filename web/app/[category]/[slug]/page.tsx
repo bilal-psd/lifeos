@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { getEntries, getEntry, linkOut } from "@/lib/archive";
+import { getEntries, getEntry, linkOut, propertyLabel } from "@/lib/archive";
 import { formatDate } from "@/lib/format";
 import { coverArt, monogram } from "@/lib/cover";
 
@@ -75,7 +75,7 @@ export default async function EntryPage({
                 const n = typeof values[0] === "number" ? (values[0] as number) : null;
                 return (
                   <div key={key} className="flex items-baseline gap-2">
-                    <dt className="capitalize text-muted">{key}</dt>
+                    <dt className="text-muted">{propertyLabel(key)}</dt>
                     <dd className="font-medium">
                       {key === "rating" && n != null ? (
                         <span className="text-star tracking-[1px]">
