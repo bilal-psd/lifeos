@@ -14,7 +14,6 @@
     "enrich": "node scripts/enrich.mjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.120.0",
     "gray-matter": "^4.0.3",
     "next": "16.3.0",
     "react": "19.2.8",

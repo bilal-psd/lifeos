@@ -2,7 +2,7 @@
 // AI-written synopsis. Idempotent — each step skips an entry that already has
 // its output, so a re-run is cheap and safe. Pass --force to redo anyway.
 //
-//   node scripts/enrich.mjs [--only covers|credits|synopses]
+//   node scripts/enrich.mjs [--only covers|credits|grounding]
 //                           [--category films|books] [--slug <slug>]
 //                           [--limit N] [--force] [--dry-run]
 //
@@ -12,7 +12,9 @@
 // Keys come from the gitignored web/.env.local:
 //   TMDB_API_KEY           films — poster, director, synopsis grounding
 //   GOOGLE_BOOKS_API_KEY   books — author, synopsis grounding
-//   ANTHROPIC_API_KEY      synopses only
+//
+// There is no model API key. `--only grounding` prints the facts for an entry;
+// Claude writes the blurb from them during capture. See docs/synopsis-brief.md.
 import fs from "node:fs";
 import path from "node:path";
 import {
@@ -21,11 +23,11 @@ import {
   tmdbMovie, directorsOf, bookMeta,
 } from "./lib/sources.mjs";
 import { setProperty } from "./lib/frontmatter.mjs";
-import { hasSynopsis, writeSynopsis, buildGrounding, generateSynopsis } from "./lib/synopsis.mjs";
+import { hasSynopsis, buildGrounding } from "./lib/synopsis.mjs";
 
 const args = parseArgs();
 const { category: onlyCat, slug: onlySlug, limit, force, dryRun } = args;
-const only = args.only ? args.only.split(",").map((s) => s.trim()) : ["covers", "credits", "synopses"];
+const only = args.only ? args.only.split(",").map((s) => s.trim()) : ["covers", "credits", "grounding"];
 const wants = (step) => only.includes(step);
 
 // Which property holds "who made this", per category. Categories absent from
@@ -35,7 +37,7 @@ const CREDIT_PROP = { films: "director", books: "author" };
 const stats = {
   covers: { done: 0, skipped: 0, missed: 0 },
   credits: { done: 0, skipped: 0, missed: 0 },
-  synopses: { done: 0, skipped: 0, missed: 0, failed: 0 },
+  grounding: { done: 0, skipped: 0, missed: 0 },
 };
 const noKey = new Set();
 const tiers = {}; // dry-run only: how many entries land in each grounding tier
@@ -88,30 +90,26 @@ async function doCredits(entry) {
   process.stdout.write(`✓ ${cat}/${slug} — ${key}: ${names.join(", ")}\n`);
 }
 
-async function doSynopsis(entry) {
-  const { cat, slug } = entry;
-  if (!force && hasSynopsis(cat, slug)) { stats.synopses.skipped++; return; }
-  // Grounding needs only TMDb/Google Books, so --dry-run works without an
-  // Anthropic key — that's how you size the tier-2 (paid web search) share
-  // before spending anything.
-  const grounding = await buildGrounding(entry);
-  if (dryRun) {
-    process.stdout.write(`~ ${cat}/${slug} — tier ${grounding.tier} (${grounding.facts.length} chars)\n`);
-    tiers[grounding.tier] = (tiers[grounding.tier] ?? 0) + 1;
-    stats.synopses.done++;
-    return;
-  }
-  if (!process.env.ANTHROPIC_API_KEY) { noKey.add("ANTHROPIC_API_KEY"); return; }
-  try {
-    const result = await generateSynopsis(entry, grounding);
-    if (!result?.synopsis) { stats.synopses.missed++; return; }
-    writeSynopsis(cat, slug, result);
-    stats.synopses.done++;
-    process.stdout.write(`✓ ${cat}/${slug} — synopsis (${grounding.tier})\n`);
-  } catch (err) {
-    stats.synopses.failed++;
-    process.stdout.write(`✗ ${cat}/${slug} — ${err.message}\n`);
-  }
+/**
+ * Print the facts for one entry so Claude can write its blurb. Deliberately
+ * prints rather than writes: the blurb is written by Claude during capture,
+ * not by a script, so nothing here needs a model or a key.
+ */
+async function doGrounding(entry) {
+  const { cat, slug, title } = entry;
+  if (!force && hasSynopsis(cat, slug)) { stats.grounding.skipped++; return; }
+  const g = await buildGrounding(entry);
+  stats.grounding.done++;
+  if (g.usableWords < 25) stats.grounding.missed++;
+
+  const lines = [`--- ${cat}/${slug} ---`];
+  for (const [k, v] of Object.entries(g.facts)) if (v) lines.push(`${k}: ${v}`);
+  if (g.primary) lines.push(`primary: ${g.primary}`);
+  if (g.wikipedia) lines.push(`wikipedia: ${g.wikipedia}`);
+  lines.push(`sources: ${g.sources.join(" | ") || "(none)"}`);
+  lines.push(`grounding: ${g.grounding} | usable words: ${g.usableWords}` +
+    (g.usableWords < 25 ? "  << THIN: research before writing, or write short" : ""));
+  process.stdout.write(lines.join("\n") + "\n\n");
 }
 
 let processed = 0;
@@ -122,15 +120,14 @@ for (const cat of listCategories(onlyCat)) {
     processed++;
     if (wants("covers")) await doCover(entry);
     if (wants("credits")) await doCredits(entry);
-    if (wants("synopses")) await doSynopsis(entry);
+    if (wants("grounding")) await doGrounding(entry);
     await sleep(200); // pace the external APIs
   }
 }
 
 const line = (name, s) =>
-  `${name.padEnd(9)} done ${s.done}, skipped ${s.skipped}, none-found ${s.missed}` +
-  (s.failed != null ? `, failed ${s.failed}` : "");
-console.log("");
+  `${name.padEnd(9)} done ${s.done}, skipped ${s.skipped}, none-found ${s.missed}`;
+process.stderr.write("\n");
 for (const step of only) if (stats[step]) console.log(line(step, stats[step]));
 if (dryRun && Object.keys(tiers).length) console.log(`\ngrounding tiers: ${Object.entries(tiers).map(([k, v]) => `${k} ${v}`).join(", ")}`);
 if (noKey.size) console.log(`\nmissing key(s) in web/.env.local: ${[...noKey].join(", ")}`);

@@ -81,19 +81,24 @@ After the markdown file is written and **before you commit**, run:
 pnpm --dir web enrich --category books --slug <YYYY-MM-DD-slug>
 ```
 
-That one command downloads the cover, writes `properties.author` from the ISBN
-lookup, and generates the "About this book" synopsis. It is idempotent, so a
-re-run is harmless. Run it for a **currently-reading** book too — the synopsis
-describes the book, and needs no rating.
+That downloads the cover, writes `properties.author` from the ISBN lookup, and prints the
+grounding facts for the synopsis. It is idempotent, so a re-run is harmless.
+
+**You then write the synopsis yourself** from those facts and save it to
+`content/books/synopses/<slug>.md`. There is no API key and no script that
+writes it. Follow **[docs/synopsis-brief.md](../../../docs/synopsis-brief.md)**
+exactly: 60-80 words, describe and never judge, only what the grounding
+supports, and no em dashes or promotional adjectives.
+
+If the printed grounding is marked THIN, search for a better source before
+writing, or write a shorter blurb. Never pad and never fill gaps from memory,
+even for a book you know well.
 
 Then commit the entry **and** what enrichment produced, together:
 
 ```bash
 git add content/books/<slug>.md content/books/covers/<slug>.* content/books/synopses/<slug>.md
 ```
-
-If a key is missing the script says so and skips that step — the entry is still
-valid, so commit it and tell the user which step didn't run.
 
 ## Filing notes
 

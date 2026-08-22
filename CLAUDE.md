@@ -186,22 +186,34 @@ Both are produced by **`pnpm --dir web enrich`**
   (same convention as `covers/`). Read straight from `content/` by
   `readSynopsisFile()` in `web/lib/archive.ts` — **no `public/` sync needed**,
   unlike covers, because they're text rendered server-side, not static assets.
-- **Grounding is two-tier**, in `web/scripts/lib/synopsis.mjs`: tier 1 is the
-  trusted APIs already in use (TMDb overview + credits, Google Books/Open
-  Library description); tier 2 kicks in only when that text is under `THIN_WORDS` (25, tuned against the real archive — see the comment there)
-  and uses Claude's server-side `web_search_20260209` tool restricted to
-  `WEB_SEARCH_DOMAINS`. Tier-2 sources are taken from the actual
-  `web_search_tool_result` blocks, not from the model's self-report.
-- **It is a synopsis, never a review.** The system prompt forbids verdicts,
-  praise, criticism and rating language — opinions on this site are the user's,
-  in the entry body. It also requires original wording rather than a close
-  paraphrase, because TMDb/Google Books text is copyrighted and this site is
-  public. The UI labels the block "AI-generated" with its sources linked; don't
-  quietly drop that label.
-- **`ANTHROPIC_API_KEY`** goes in `web/.env.local` beside the other keys. Model
-  is `claude-opus-5` at `effort: "low"`. Don't pass `temperature` or
-  `budget_tokens` and don't prefill the assistant turn — all three are 400s on
-  Opus 5.
+- **Grounding is gathered by script; the blurb is written by Claude.** There is
+  **no model API key in this repo and no code that calls one.**
+  `pnpm --dir web enrich --only grounding --slug <slug>` prints the facts for an
+  entry (TMDb overview and credits, Google Books or Open Library, plus a
+  Wikipedia extract when the first source is thin). Claude writes the blurb from
+  that during capture and saves the sidecar. A script that called Claude on
+  Claude's behalf only added a bill and a dependency, since capture already runs
+  through Claude. Rules live in **[docs/synopsis-brief.md](docs/synopsis-brief.md)**.
+- **Verify the Wikipedia extract is about the right work.** It is resolved by
+  search, and over one full pass **34 of 371 extracts described something else**:
+  soundtrack albums (Pulp Fiction, Inglourious Basterds), a video game (Revenge
+  of the Sith), a sequel (The Devil Wears Prada 2), an unrelated film (Easy A got
+  a Swedish crime thriller), and nine author biographies standing in for the
+  book. `articleMatches()` in `web/scripts/lib/synopsis.mjs` rejects the obvious
+  cases; read the rest before trusting them.
+- **Publisher copy can be marketing with no content.** "Over 10 million copies
+  sold, from the bestselling author of..." passes a word count and says nothing.
+  `MARKETING` in `synopsis.mjs` discards it so the entry is treated as thin
+  rather than written from sales figures.
+- **It is a synopsis, never a review.** No verdicts, praise, criticism or rating
+  language; opinions on this site are the user's, in the entry body. Original
+  wording, not close paraphrase, because the sources are copyrighted and the
+  site is public. The UI labels the block "AI-generated" with sources linked.
+  Don't quietly drop that label.
+- **Quality is enforced mechanically.** A lint checks every blurb for em dashes,
+  fifteen banned promotional adjectives, forced triples, decorative -ing endings,
+  vague attribution, verdict language, length, and near-duplicate openings across
+  the archive. Re-run it after any bulk edit.
 
 ## Editorial design system (books/films pages)
 

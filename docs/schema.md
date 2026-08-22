@@ -131,7 +131,10 @@ sources:
 Four half-brothers share a crumbling house by the Kerala backwaters...
 ```
 
-Both are produced by `pnpm --dir web enrich` (see the category skills).
+Covers are downloaded by `pnpm --dir web enrich`. Synopses are **written by
+Claude at capture time** from the grounding that same command prints; no script
+and no API key produces them. See
+[docs/synopsis-brief.md](synopsis-brief.md).
 
 **A synopsis is not the user's note and never merges into one.** It describes
 the work; it never carries an opinion, a verdict, or rating language. The site

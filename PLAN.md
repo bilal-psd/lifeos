@@ -66,12 +66,19 @@ through a full editorial redesign.**
       single entry point for cover + credits + synopsis, including the
       `--slug` path the capture skills now call. **This closes the old
       "wire cover-fetching into capture" item.**
-- [x] **AI synopsis pipeline — code complete, backfill not yet run.** Sidecar
-      files at `content/<cat>/synopses/<slug>.md`, two-tier grounding
-      (trusted APIs → Claude web search only when thin), rendered on entry
-      pages below the user's note and labelled AI-generated with sources.
-      **Blocked on `ANTHROPIC_API_KEY` being added to `web/.env.local`** —
-      see "In progress".
+- [x] **Synopses for all 433 entries.** Sidecar files at
+      `content/<cat>/synopses/<slug>.md`, rendered on entry pages below the
+      user's note and labelled AI-generated with sources linked.
+      **No API key and no bill:** capture already runs through Claude, so
+      Claude writes the blurbs from grounding a script gathers. Grounding is
+      TMDb, Google Books, Open Library and Wikipedia, all free.
+      Written by 8 parallel Sonnet subagents working from
+      [docs/synopsis-brief.md](docs/synopsis-brief.md), with franchise clusters
+      kept inside one agent so instalments got differentiated.
+      Final state: 0 rule violations, 0 duplicate openings, median 75 words.
+      **The real work was auditing the grounding**, not writing: 34 of 371
+      Wikipedia extracts were about a different work (soundtracks, video games,
+      sequels, author biographies). See CLAUDE.md.
 - [x] **Full editorial redesign of the books/films pages** (commit `674a8a4`,
       preceded by `ad92ec0`, `0bc5682`). Iterated as published Claude
       artifacts with inline comments before touching code — see "Rejected
@@ -93,15 +100,11 @@ through a full editorial redesign.**
 
 ## In progress
 
-- **Synopsis backfill is the one unfinished step.** All the code ships and the
-  UI is verified against a fixture, but no synopsis has been generated: this
-  machine has no Anthropic credential (no `ANTHROPIC_API_KEY`, no `ant` CLI).
-  To finish:
-  1. Add `ANTHROPIC_API_KEY=...` to `web/.env.local` (gitignored).
-  2. Sanity-check a few: `pnpm --dir web enrich --only synopses --category books --limit 3`
-     — read them against their source URLs before going wide.
-  3. Check spend on a slightly bigger sample, then run the rest.
-     Estimated ~$8-10 one-time for all 433.
+- **The modal / "shelf view".** Direction approved from a published mockup
+  (poster casts its own light, arrow keys flip between entries). Not built.
+  Implementation is Next's intercepting routes so a click from the grid opens
+  a modal while a direct visit or refresh still serves a real page and
+  `/films/<slug>` stays a shareable link.
 
 ## Rejected directions (don't re-propose without new information)
 
