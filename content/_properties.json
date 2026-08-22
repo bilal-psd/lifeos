@@ -3,5 +3,7 @@
   "language": { "label": "Language", "type": "enum", "summary": true },
   "lists":    { "label": "List",     "type": "enum" },
   "year":     { "label": "Year",     "type": "number" },
-  "status":   { "label": "Status",   "type": "enum", "hidden": true }
+  "status":   { "label": "Status",   "type": "enum", "hidden": true },
+  "project_status": { "label": "Status", "type": "enum", "summary": true },
+  "stack":    { "label": "Stack",    "type": "enum" }
 }
