@@ -1,11 +1,12 @@
 import Link from "next/link";
 import type { Row } from "./FilterableList";
 import { Cover } from "./Cover";
+import { creditOf } from "./rowHelpers";
 
 /**
  * A book gets here via `properties.status: reading` — set while in progress,
  * dropped once rated and finished (see the books skill). No rating exists
- * yet, so the tile only shows what's known: cover and title.
+ * yet, so the tile only shows what's known: cover, title and author.
  */
 export default function CurrentlyReading({ entries }: { entries: Row[] }) {
   if (entries.length === 0) return null;
@@ -30,6 +31,9 @@ export default function CurrentlyReading({ entries }: { entries: Row[] }) {
             <div className="mt-2 line-clamp-2 text-[12.5px] font-medium leading-snug tracking-[-.006em] transition-colors group-hover:text-accent">
               {e.title}
             </div>
+            {creditOf(e) && (
+              <div className="mt-0.5 truncate text-[11px] leading-tight text-muted">{creditOf(e)}</div>
+            )}
           </Link>
         ))}
       </div>

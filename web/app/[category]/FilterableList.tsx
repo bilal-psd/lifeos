@@ -4,7 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import Link from "next/link";
 import { formatDate, formatMonthYear } from "@/lib/format";
 import type { ListCard, PropertyDef, PropValue } from "@/lib/archive";
-import { numProp, stars } from "./rowHelpers";
+import { numProp, stars, creditOf } from "./rowHelpers";
 import { Cover } from "./Cover";
 import CurrentlyReading from "./CurrentlyReading";
 
@@ -240,6 +240,9 @@ export default function FilterableList({
   const facetDefs = useMemo(() => filters.filter((d) => d.key !== "lists"), [filters]);
   // List view shows a fixed default set of facets (the `summary` properties).
   const summaryDefs = useMemo(() => filters.filter((d) => d.summary), [filters]);
+  // Over every row, not the filtered view — otherwise the credit line would
+  // appear and vanish as filters change.
+  const anyCredit = useMemo(() => rows.some((r) => creditOf(r)), [rows]);
 
   /* persistence: sort + view mode, per category.
      v2 bumps past saved prefs so the new grid/rating default takes over. */
@@ -541,6 +544,7 @@ export default function FilterableList({
             // to the entry's logged date — either way, real data, not invented.
             const yr = numProp(e, "year");
             const dateline = yr != null ? String(yr) : formatMonthYear(e.date);
+            const credit = creditOf(e);
             return (
               <Link key={e.slug} href={`/${e.category}/${e.slug}`} className="group block">
                 <div className="relative aspect-[2/3] overflow-hidden rounded-md border border-border bg-surface shadow-sm transition-all duration-200 group-hover:-translate-y-1 group-hover:border-border-strong group-hover:shadow-lg">
@@ -556,6 +560,14 @@ export default function FilterableList({
                   <div className="line-clamp-2 min-h-[calc(1.32em*2)] text-[13px] font-medium leading-snug tracking-[-.006em] transition-colors group-hover:text-accent">
                     {e.title}
                   </div>
+                  {/* Rendered for every tile once the category has any credits at
+                      all, so a missing one leaves a gap instead of shifting the
+                      row out of alignment with its neighbours. */}
+                  {anyCredit && (
+                    <div className="mt-0.5 min-h-[1.35em] truncate text-[11px] leading-tight text-muted">
+                      {credit}
+                    </div>
+                  )}
                   {dateline && (
                     <div className="mt-1 text-[10.5px] font-semibold uppercase tracking-[.06em] text-faint">
                       {dateline}
@@ -569,6 +581,7 @@ export default function FilterableList({
       ) : (
         <ul className="border-t border-border">
           {view.map((e) => {
+            const credit = creditOf(e);
             const shown = summaryDefs
               .filter((def) => (e.properties[def.key]?.length ?? 0) > 0)
               .map((def) => {
@@ -594,8 +607,9 @@ export default function FilterableList({
                       </span>
                       <time className="shrink-0 text-[12.5px] text-faint tabular-nums">{formatDate(e.date)}</time>
                     </div>
-                    {shown.length > 0 && (
+                    {(shown.length > 0 || credit) && (
                       <div className="mt-1 flex flex-wrap items-center gap-x-3 text-[12.5px] text-muted">
+                        {credit && <span className="truncate">{credit}</span>}
                         {shown.map((s) => (
                           <span key={s.key} className={s.cls}>
                             {s.text}
