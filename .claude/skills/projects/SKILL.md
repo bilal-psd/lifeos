@@ -63,18 +63,42 @@ these are the user's own work, not something to score.
 
 Unlike films/books (a short personal reaction), a project entry's body is
 **documentary** — it should read as a portfolio case study, roughly a page
-long, something a recruiter or future-you would actually want to read. Six
-sections, in order:
+long, something a recruiter or future-you would actually want to read.
 
-1. **The problem / motivation** — what friction, need, or curiosity led to
-   building this.
-2. **What it does** — the pitch, 2-3 sentences.
-3. **Technical highlights** — the 2-4 most interesting engineering facts, not
-   a full stack list.
-4. **Decisions & tradeoffs** — things deliberately chosen a certain way, and
-   why (including rejected alternatives, if known).
-5. **Outcome / status** — shipped state, version, any real usage signal.
-6. **Links** — repo + homepage (already covered by `metadata`).
+- **Write it as an article, not a spec sheet.** Real markdown headings
+  (`## `, sentence case), full narrative paragraphs underneath each one — not
+  a bold inline label followed by one clipped sentence (`**The problem.**
+  Checking what's playing...`). Let a section run several paragraphs when
+  there's material; don't compress facts into terse fragments for their own
+  sake. It should read like the story of building the thing, not a table of
+  facts about it.
+- **Include ASCII diagrams where they earn their place** — an architecture /
+  data-flow diagram, a release pipeline, a state machine, whatever the
+  project actually has that's easier to see than to read. Plain fenced code
+  blocks, placed next to the prose they illustrate. Not mandatory for every
+  section, only where there's a real shape to draw.
+- **Still run every draft through `/unslop`** (see below) — long-form and
+  narrative doesn't mean license for AI-writing tells; if anything a longer
+  draft has more places for them to hide.
+
+Cover the same ground as before, but as a narrative arc rather than six
+isolated boxes — roughly this order, blending sections together where the
+story wants to:
+
+1. **The itch** — what friction, need, or curiosity led to building this.
+2. **What it does** — the pitch.
+3. **How it works** — the interesting engineering, architecture, and any
+   diagram that helps. Not a full stack list.
+4. **What got hard along the way** — real bugs or edge cases hit and how they
+   got fixed; deliberate decisions and tradeoffs, including rejected
+   alternatives if known. This is usually the most interesting section — tell
+   it as what happened, not as a bullet list of facts.
+5. **Shipping it** — release process, distribution, and a pipeline diagram
+   if there's a real one worth drawing.
+6. **Where it stands** — current status, version, any real usage signal.
+
+Links (repo + homepage) are already covered by `metadata` — no separate link
+section needed in the body.
 
 ### The audit (do this before asking anything)
 
@@ -118,24 +142,6 @@ no exceptions.
 
 ## Example
 
-`content/projects/2026-08-22-marquee.md`
-
-```markdown
----
-title: "Marquee"
-category: projects
-date: 2026-08-22
-tags: [macos, menu-bar-app]
-public: true
-properties:
-  project_status: shipped
-  stack: [Swift, SwiftUI]
-metadata:
-  repo_url: https://github.com/bilal-psd/Marquee
-  homepage_url: https://github.com/bilal-psd/homebrew-tap
----
-
-A small macOS menu bar app that shows what you're listening to and lets you
-control playback — without opening Apple Music or Spotify. Shipped as a
-Homebrew cask.
-```
+`content/projects/2026-08-22-marquee.md` — see that file for a full worked
+example of the narrative, headed, diagram-including body format described
+above.

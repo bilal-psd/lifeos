@@ -208,6 +208,52 @@ body {
   color: var(--muted);
   font-style: italic;
 }
+.entry-body h2 {
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.006em;
+  color: var(--foreground);
+}
+.entry-body h2:first-child {
+  margin-top: 0;
+}
+.entry-body h3 {
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.entry-body code {
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--surface);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.875em;
+}
+.entry-body pre {
+  margin-bottom: 1rem;
+  padding: 1rem 1.125rem;
+  overflow-x: auto;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--pop);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.entry-body pre code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
 
 /* ---- shelf panel (Currently reading / Featured) — a warm-tinted raised
    surface distinguishing "things you're actively engaged with" from the
