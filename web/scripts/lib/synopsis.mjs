@@ -124,11 +124,23 @@ Write 60-80 words describing the work: what it is about, who made it, and what i
 
 Hard rules:
 - Describe, never judge. No verdict, no praise, no criticism, no recommendation, and no rating language. The opinions on this site are the owner's, not yours.
-- Write entirely in your own words. Never reuse phrasing, sentence structure, or distinctive wording from the source material you are given or find — these sources are copyrighted and this page is public. A close paraphrase is not acceptable; re-express the substance from scratch.
+- Write entirely in your own words. Never reuse phrasing, sentence structure, or distinctive wording from the source material you are given or find. These sources are copyrighted and this page is public. A close paraphrase is not acceptable, so re-express the substance from scratch.
 - Third person. Present tense for plot or argument.
-- No major spoilers: do not reveal endings or late twists.
+- No major spoilers. Do not reveal endings or late twists.
 - State only what your sources support. If something is uncertain, leave it out rather than guessing.
-- Output the blurb text only — no preamble, no title, no heading, no quotation marks around it.`;
+- Output the blurb text only. No preamble, no title, no heading, no quotation marks around it.
+
+Write plainly. A blurb that reads like marketing copy has failed, so these rules bind as hard as the ones above:
+- Never use an em dash. Use a period or a comma.
+- No promotional or evaluative adjectives. Banned outright: acclaimed, beloved, iconic, masterful, stunning, vibrant, breathtaking, renowned, seminal, poignant, haunting, powerful, unflinching, gripping.
+- No "not just X, but Y" construction.
+- Do not force items into groups of three. Use however many the facts actually give you.
+- Do not end a sentence with a decorative -ing clause such as "cementing its status as", "exploring themes of", or "highlighting the".
+- Write "is" and "has", not "serves as", "stands as", "boasts", or "features".
+- No abstract metaphor nouns: tapestry, landscape, journey, meditation, lens, portrait, tour de force.
+- No vague attribution. Never write "critics say", "widely regarded as", or "considered by many".
+- Prefer active voice, and name who does what.
+- Be concrete. Name the person, place, year, or event. If a sentence could sit unchanged in a blurb for some other work, delete it and write something specific instead.`;
 
 /** Pull the URLs Claude actually consulted out of the server-tool result blocks. */
 function searchSources(message) {
