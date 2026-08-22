@@ -238,3 +238,37 @@ body {
 .scroll-x-clean::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
 }
+
+/* ---- AI-written synopsis — reference text, never the user's voice ----
+   Deliberately quieter and narrower than .entry-body: on an entry that has a
+   real note, the note must read first and this must read second. */
+.synopsis {
+  border-top: 1px solid var(--border);
+  padding-top: 1.25rem;
+}
+.synopsis-eyebrow {
+  font-size: 0.9375rem;
+  font-style: italic;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--foreground) 85%, transparent);
+  margin-bottom: 0.5rem;
+}
+.synopsis-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.synopsis-note {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--faint);
+}
+.synopsis-note a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.synopsis-note a:hover {
+  color: var(--accent);
+}

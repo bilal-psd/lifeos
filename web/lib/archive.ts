@@ -15,6 +15,19 @@ export type EntryMeta = {
 
 export type PropValue = string | number | boolean;
 
+/**
+ * An AI-written "About this…" blurb. Deliberately NOT part of `body` — the
+ * body is the user's own note (see docs/schema.md); this is machine-written
+ * reference text and is always labelled as such in the UI.
+ */
+export type Synopsis = {
+  text: string;
+  sources: string[];
+  generated: string;
+  model: string;
+  grounding: string;
+};
+
 export type Entry = {
   slug: string;
   category: string;
@@ -26,6 +39,7 @@ export type Entry = {
   metadata: EntryMeta;
   body: string;
   cover: string | null; // serving URL, or null → UI shows a fallback tile
+  synopsis: Synopsis | null;
 };
 
 // A filterable property, derived from the entries present (values) and merged
@@ -149,6 +163,24 @@ function coverUrl(category: string, slug: string): string | null {
   return null;
 }
 
+// Synopses live at content/<category>/synopses/<slug>.md, a sibling convention
+// to covers/ — presence of the file is the synopsis. Unlike covers these are
+// read server-side straight from content/, so nothing is copied into public/.
+function readSynopsisFile(category: string, slug: string): Synopsis | null {
+  const p = path.join(CONTENT_DIR, category, "synopses", `${slug}.md`);
+  if (!fs.existsSync(p)) return null;
+  const { data, content } = matter(fs.readFileSync(p, "utf8"));
+  const text = content.trim();
+  if (!text) return null;
+  return {
+    text,
+    sources: Array.isArray(data.sources) ? data.sources.map(String) : [],
+    generated: toISODate(data.generated),
+    model: String(data.model ?? ""),
+    grounding: String(data.grounding ?? ""),
+  };
+}
+
 /** Display name for a list slug: registry name, else a humanized slug. */
 export function listLabel(slug: string): string {
   return getLists()[slug]?.name ?? humanizeSlug(slug);
@@ -203,6 +235,7 @@ function readCategory(category: string): Entry[] {
         metadata: (data.metadata ?? {}) as EntryMeta,
         body: content.trim(),
         cover: coverUrl(category, slug),
+        synopsis: readSynopsisFile(category, slug),
       } satisfies Entry;
     });
 }

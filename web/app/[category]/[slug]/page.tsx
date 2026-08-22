@@ -8,6 +8,18 @@ import { getEntries, getEntry, linkOut, propertyLabel } from "@/lib/archive";
 import { formatDate } from "@/lib/format";
 import { coverArt, monogram } from "@/lib/cover";
 
+/** "themoviedb.org" — the bare host, for a compact source credit. */
+function hostLabel(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
+/** Singular noun for a category, used in the synopsis heading. */
+const KIND: Record<string, string> = { films: "film", books: "book" };
+
 export function generateStaticParams() {
   return getEntries().map((e) => ({ category: e.category, slug: e.slug }));
 }
@@ -32,6 +44,7 @@ export default async function EntryPage({
   if (!entry) notFound();
 
   const link = linkOut(entry);
+  const kind = KIND[entry.category] ?? "entry";
 
   return (
     <article className="max-w-2xl">
@@ -96,6 +109,26 @@ export default async function EntryPage({
       <div className="entry-body mt-8">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{entry.body}</ReactMarkdown>
       </div>
+
+      {entry.synopsis && (
+        <aside className="synopsis mt-10" aria-label={`About this ${kind}`}>
+          <h2 className="synopsis-eyebrow font-display">About this {kind}</h2>
+          <p className="synopsis-text">{entry.synopsis.text}</p>
+          <p className="synopsis-note">
+            {/* Machine-written text on a public page says so plainly. */}
+            AI-generated
+            {entry.synopsis.sources.length > 0 && " from "}
+            {entry.synopsis.sources.map((src, i) => (
+              <span key={src}>
+                {i > 0 && ", "}
+                <a href={src} target="_blank" rel="noreferrer">
+                  {hostLabel(src)}
+                </a>
+              </span>
+            ))}
+          </p>
+        </aside>
+      )}
 
       {link && (
         <div className="mt-10 border-t border-border pt-4 text-sm">
