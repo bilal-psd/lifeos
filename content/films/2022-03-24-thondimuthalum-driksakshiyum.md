@@ -15,5 +15,3 @@ metadata:
   imdb_id: tt5906392
   id_status: verified
 ---
-
-Watched.

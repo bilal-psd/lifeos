@@ -102,12 +102,19 @@ export default function EntryView({ entry }: { entry: Entry }) {
         </div>
       </div>
 
-      <div className="entry-body mt-7">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{entry.body}</ReactMarkdown>
-      </div>
+      {/* Most bulk-imported entries have no note. Render nothing rather than an
+          empty block, so the synopsis sits directly under the metadata. */}
+      {entry.body && (
+        <div className="entry-body mt-7">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{entry.body}</ReactMarkdown>
+        </div>
+      )}
 
       {entry.synopsis && (
-        <aside className="synopsis mt-8" aria-label={`About this ${kind}`}>
+        <aside
+          className={entry.body ? "synopsis mt-8" : "synopsis synopsis-lead mt-7"}
+          aria-label={`About this ${kind}`}
+        >
           <h2 className="synopsis-eyebrow font-display">About this {kind}</h2>
           <p className="synopsis-text">{entry.synopsis.text}</p>
           <p className="synopsis-note">

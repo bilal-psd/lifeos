@@ -408,3 +408,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .modal-scrim, .modal-panel { animation: none; }
 }
+
+/* With no note above it, the synopsis is the first prose on the page and does
+   not need a rule separating it from one. */
+.synopsis-lead {
+  border-top: 0;
+  padding-top: 0;
+}

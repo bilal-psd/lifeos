@@ -14,5 +14,3 @@ metadata:
   imdb_id: tt0133093
   id_status: verified
 ---
-
-Watched — rated 3/5 on Letterboxd.
