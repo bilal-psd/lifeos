@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2021
   language: Hindi
+  director: "Shoojit Sircar"
 metadata:
   tmdb_id: 598826
   imdb_id: tt10280296

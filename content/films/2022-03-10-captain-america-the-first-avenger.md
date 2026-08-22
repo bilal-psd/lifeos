@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2011
   language: English
+  director: "Joe Johnston"
 metadata:
   tmdb_id: 1771
   imdb_id: tt0458339

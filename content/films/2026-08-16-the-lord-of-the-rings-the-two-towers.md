@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2002
   language: English
+  director: "Peter Jackson"
 metadata:
   tmdb_id: 121
   imdb_id: tt0167261

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2025
   language: Hindi
+  director: "Neeraj Ghaywan"
 metadata:
   tmdb_id: 1227739
   imdb_id: tt26733325

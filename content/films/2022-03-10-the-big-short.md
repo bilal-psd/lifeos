@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2015
   language: English
+  director: "Adam McKay"
 metadata:
   tmdb_id: 318846
   imdb_id: tt1596363

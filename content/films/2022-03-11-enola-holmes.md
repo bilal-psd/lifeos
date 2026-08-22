@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2020
   language: English
+  director: "Harry Bradbeer"
 metadata:
   tmdb_id: 497582
   imdb_id: tt7846844

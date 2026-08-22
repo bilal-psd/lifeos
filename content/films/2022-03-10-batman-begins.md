@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2005
   language: English
+  director: "Christopher Nolan"
 metadata:
   tmdb_id: 272
   imdb_id: tt0372784

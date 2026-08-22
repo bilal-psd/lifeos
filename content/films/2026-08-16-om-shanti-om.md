@@ -8,6 +8,7 @@ properties:
   rating: 2.5
   year: 2007
   language: Hindi
+  director: "Farah Khan"
 metadata:
   tmdb_id: 8079
   imdb_id: tt1024943

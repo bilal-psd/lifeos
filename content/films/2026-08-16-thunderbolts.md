@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2025
   language: English
+  director: "Jake Schreier"
 metadata:
   tmdb_id: 986056
   imdb_id: tt20969586

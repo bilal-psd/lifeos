@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2005
   language: English
+  director: "George Lucas"
 metadata:
   tmdb_id: 1895
   imdb_id: tt0121766

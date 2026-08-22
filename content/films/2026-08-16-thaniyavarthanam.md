@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 1987
   language: Malayalam
+  director: "Sibi Malayil"
 metadata:
   tmdb_id: 307252
   imdb_id: tt0237820

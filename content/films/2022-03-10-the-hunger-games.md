@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2012
   language: English
+  director: "Gary Ross"
 metadata:
   tmdb_id: 70160
   imdb_id: tt1392170

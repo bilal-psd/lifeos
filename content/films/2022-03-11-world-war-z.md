@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2013
   language: English
+  director: "Marc Forster"
 metadata:
   tmdb_id: 72190
   imdb_id: tt0816711

@@ -6,6 +6,7 @@ tags: [arthur-conan-doyle]
 public: true
 properties:
   rating: 4.5
+  author: "Arthur Conan Doyle"
 metadata:
   isbn_13: "9781409077060"
   olid: OL15178275M

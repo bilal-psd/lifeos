@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2021
   language: English
+  director: "Jon Watts"
 metadata:
   tmdb_id: 634649
   imdb_id: tt10872600

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2004
   language: English
+  director: "Michel Gondry"
 metadata:
   tmdb_id: 38
   imdb_id: tt0338013

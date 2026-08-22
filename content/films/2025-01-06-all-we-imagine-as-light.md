@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2024
   language: Malayalam
+  director: "Payal Kapadia"
 metadata:
   tmdb_id: 927547
   imdb_id: tt32086077

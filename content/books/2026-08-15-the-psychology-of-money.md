@@ -6,6 +6,7 @@ tags: [nonfiction, finance, morgan-housel]
 public: true
 properties:
   rating: 5
+  author: "Morgan Housel"
 metadata:
   isbn_13: "9780857197689"
   olid: OL29412746M

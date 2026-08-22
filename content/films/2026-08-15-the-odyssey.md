@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 5
   language: English
+  director: "Christopher Nolan"
 metadata:
   tmdb_id: 1368337
   imdb_id: tt33764258

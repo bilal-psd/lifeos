@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2019
   language: English
+  director: "Andy Muschietti"
 metadata:
   tmdb_id: 474350
   imdb_id: tt7349950

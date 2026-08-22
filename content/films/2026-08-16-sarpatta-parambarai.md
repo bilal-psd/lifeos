@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2021
   language: Tamil
+  director: "Pa. Ranjith"
 metadata:
   tmdb_id: 796011
   imdb_id: tt11580854

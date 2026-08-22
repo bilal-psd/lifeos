@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2007
   language: English
+  director: "Paul Thomas Anderson"
 metadata:
   tmdb_id: 7345
   imdb_id: tt0469494

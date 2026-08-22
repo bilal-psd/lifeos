@@ -9,6 +9,7 @@ properties:
   year: 2015
   language: Malayalam
   lists: [malayalam-starter-pack]
+  director: "Basil Joseph"
 metadata:
   tmdb_id: 356783
   imdb_id: tt4589628

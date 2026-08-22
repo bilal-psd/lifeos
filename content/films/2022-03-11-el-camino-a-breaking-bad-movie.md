@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2019
   language: English
+  director: "Vince Gilligan"
 metadata:
   tmdb_id: 559969
   imdb_id: tt9243946

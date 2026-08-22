@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2011
   language: English
+  director: ["Glenn Ficarra", "John Requa"]
 metadata:
   tmdb_id: 50646
   imdb_id: tt1570728

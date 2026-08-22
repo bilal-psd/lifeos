@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2005
   language: Malayalam
+  director: "Blessy"
 metadata:
   tmdb_id: 81168
   imdb_id: tt0483180

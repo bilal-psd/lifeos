@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2005
   language: English
+  director: "Mike Newell"
 metadata:
   tmdb_id: 674
   imdb_id: tt0330373

@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2000
   language: English
+  director: "Ridley Scott"
 metadata:
   tmdb_id: 98
   imdb_id: tt0172495

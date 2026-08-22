@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 3.5
   language: English
+  author: "Jonathan Swift"
 metadata:
   isbn_13: "9780141439495"
   id_status: verified

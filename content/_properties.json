@@ -5,5 +5,7 @@
   "year":     { "label": "Year",     "type": "number" },
   "status":   { "label": "Status",   "type": "enum", "hidden": true },
   "project_status": { "label": "Status", "type": "enum", "summary": true },
-  "stack":    { "label": "Stack",    "type": "enum" }
+  "stack":    { "label": "Stack",    "type": "enum" },
+  "director": { "label": "Director", "type": "enum", "hidden": true },
+  "author":   { "label": "Author",   "type": "enum", "hidden": true }
 }

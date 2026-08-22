@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2010
   language: English
+  director: "David Yates"
 metadata:
   tmdb_id: 12444
   imdb_id: tt0926084

@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2020
   language: English
+  director: "J Blakeson"
 metadata:
   tmdb_id: 601666
   imdb_id: tt9893250

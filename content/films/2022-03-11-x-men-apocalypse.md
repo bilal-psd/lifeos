@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2016
   language: English
+  director: "Bryan Singer"
 metadata:
   tmdb_id: 246655
   imdb_id: tt3385516

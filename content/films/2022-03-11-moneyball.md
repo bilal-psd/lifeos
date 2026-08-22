@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2011
   language: English
+  director: "Bennett Miller"
 metadata:
   tmdb_id: 60308
   imdb_id: tt1210166

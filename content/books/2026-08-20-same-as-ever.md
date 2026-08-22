@@ -6,6 +6,7 @@ tags: [non-fiction]
 public: true
 properties:
   status: reading
+  author: "Morgan Housel"
 metadata:
   isbn_13: "9780593332702"
   olid: OL47540492M

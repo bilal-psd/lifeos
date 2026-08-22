@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 1993
   language: Malayalam
+  director: "Fazil"
 metadata:
   tmdb_id: 84368
   imdb_id: tt0214915

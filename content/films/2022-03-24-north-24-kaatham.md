@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2013
   language: Malayalam
+  director: "Anil Radhakrishnan Menon"
 metadata:
   tmdb_id: 224057
   imdb_id: tt3198468

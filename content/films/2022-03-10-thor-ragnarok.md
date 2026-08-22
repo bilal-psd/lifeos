@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2017
   language: English
+  director: "Taika Waititi"
 metadata:
   tmdb_id: 284053
   imdb_id: tt3501632

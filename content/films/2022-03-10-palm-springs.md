@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2020
   language: English
+  director: "Max Barbakow"
 metadata:
   tmdb_id: 587792
   imdb_id: tt9484998

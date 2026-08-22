@@ -6,6 +6,7 @@ tags: [cecelia-ahern]
 public: true
 properties:
   rating: 3
+  author: "Cecelia Ahern"
 metadata:
   isbn_13: "9780007300822"
   id_status: verified

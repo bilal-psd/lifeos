@@ -8,6 +8,7 @@ properties:
   rating: 4.5
   year: 2001
   language: English
+  director: "Wes Anderson"
 metadata:
   tmdb_id: 9428
   imdb_id: tt0265666

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2015
   language: English
+  director: "Joss Whedon"
 metadata:
   tmdb_id: 99861
   imdb_id: tt2395427

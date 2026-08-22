@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2012
   language: English
+  director: "Marc Webb"
 metadata:
   tmdb_id: 1930
   imdb_id: tt0948470

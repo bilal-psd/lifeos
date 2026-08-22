@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4.5
   language: English
+  author: "Khaled Hosseini"
 metadata:
   isbn_13: "9781594631931"
   id_status: verified

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2014
   language: English
+  director: "Bryan Singer"
 metadata:
   tmdb_id: 127585
   imdb_id: tt1877832

@@ -6,6 +6,7 @@ tags: [john-green]
 public: true
 properties:
   rating: 4
+  author: "John Green"
 metadata:
   isbn_13: "9780525555728"
   olid: OL17209849M

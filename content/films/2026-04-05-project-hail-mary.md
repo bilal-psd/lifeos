@@ -8,6 +8,7 @@ properties:
   rating: 4.5
   year: 2026
   language: English
+  director: ["Phil Lord", "Christopher Miller"]
 metadata:
   tmdb_id: 687163
   imdb_id: tt12042730

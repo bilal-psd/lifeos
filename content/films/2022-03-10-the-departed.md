@@ -8,6 +8,7 @@ properties:
   rating: 1
   year: 2006
   language: English
+  director: "Martin Scorsese"
 metadata:
   tmdb_id: 1422
   imdb_id: tt0407887

@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2006
   language: Spanish
+  director: "Guillermo del Toro"
 metadata:
   tmdb_id: 1417
   imdb_id: tt0457430

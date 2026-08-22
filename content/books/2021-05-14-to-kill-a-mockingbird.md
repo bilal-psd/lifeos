@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4
   language: English
+  author: "Harper Lee"
 metadata:
   isbn_13: "9780060935467"
   id_status: verified

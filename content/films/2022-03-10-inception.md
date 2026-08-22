@@ -8,6 +8,7 @@ properties:
   rating: 5
   year: 2010
   language: English
+  director: "Christopher Nolan"
 metadata:
   tmdb_id: 27205
   imdb_id: tt1375666

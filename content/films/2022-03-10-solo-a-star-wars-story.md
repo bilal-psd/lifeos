@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2018
   language: English
+  director: "Ron Howard"
 metadata:
   tmdb_id: 348350
   imdb_id: tt3778644

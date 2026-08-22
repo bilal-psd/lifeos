@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2017
   language: Malayalam
+  director: "Lijo Jose Pellissery"
 metadata:
   tmdb_id: 442000
   imdb_id: tt6167894

@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2018
   language: English
+  director: "David Slade"
 metadata:
   tmdb_id: 569547
   imdb_id: tt9495224

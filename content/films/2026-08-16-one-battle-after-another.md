@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2025
   language: English
+  director: "Paul Thomas Anderson"
 metadata:
   tmdb_id: 1054867
   imdb_id: tt30144839

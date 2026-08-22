@@ -6,6 +6,7 @@ tags: [philosophy, fiction]
 public: true
 properties:
   status: reading
+  author: "Jostein Gaarder"
 metadata:
   isbn_13: "9780425152256"
   olid: OL7503818M

@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 1987
   language: Malayalam
+  director: "Sathyan Anthikad"
 metadata:
   tmdb_id: 275366
   imdb_id: tt0282778

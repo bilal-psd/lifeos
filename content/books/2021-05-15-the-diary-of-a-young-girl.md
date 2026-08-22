@@ -6,6 +6,7 @@ tags: [anne-frank]
 public: true
 properties:
   rating: 3.5
+  author: "Anne Frank"
 metadata:
   isbn_13: "9789388810821"
   olid: OL38464096M

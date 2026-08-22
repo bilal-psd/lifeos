@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2017
   language: English
+  director: "Guillermo del Toro"
 metadata:
   tmdb_id: 399055
   imdb_id: tt5580390

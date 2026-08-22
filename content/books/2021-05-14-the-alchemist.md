@@ -6,6 +6,7 @@ tags: [paulo-coelho]
 public: true
 properties:
   rating: 3
+  author: "Paulo Coelho"
 metadata:
   isbn_13: "9780062315007"
   id_status: verified

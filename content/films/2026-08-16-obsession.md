@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2025
   language: English
+  director: "Curry Barker"
 metadata:
   tmdb_id: 1339713
   imdb_id: tt37287335

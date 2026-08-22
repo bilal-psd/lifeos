@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 1991
   language: English
+  director: "Jonathan Demme"
 metadata:
   tmdb_id: 274
   imdb_id: tt0102926

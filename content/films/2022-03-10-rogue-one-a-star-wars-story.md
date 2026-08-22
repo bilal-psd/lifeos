@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2016
   language: English
+  director: "Gareth Edwards"
 metadata:
   tmdb_id: 330459
   imdb_id: tt3748528

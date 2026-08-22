@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2013
   language: English
+  director: "Denis Villeneuve"
 metadata:
   tmdb_id: 146233
   imdb_id: tt1392214

@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2002
   language: English
+  director: "Sam Raimi"
 metadata:
   tmdb_id: 557
   imdb_id: tt0145487

@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2015
   language: English
+  director: "Ridley Scott"
 metadata:
   tmdb_id: 286217
   imdb_id: tt3659388

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2001
   language: English
+  director: "Pete Docter"
 metadata:
   tmdb_id: 585
   imdb_id: tt0198781

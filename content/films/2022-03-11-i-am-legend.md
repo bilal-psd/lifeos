@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2007
   language: English
+  director: "Francis Lawrence"
 metadata:
   tmdb_id: 6479
   imdb_id: tt0480249

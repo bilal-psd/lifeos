@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2023
   language: English
+  director: "James Gunn"
 metadata:
   tmdb_id: 447365
   imdb_id: tt6791350

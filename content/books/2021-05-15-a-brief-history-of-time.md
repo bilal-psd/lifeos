@@ -6,6 +6,7 @@ tags: [stephen-w-hawking]
 public: true
 properties:
   rating: 4
+  author: "Stephen Hawking"
 metadata:
   isbn_13: "9780553380163"
   id_status: verified

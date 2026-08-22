@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2021
   language: English
+  director: ["Don Hall", "Carlos López Estrada"]
 metadata:
   tmdb_id: 527774
   imdb_id: tt5109280

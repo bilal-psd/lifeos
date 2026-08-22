@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 1980
   language: English
+  director: "Stanley Kubrick"
 metadata:
   tmdb_id: 694
   imdb_id: tt0081505

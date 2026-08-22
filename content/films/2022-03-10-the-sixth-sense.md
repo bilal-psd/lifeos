@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 1999
   language: English
+  director: "M. Night Shyamalan"
 metadata:
   tmdb_id: 745
   imdb_id: tt0167404

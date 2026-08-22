@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2016
   language: English
+  director: "Scott Derrickson"
 metadata:
   tmdb_id: 284052
   imdb_id: tt1211837

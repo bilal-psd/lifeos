@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 1997
   language: English
+  director: "Gus Van Sant"
 metadata:
   tmdb_id: 489
   imdb_id: tt0119217

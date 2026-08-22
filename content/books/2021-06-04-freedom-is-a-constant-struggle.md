@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 5
   language: English
+  author: "Angela Davis"
 metadata:
   isbn_13: "9781608465644"
   id_status: verified

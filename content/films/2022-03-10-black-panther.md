@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2018
   language: English
+  director: "Ryan Coogler"
 metadata:
   tmdb_id: 284054
   imdb_id: tt1825683

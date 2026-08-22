@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2012
   language: English
+  director: "Joss Whedon"
 metadata:
   tmdb_id: 24428
   imdb_id: tt0848228

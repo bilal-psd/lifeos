@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2007
   language: English
+  director: "Wes Anderson"
 metadata:
   tmdb_id: 4538
   imdb_id: tt0838221

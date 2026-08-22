@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2015
   language: English
+  director: "Pete Docter"
 metadata:
   tmdb_id: 150540
   imdb_id: tt2096673

@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 3
   language: English
+  author: "Yvonne Woon"
 metadata:
   isbn_13: "9781423119579"
   id_status: verified

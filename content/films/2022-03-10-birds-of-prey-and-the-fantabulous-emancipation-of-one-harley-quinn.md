@@ -8,6 +8,7 @@ properties:
   rating: 2.5
   year: 2020
   language: English
+  director: "Cathy Yan"
 metadata:
   tmdb_id: 495764
   imdb_id: tt7713068

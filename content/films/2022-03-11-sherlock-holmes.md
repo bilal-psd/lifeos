@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2009
   language: English
+  director: "Guy Ritchie"
 metadata:
   tmdb_id: 10528
   imdb_id: tt0988045

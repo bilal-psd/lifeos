@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 1995
   language: English
+  director: "Richard Linklater"
 metadata:
   tmdb_id: 76
   imdb_id: tt0112471

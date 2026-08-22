@@ -8,6 +8,7 @@ properties:
   rating: 4.5
   year: 2010
   language: English
+  director: ["Dean DeBlois", "Chris Sanders"]
 metadata:
   tmdb_id: 10191
   imdb_id: tt0892769

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2000
   language: English
+  director: "M. Night Shyamalan"
 metadata:
   tmdb_id: 9741
   imdb_id: tt0217869

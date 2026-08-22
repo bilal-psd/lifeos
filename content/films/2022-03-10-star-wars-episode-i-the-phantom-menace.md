@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 1999
   language: English
+  director: "George Lucas"
 metadata:
   tmdb_id: 1893
   imdb_id: tt0120915

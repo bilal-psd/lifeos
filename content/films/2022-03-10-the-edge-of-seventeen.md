@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2016
   language: English
+  director: "Kelly Fremon Craig"
 metadata:
   tmdb_id: 376660
   imdb_id: tt1878870

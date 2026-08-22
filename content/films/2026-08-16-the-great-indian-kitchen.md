@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2021
   language: Malayalam
+  director: "Jeo Baby"
 metadata:
   tmdb_id: 786064
   imdb_id: tt13299890

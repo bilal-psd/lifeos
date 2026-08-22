@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2009
   language: English
+  director: "Quentin Tarantino"
 metadata:
   tmdb_id: 16869
   imdb_id: tt0361748

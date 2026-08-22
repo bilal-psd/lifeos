@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2017
   language: English
+  director: "Edgar Wright"
 metadata:
   tmdb_id: 339403
   imdb_id: tt3890160

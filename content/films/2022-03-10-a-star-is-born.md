@@ -8,6 +8,7 @@ properties:
   rating: 2.5
   year: 2018
   language: English
+  director: "Bradley Cooper"
 metadata:
   tmdb_id: 332562
   imdb_id: tt1517451

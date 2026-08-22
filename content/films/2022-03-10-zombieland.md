@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2009
   language: English
+  director: "Ruben Fleischer"
 metadata:
   tmdb_id: 19908
   imdb_id: tt1156398

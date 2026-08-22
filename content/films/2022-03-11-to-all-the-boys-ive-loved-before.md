@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2018
   language: English
+  director: "Susan Johnson"
 metadata:
   tmdb_id: 466282
   imdb_id: tt3846674

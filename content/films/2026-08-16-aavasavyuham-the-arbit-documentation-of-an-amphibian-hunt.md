@@ -9,6 +9,7 @@ properties:
   year: 2022
   language: Malayalam
   lists: [malayalam-starter-pack]
+  director: "Krishand"
 metadata:
   tmdb_id: 922598
   imdb_id: tt15939240

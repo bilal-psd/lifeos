@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4
   language: English
+  author: "J. K. Rowling"
 metadata:
   isbn_13: "9780439139595"
   id_status: verified

@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4
   language: English
+  author: "J. K. ROWLING"
 metadata:
   isbn_13: "9780439554930"
   id_status: verified

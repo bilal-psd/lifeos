@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 1985
   language: English
+  director: "Robert Zemeckis"
 metadata:
   tmdb_id: 105
   imdb_id: tt0088763

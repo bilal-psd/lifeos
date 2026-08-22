@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2006
   language: English
+  director: "David Frankel"
 metadata:
   tmdb_id: 350
   imdb_id: tt0458352

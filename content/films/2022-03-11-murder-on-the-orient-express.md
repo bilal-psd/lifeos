@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2017
   language: English
+  director: "Kenneth Branagh"
 metadata:
   tmdb_id: 392044
   imdb_id: tt3402236

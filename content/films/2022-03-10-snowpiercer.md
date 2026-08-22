@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2013
   language: English
+  director: "Bong Joon Ho"
 metadata:
   tmdb_id: 110415
   imdb_id: tt1706620

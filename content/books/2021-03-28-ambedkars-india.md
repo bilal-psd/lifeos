@@ -6,6 +6,7 @@ tags: [br-ambedkar]
 public: true
 properties:
   rating: 5
+  author: "B.R. Ambedkar"
 metadata:
   isbn_13: "9789387022898"
   id_status: verified

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2018
   language: English
+  director: ["Joe Russo", "Anthony Russo"]
 metadata:
   tmdb_id: 299536
   imdb_id: tt4154756

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2009
   language: English
+  director: "Marc Webb"
 metadata:
   tmdb_id: 19913
   imdb_id: tt1022603

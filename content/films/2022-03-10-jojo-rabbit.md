@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2019
   language: English
+  director: "Taika Waititi"
 metadata:
   tmdb_id: 515001
   imdb_id: tt2584384

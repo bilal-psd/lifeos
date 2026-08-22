@@ -8,6 +8,7 @@ properties:
   rating: 1
   year: 2021
   language: English
+  director: "Ridley Scott"
 metadata:
   tmdb_id: 617653
   imdb_id: tt4244994

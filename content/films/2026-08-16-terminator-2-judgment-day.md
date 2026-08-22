@@ -8,6 +8,7 @@ properties:
   rating: 2.5
   year: 1991
   language: English
+  director: "James Cameron"
 metadata:
   tmdb_id: 280
   imdb_id: tt0103064

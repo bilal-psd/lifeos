@@ -8,6 +8,7 @@ properties:
   rating: 4.5
   year: 2007
   language: Hindi
+  director: "Aamir Khan"
 metadata:
   tmdb_id: 7508
   imdb_id: tt0986264

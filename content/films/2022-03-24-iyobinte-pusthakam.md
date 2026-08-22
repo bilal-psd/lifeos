@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2014
   language: Malayalam
+  director: "Amal Neerad"
 metadata:
   tmdb_id: 302638
   imdb_id: tt4186118

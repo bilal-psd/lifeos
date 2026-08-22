@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4
   language: English
+  author: "Veronica Roth"
 metadata:
   isbn_13: "9780062348630"
   id_status: verified

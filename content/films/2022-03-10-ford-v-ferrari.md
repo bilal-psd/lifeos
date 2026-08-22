@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2019
   language: English
+  director: "James Mangold"
 metadata:
   tmdb_id: 359724
   imdb_id: tt1950186

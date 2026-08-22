@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2023
   language: English
+  director: "Peyton Reed"
 metadata:
   tmdb_id: 640146
   imdb_id: tt10954600

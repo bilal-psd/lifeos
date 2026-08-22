@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2023
   language: English
+  director: "Christopher Nolan"
 metadata:
   tmdb_id: 872585
   imdb_id: tt15398776

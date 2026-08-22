@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2019
   language: Spanish
+  director: "Galder Gaztelu-Urrutia"
 metadata:
   tmdb_id: 619264
   imdb_id: tt8228288

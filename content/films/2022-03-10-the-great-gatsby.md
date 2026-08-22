@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2013
   language: English
+  director: "Baz Luhrmann"
 metadata:
   tmdb_id: 64682
   imdb_id: tt1343092

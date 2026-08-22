@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2018
   language: English
+  director: "Spike Lee"
 metadata:
   tmdb_id: 487558
   imdb_id: tt7349662

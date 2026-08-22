@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2019
   language: English
+  director: ["Matt Bettinelli-Olpin", "Tyler Gillett"]
 metadata:
   tmdb_id: 567609
   imdb_id: tt7798634

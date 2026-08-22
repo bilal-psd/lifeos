@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2014
   language: English
+  director: "Doug Liman"
 metadata:
   tmdb_id: 137113
   imdb_id: tt1631867

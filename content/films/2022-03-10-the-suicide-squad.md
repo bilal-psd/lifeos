@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2021
   language: English
+  director: "James Gunn"
 metadata:
   tmdb_id: 436969
   imdb_id: tt6334354

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2017
   language: English
+  director: "Jon Watts"
 metadata:
   tmdb_id: 315635
   imdb_id: tt2250912

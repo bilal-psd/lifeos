@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2018
   language: English
+  director: "Jon M. Chu"
 metadata:
   tmdb_id: 455207
   imdb_id: tt3104988

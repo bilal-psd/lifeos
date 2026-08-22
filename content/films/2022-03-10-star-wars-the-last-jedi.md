@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2017
   language: English
+  director: "Rian Johnson"
 metadata:
   tmdb_id: 181808
   imdb_id: tt2527336

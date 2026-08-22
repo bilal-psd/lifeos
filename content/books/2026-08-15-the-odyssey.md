@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4.5
   language: English
+  author: "Homer"
 metadata:
   isbn_13: "9780140268867"
   olid: OL7351772M

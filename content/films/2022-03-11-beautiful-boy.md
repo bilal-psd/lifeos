@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2018
   language: English
+  director: "Felix van Groeningen"
 metadata:
   tmdb_id: 451915
   imdb_id: tt1226837

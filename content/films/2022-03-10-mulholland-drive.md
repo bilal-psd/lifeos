@@ -8,6 +8,7 @@ properties:
   rating: 1
   year: 2001
   language: English
+  director: "David Lynch"
 metadata:
   tmdb_id: 1018
   imdb_id: tt0166924

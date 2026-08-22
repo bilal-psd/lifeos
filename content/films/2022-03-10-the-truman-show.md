@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 1998
   language: English
+  director: "Peter Weir"
 metadata:
   tmdb_id: 37165
   imdb_id: tt0120382

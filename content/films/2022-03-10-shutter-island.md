@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2010
   language: English
+  director: "Martin Scorsese"
 metadata:
   tmdb_id: 11324
   imdb_id: tt1130884

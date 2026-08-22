@@ -6,6 +6,7 @@ tags: [veronica-roth]
 public: true
 properties:
   rating: 3.5
+  author: "Veronica Roth"
 metadata:
   isbn_13: "9780007524273"
   id_status: verified

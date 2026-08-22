@@ -6,6 +6,7 @@ tags: [dan-brown]
 public: true
 properties:
   rating: 3
+  author: "Dan Brown"
 metadata:
   isbn_13: "9780552161275"
   id_status: verified

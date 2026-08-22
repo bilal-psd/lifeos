@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2007
   language: English
+  director: ["Joel Coen", "Ethan Coen"]
 metadata:
   tmdb_id: 6977
   imdb_id: tt0477348

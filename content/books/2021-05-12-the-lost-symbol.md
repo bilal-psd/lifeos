@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 3
   language: English
+  author: "Dan Brown"
 metadata:
   isbn_13: "9780385504225"
   id_status: verified

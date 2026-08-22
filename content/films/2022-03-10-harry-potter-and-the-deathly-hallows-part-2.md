@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2011
   language: English
+  director: "David Yates"
 metadata:
   tmdb_id: 12445
   imdb_id: tt1201607

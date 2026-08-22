@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2022
   language: English
+  director: "Matt Reeves"
 metadata:
   tmdb_id: 414906
   imdb_id: tt1877830

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2006
   language: English
+  director: "Martin Campbell"
 metadata:
   tmdb_id: 36557
   imdb_id: tt0381061

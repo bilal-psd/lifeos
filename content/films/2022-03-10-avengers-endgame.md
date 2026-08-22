@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2019
   language: English
+  director: ["Anthony Russo", "Joe Russo"]
 metadata:
   tmdb_id: 299534
   imdb_id: tt4154796

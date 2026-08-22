@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2012
   language: English
+  director: "Stephen Chbosky"
 metadata:
   tmdb_id: 84892
   imdb_id: tt1659337

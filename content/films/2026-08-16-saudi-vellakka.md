@@ -9,6 +9,7 @@ properties:
   year: 2022
   language: Malayalam
   lists: [malayalam-starter-pack]
+  director: "Tharun Moorthy"
 metadata:
   tmdb_id: 873992
   imdb_id: tt15422244

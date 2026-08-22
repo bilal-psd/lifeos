@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 1990
   language: English
+  director: "Martin Scorsese"
 metadata:
   tmdb_id: 769
   imdb_id: tt0099685

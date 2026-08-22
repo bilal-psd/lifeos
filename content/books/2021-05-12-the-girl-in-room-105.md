@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 1
   language: English
+  author: "Chetan Bhagat"
 metadata:
   isbn_13: "9781542040464"
   id_status: verified

@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2024
   language: Malayalam
+  director: "Chidambaram"
 metadata:
   tmdb_id: 1069945
   imdb_id: tt26458038

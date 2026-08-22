@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2017
   language: English
+  director: "Michael Gracey"
 metadata:
   tmdb_id: 316029
   imdb_id: tt1485796

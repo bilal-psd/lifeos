@@ -6,6 +6,7 @@ tags: [br-ambedkar]
 public: true
 properties:
   rating: 5
+  author: "B. R. Ambedkar"
 metadata:
   isbn_13: "9788190875318"
   olid: OL25535124M

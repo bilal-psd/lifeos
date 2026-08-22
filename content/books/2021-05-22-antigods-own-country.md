@@ -6,6 +6,7 @@ tags: [av-sakthidharan]
 public: true
 properties:
   rating: 5
+  author: "A.V. Sakthidharan"
 metadata:
   isbn_13: "9788189059941"
   id_status: verified

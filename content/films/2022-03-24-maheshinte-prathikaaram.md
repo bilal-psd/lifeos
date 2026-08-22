@@ -9,6 +9,7 @@ properties:
   year: 2016
   language: Malayalam
   lists: [malayalam-starter-pack]
+  director: "Dileesh Pothan"
 metadata:
   tmdb_id: 381691
   imdb_id: tt4851630

@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2012
   language: Malayalam
+  director: "Anwar Rasheed"
 metadata:
   tmdb_id: 117751
   imdb_id: tt2218988

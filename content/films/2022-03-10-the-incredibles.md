@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2004
   language: English
+  director: "Brad Bird"
 metadata:
   tmdb_id: 9806
   imdb_id: tt0317705

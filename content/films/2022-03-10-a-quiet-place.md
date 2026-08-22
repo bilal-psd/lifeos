@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2018
   language: English
+  director: "John Krasinski"
 metadata:
   tmdb_id: 447332
   imdb_id: tt6644200

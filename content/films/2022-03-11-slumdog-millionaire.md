@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2008
   language: English
+  director: "Danny Boyle"
 metadata:
   tmdb_id: 12405
   imdb_id: tt1010048

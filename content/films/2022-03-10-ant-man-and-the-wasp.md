@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2018
   language: English
+  director: "Peyton Reed"
 metadata:
   tmdb_id: 363088
   imdb_id: tt5095030

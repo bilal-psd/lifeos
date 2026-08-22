@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2021
   language: English
+  director: "Cary Joji Fukunaga"
 metadata:
   tmdb_id: 370172
   imdb_id: tt2382320

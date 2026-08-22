@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 1999
   language: English
+  director: "David Fincher"
 metadata:
   tmdb_id: 550
   imdb_id: tt0137523

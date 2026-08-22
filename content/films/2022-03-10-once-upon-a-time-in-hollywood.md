@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2019
   language: English
+  director: "Quentin Tarantino"
 metadata:
   tmdb_id: 466272
   imdb_id: tt7131622

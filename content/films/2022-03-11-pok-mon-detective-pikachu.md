@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2019
   language: English
+  director: "Rob Letterman"
 metadata:
   tmdb_id: 447404
   imdb_id: tt5884052

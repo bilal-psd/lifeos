@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2002
   language: English
+  director: "Chris Columbus"
 metadata:
   tmdb_id: 672
   imdb_id: tt0295297

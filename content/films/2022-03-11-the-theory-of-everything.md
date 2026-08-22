@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2014
   language: English
+  director: "James Marsh"
 metadata:
   tmdb_id: 266856
   imdb_id: tt2980516

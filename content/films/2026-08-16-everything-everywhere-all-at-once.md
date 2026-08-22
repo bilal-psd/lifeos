@@ -8,6 +8,7 @@ properties:
   rating: 4.5
   year: 2022
   language: English
+  director: ["Daniel Scheinert", "Daniel Kwan"]
 metadata:
   tmdb_id: 545611
   imdb_id: tt6710474

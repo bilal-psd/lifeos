@@ -8,6 +8,7 @@ properties:
   rating: 2.5
   year: 2018
   language: English
+  director: "David Yates"
 metadata:
   tmdb_id: 338952
   imdb_id: tt4123430

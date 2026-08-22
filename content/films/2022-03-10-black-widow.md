@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2021
   language: English
+  director: "Cate Shortland"
 metadata:
   tmdb_id: 497698
   imdb_id: tt3480822

@@ -6,6 +6,7 @@ tags: [br-ambedkar]
 public: true
 properties:
   rating: 5
+  author: ["Bhimrao Ramji Ambedkar", "D. C. Ahir"]
 metadata:
   isbn_13: "9788187190448"
   id_status: verified

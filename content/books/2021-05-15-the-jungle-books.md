@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4
   language: English
+  author: "Rudyard Kipling"
 metadata:
   isbn_13: "9780451529756"
   id_status: verified

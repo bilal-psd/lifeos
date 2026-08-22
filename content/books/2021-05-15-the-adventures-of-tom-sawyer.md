@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4.5
   language: English
+  author: "Mark Twain"
 metadata:
   isbn_13: "9780143039563"
   id_status: verified

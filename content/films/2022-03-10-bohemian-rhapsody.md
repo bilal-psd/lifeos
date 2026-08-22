@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2018
   language: English
+  director: "Bryan Singer"
 metadata:
   tmdb_id: 424694
   imdb_id: tt1727824

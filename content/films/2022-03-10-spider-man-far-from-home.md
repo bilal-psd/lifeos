@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2019
   language: English
+  director: "Jon Watts"
 metadata:
   tmdb_id: 429617
   imdb_id: tt6320628

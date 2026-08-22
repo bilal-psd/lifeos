@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2014
   language: English
+  director: "Marc Webb"
 metadata:
   tmdb_id: 102382
   imdb_id: tt1872181

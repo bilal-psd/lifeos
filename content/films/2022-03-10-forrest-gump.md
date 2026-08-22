@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 1994
   language: English
+  director: "Robert Zemeckis"
 metadata:
   tmdb_id: 13
   imdb_id: tt0109830

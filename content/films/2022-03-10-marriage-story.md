@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2019
   language: English
+  director: "Noah Baumbach"
 metadata:
   tmdb_id: 492188
   imdb_id: tt7653254

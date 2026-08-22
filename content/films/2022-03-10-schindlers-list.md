@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 1993
   language: English
+  director: "Steven Spielberg"
 metadata:
   tmdb_id: 424
   imdb_id: tt0108052

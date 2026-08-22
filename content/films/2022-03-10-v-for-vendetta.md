@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2005
   language: English
+  director: "James McTeigue"
 metadata:
   tmdb_id: 752
   imdb_id: tt0434409

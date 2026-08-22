@@ -6,6 +6,7 @@ tags: [nicholas-sparks]
 public: true
 properties:
   rating: 4
+  author: "Nicholas Sparks"
 metadata:
   isbn_13: "9781568652429"
   olid: OL25855694M

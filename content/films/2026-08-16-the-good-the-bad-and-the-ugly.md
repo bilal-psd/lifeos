@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 1966
   language: Italian
+  director: "Sergio Leone"
 metadata:
   tmdb_id: 429
   imdb_id: tt0060196

@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 1
   language: English
+  author: "Chetan Bhagat"
 metadata:
   isbn_13: "9788129142146"
   id_status: verified

@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4
   language: English
+  author: "Rick Riordan"
 metadata:
   isbn_13: "9780786838653"
   id_status: verified

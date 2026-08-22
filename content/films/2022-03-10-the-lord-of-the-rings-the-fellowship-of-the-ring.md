@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2001
   language: English
+  director: "Peter Jackson"
 metadata:
   tmdb_id: 120
   imdb_id: tt0120737

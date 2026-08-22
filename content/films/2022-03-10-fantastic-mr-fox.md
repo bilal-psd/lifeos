@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2009
   language: English
+  director: "Wes Anderson"
 metadata:
   tmdb_id: 10315
   imdb_id: tt0432283

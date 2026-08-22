@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 1990
   language: English
+  director: "Tim Burton"
 metadata:
   tmdb_id: 162
   imdb_id: tt0099487

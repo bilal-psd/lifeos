@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2017
   language: English
+  director: "Matthew Vaughn"
 metadata:
   tmdb_id: 343668
   imdb_id: tt4649466

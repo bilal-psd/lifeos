@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2000
   language: English
+  director: "Mary Harron"
 metadata:
   tmdb_id: 1359
   imdb_id: tt0144084

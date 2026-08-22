@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2024
   language: English
+  director: "Coralie Fargeat"
 metadata:
   tmdb_id: 933260
   imdb_id: tt17526714

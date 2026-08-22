@@ -8,6 +8,7 @@ properties:
   rating: 4.5
   year: 2007
   language: English
+  director: "Brad Bird"
 metadata:
   tmdb_id: 2062
   imdb_id: tt0382932

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2021
   language: English
+  director: "Destin Daniel Cretton"
 metadata:
   tmdb_id: 566525
   imdb_id: tt9376612

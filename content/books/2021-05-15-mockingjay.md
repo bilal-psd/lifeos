@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 3
   language: English
+  author: "Suzanne Collins"
 metadata:
   isbn_13: "9780439023511"
   id_status: verified

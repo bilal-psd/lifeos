@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4
   language: English
+  author: "Austin Kleon"
 metadata:
   isbn_13: "9780761178972"
   id_status: verified

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2007
   language: English
+  director: "David Yates"
 metadata:
   tmdb_id: 675
   imdb_id: tt0373889

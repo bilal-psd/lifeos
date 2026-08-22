@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2013
   language: English
+  director: "James Wan"
 metadata:
   tmdb_id: 138843
   imdb_id: tt1457767

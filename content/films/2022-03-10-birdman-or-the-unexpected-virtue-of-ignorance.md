@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2014
   language: English
+  director: "Alejandro G. Iñárritu"
 metadata:
   tmdb_id: 194662
   imdb_id: tt2562232

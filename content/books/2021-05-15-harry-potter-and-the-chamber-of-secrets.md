@@ -6,6 +6,7 @@ tags: [jk-rowling]
 public: true
 properties:
   rating: 4
+  author: "J.K. Rowling"
 metadata:
   isbn_13: "9788498389241"
   olid: OL59041259M

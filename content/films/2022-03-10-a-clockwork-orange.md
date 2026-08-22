@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 1971
   language: English
+  director: "Stanley Kubrick"
 metadata:
   tmdb_id: 185
   imdb_id: tt0066921

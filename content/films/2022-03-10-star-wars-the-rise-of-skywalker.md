@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2019
   language: English
+  director: "J.J. Abrams"
 metadata:
   tmdb_id: 181812
   imdb_id: tt2527338

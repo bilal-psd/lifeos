@@ -6,6 +6,7 @@ tags: [mark-haddon]
 public: true
 properties:
   rating: 4
+  author: "Mark Haddon"
 metadata:
   isbn_13: "9781400032716"
   id_status: verified

@@ -8,6 +8,7 @@ properties:
   language: English
   rating: 2.5
   year: 2017
+  director: "Tommy O'Haver"
 metadata:
   tmdb_id: 401743
   imdb_id: tt4842646

@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2018
   language: English
+  director: "Steven Spielberg"
 metadata:
   tmdb_id: 333339
   imdb_id: tt1677720

@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2012
   language: English
+  director: "Quentin Tarantino"
 metadata:
   tmdb_id: 68718
   imdb_id: tt1853728

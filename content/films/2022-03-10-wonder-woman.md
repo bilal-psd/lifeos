@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2017
   language: English
+  director: "Patty Jenkins"
 metadata:
   tmdb_id: 297762
   imdb_id: tt0451279

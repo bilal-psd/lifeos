@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2013
   language: English
+  director: "Martin Scorsese"
 metadata:
   tmdb_id: 106646
   imdb_id: tt0993846

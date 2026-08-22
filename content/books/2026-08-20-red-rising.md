@@ -6,6 +6,7 @@ tags: [sci-fi]
 public: true
 properties:
   status: reading
+  author: "Pierce Brown"
 metadata:
   isbn_13: "9780345539793"
   olid: OL26758016M

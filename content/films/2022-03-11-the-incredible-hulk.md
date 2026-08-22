@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2008
   language: English
+  director: "Louis Leterrier"
 metadata:
   tmdb_id: 1724
   imdb_id: tt0800080

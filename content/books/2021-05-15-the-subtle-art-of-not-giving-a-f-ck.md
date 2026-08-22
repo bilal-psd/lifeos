@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4
   language: English
+  author: "Mark Manson"
 metadata:
   isbn_13: "9798804636129"
   id_status: verified

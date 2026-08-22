@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2017
   language: English
+  director: "James Gunn"
 metadata:
   tmdb_id: 283995
   imdb_id: tt3896198

@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2023
   language: English
+  director: ["Kemp Powers", "Justin K. Thompson", "Joaquim Dos Santos"]
 metadata:
   tmdb_id: 569094
   imdb_id: tt9362722

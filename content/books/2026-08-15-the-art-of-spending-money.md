@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4
   language: English
+  author: "Morgan. Housel"
 metadata:
   isbn_13: "9781804091890"
   olid: OL60292250M

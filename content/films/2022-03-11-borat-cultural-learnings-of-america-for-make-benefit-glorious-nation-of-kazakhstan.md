@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2006
   language: English
+  director: "Larry Charles"
 metadata:
   tmdb_id: 496
   imdb_id: tt0443453

@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2014
   language: English
+  director: "James Gunn"
 metadata:
   tmdb_id: 118340
   imdb_id: tt2015381

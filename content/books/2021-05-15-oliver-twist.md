@@ -6,6 +6,7 @@ tags: [charles-dickens]
 public: true
 properties:
   rating: 4
+  author: "Charles Dickens"
 metadata:
   isbn_13: "9798613739455"
   id_status: unverified

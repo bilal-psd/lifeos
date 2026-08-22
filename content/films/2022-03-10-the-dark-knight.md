@@ -8,6 +8,7 @@ properties:
   rating: 4.5
   year: 2008
   language: English
+  director: "Christopher Nolan"
 metadata:
   tmdb_id: 155
   imdb_id: tt0468569

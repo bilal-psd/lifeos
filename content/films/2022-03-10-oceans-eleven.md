@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2001
   language: English
+  director: "Steven Soderbergh"
 metadata:
   tmdb_id: 161
   imdb_id: tt0240772

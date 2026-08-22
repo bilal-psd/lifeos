@@ -6,6 +6,7 @@ tags: [khaled-hosseini]
 public: true
 properties:
   rating: 3
+  author: "Khaled Hosseini"
 metadata:
   isbn_13: "9789382951001"
   id_status: verified

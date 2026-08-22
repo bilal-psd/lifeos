@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2013
   language: English
+  director: "Steve McQueen"
 metadata:
   tmdb_id: 76203
   imdb_id: tt2024544

@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2003
   language: English
+  director: "Peter Jackson"
 metadata:
   tmdb_id: 122
   imdb_id: tt0167260

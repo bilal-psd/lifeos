@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2013
   language: English
+  director: "Louis Leterrier"
 metadata:
   tmdb_id: 75656
   imdb_id: tt1670345

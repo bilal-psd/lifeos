@@ -8,6 +8,7 @@ properties:
   rating: 1
   year: 1976
   language: English
+  director: "Martin Scorsese"
 metadata:
   tmdb_id: 103
   imdb_id: tt0075314

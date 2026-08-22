@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2019
   language: English
+  director: "Greta Gerwig"
 metadata:
   tmdb_id: 331482
   imdb_id: tt3281548

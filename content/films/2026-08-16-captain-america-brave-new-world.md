@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2025
   language: English
+  director: "Julius Onah"
 metadata:
   tmdb_id: 822119
   imdb_id: tt14513804

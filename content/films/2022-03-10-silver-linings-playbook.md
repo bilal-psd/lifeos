@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2012
   language: English
+  director: "David O. Russell"
 metadata:
   tmdb_id: 82693
   imdb_id: tt1045658

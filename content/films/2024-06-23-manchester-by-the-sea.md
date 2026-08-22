@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2016
   language: English
+  director: "Kenneth Lonergan"
 metadata:
   tmdb_id: 334541
   imdb_id: tt4034228

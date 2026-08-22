@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 5
   language: English
+  author: "Arundhati Roy"
 metadata:
   isbn_13: "9781608467976"
   id_status: verified

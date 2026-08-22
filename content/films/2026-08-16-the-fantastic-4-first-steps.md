@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2025
   language: English
+  director: "Matt Shakman"
 metadata:
   tmdb_id: 617126
   imdb_id: tt10676052

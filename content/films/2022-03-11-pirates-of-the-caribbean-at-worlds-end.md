@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2007
   language: English
+  director: "Gore Verbinski"
 metadata:
   tmdb_id: 285
   imdb_id: tt0449088

@@ -7,6 +7,7 @@ public: true
 properties:
   status: reading
   language: English
+  author: "M. Fazlul Hasan"
 metadata:
   olid: OL5747660M
   id_status: verified

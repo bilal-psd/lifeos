@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 3
   language: English
+  author: "Cassandra Clare"
 metadata:
   isbn_13: "9781416914280"
   id_status: verified

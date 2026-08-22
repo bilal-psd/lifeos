@@ -8,6 +8,7 @@ properties:
   rating: 5
   year: 2021
   language: English
+  director: "Shaka King"
 metadata:
   tmdb_id: 583406
   imdb_id: tt9784798

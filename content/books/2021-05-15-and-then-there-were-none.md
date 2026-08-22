@@ -7,6 +7,7 @@ public: true
 properties:
   rating: 4.5
   language: English
+  author: "Agatha Christie"
 metadata:
   isbn_13: "9780312330873"
   id_status: verified

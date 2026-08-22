@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2018
   language: English
+  director: "Alex Garland"
 metadata:
   tmdb_id: 300668
   imdb_id: tt2798920

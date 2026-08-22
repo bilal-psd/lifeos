@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2001
   language: English
+  director: "Ron Howard"
 metadata:
   tmdb_id: 453
   imdb_id: tt0268978

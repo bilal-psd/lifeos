@@ -8,6 +8,7 @@ properties:
   rating: 3.5
   year: 2026
   language: English
+  director: "Destin Daniel Cretton"
 metadata:
   tmdb_id: 969681
   imdb_id: tt22084616

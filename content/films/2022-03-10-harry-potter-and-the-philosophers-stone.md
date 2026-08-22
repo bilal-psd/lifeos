@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2001
   language: English
+  director: "Chris Columbus"
 metadata:
   tmdb_id: 671
   imdb_id: tt0241527

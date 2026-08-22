@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2004
   language: English
+  director: "Alfonso Cuarón"
 metadata:
   tmdb_id: 673
   imdb_id: tt0304141

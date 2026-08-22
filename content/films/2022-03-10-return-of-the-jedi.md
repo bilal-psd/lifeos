@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 1983
   language: English
+  director: "Richard Marquand"
 metadata:
   tmdb_id: 1892
   imdb_id: tt0086190

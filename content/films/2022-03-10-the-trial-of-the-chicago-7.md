@@ -8,6 +8,7 @@ properties:
   rating: 5
   year: 2020
   language: English
+  director: "Aaron Sorkin"
 metadata:
   tmdb_id: 556984
   imdb_id: tt1070874

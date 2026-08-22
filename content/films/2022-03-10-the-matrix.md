@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 1999
   language: English
+  director: ["Lana Wachowski", "Lilly Wachowski"]
 metadata:
   tmdb_id: 603
   imdb_id: tt0133093

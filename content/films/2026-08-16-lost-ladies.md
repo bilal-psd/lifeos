@@ -8,6 +8,7 @@ properties:
   rating: 4.5
   year: 2023
   language: Hindi
+  director: "Kiran Rao"
 metadata:
   tmdb_id: 1163194
   imdb_id: tt21626284

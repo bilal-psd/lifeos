@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2017
   language: Malayalam
+  director: "Aashiq Abu"
 metadata:
   tmdb_id: 458741
   imdb_id: tt6915596

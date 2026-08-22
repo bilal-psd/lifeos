@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2003
   language: English
+  director: "Gore Verbinski"
 metadata:
   tmdb_id: 22
   imdb_id: tt0325980

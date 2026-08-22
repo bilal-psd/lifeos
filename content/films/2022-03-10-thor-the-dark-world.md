@@ -8,6 +8,7 @@ properties:
   rating: 2
   year: 2013
   language: English
+  director: "Alan Taylor"
 metadata:
   tmdb_id: 76338
   imdb_id: tt1981115

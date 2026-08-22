@@ -6,6 +6,7 @@ tags: [philosophy]
 public: true
 properties:
   status: reading
+  author: "Robert M. Pirsig"
 metadata:
   isbn_13: "9780060589462"
   olid: OL7279374M

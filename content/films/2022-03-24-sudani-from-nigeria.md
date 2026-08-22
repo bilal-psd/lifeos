@@ -8,6 +8,7 @@ properties:
   rating: 4.5
   year: 2018
   language: Malayalam
+  director: "Zakariya Mohammed"
 metadata:
   tmdb_id: 504314
   imdb_id: tt7581572

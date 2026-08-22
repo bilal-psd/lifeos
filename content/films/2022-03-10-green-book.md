@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 2018
   language: English
+  director: "Peter Farrelly"
 metadata:
   tmdb_id: 490132
   imdb_id: tt6966692

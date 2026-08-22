@@ -8,6 +8,7 @@ properties:
   rating: 3
   year: 2022
   language: English
+  director: "Sam Raimi"
 metadata:
   tmdb_id: 453395
   imdb_id: tt9419884

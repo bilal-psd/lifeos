@@ -8,6 +8,7 @@ properties:
   rating: 4
   year: 1972
   language: English
+  director: "Francis Ford Coppola"
 metadata:
   tmdb_id: 238
   imdb_id: tt0068646

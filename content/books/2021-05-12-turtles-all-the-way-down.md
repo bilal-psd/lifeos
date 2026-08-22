@@ -6,6 +6,7 @@ tags: [john-green]
 public: true
 properties:
   rating: 3
+  author: "John Green"
 metadata:
   isbn_13: "9780525555360"
   id_status: verified
