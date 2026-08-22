@@ -209,11 +209,13 @@ body {
   font-style: italic;
 }
 .entry-body h2 {
-  margin-top: 2.25rem;
-  margin-bottom: 0.75rem;
-  font-size: 1.0625rem;
-  font-weight: 600;
-  letter-spacing: -0.006em;
+  margin-top: 2.75rem;
+  margin-bottom: 0.875rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.3125rem;
+  letter-spacing: -0.008em;
   color: var(--foreground);
 }
 .entry-body h2:first-child {
@@ -222,8 +224,10 @@ body {
 .entry-body h3 {
   margin-top: 1.75rem;
   margin-bottom: 0.5rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.0625rem;
   color: var(--foreground);
 }
 .entry-body code {

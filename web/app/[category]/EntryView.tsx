@@ -16,7 +16,7 @@ function hostLabel(url: string): string {
 }
 
 /** Singular noun for a category, used in the synopsis heading. */
-const KIND: Record<string, string> = { films: "film", books: "book" };
+const KIND: Record<string, string> = { films: "film", books: "book", projects: "project" };
 
 /**
  * One entry's content, shared by the routed page and the modal so the two can
