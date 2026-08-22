@@ -42,6 +42,9 @@ Set these under `properties:` when available (see
   reading** below for the one exception). If the user's note doesn't give one,
   ask for it. If they decline or don't answer, set `rating: 3` (the midpoint)
   and **tell them you defaulted it** so they can change it later.
+- `author` — **don't fill this in by hand.** The enrichment step below reads it
+  from Google Books (falling back to Open Library) and writes it. Never guess an
+  author.
 - `lists` — set when the user is adding the book to a named list.
 - `status` — set to `reading` while a book is in progress; otherwise omit it
   entirely (a finished book has no `status` field). See below.
@@ -70,10 +73,33 @@ it 4"). This is **not** a new capture — find the existing entry (grep
 - Commit and push that one file, same as any other edit: `git commit -m
   "Finish book: <title>"`.
 
+## Enrich the entry (cover, author, synopsis)
+
+After the markdown file is written and **before you commit**, run:
+
+```bash
+pnpm --dir web enrich --category books --slug <YYYY-MM-DD-slug>
+```
+
+That one command downloads the cover, writes `properties.author` from the ISBN
+lookup, and generates the "About this book" synopsis. It is idempotent, so a
+re-run is harmless. Run it for a **currently-reading** book too — the synopsis
+describes the book, and needs no rating.
+
+Then commit the entry **and** what enrichment produced, together:
+
+```bash
+git add content/books/<slug>.md content/books/covers/<slug>.* content/books/synopses/<slug>.md
+```
+
+If a key is missing the script says so and skips that step — the entry is still
+valid, so commit it and tell the user which step didn't run.
+
 ## Filing notes
 
-- `title` is the book's title; consider adding the author to `tags` or letting
-  it live only in the user's note (do not fabricate an author).
+- `title` is the book's title. The author is **not** something you write by
+  hand — the enrichment step resolves it from the ISBN into `properties.author`.
+  Never guess one.
 - `date` is when the user finished/read it — or started it, for a
   currently-reading entry (today if unspecified).
 - Body = the user's note, lightly edited for readability but never changed in
@@ -90,6 +116,10 @@ category: books
 date: 2026-08-01
 tags: [fantasy]
 public: true
+properties:
+  rating: 5
+  language: English
+  author: "Patrick Rothfuss"   # written by the enrichment step, not by hand
 metadata:
   isbn_13: "9780756404741"
   olid: OL8479867M

@@ -63,10 +63,20 @@ the user's note. schema.md documents `properties` and custom lists in full.
 
 ## Design decisions (settled — don't re-litigate)
 
-- **Enrichment is ID-only, plus a cover image.** Attach a stable external index
-  (IMDb/TMDb id, ISBN/OLID, etc.) and a **cover** — nothing else (no cast,
-  runtime, or summaries). The cover was a deliberate amendment to the original
-  ID-only rule; see **Covers** below for how it's stored and served.
+- **Enrichment is ID + cover + credit + synopsis — and still nothing else.**
+  The original rule was ID-only. It has been amended twice, deliberately, and
+  each amendment is listed here so the rule stays a rule rather than drifting:
+  1. a **cover image** (see **Covers** below);
+  2. a **credit** — `properties.director` for films, `properties.author` for
+     books — because an archive that can't say who made a thing is missing the
+     single most-asked fact about it;
+  3. an **AI-written synopsis** sidecar, because ~424 of 433 entries are bulk
+     imports whose body is a stub like `Watched.`, leaving most pages empty.
+
+  Still **not** enriched: cast lists, runtime, budget, publisher blurbs, crew
+  beyond the director, or anything else. The bar for a fourth amendment is the
+  same as for these: it answers a question a reader actually has on the page.
+  See **Credits & synopses** below.
 - **The category skill owns its ID convention.** `new-category` makes the
   ID-source decision **once per category**, with a single user confirmation,
   from the authorities table in its SKILL.md, and freezes it into the new
@@ -88,6 +98,27 @@ the user's note. schema.md documents `properties` and custom lists in full.
   name registry (`content/_lists.json`) — they work in any category and become a
   filter automatically, with no per-category code. Don't hardcode per-category
   filters or a bespoke lists table. See docs/schema.md and the `lists` skill.
+- **Lists can be static or rule-derived — same mechanism either way.** A list
+  entry in `_lists.json` normally has manual membership (entries carry the
+  slug in `properties.lists`). It can instead carry a `rule: {category,
+  property, value}` — Perfect Films (`category: films, property: rating,
+  value: 5`) is the example. `applyDynamicLists()` in `web/lib/archive.ts`
+  evaluates every rule at read time and merges matching slugs into
+  `properties.lists`, so from that point on a rule-derived list is
+  byte-identical to a static one everywhere downstream (filter chip, Featured
+  card, click-to-filter). Add new auto-lists by registering a rule, not by
+  writing new code.
+- **A category can define a lifecycle exception to "every entry needs a
+  rating."** Books support `properties.status: reading` for an in-progress
+  book — no rating required, excluded from the rated grid and from
+  filter/sort entirely, shown in its own "Currently reading" strip. Finishing
+  a book is **not** a new capture: the user tells Claude, which finds the
+  existing entry and edits it in place (drops `status`, adds the rating,
+  bumps `date`). This is the first "edit an existing entry" flow in the
+  project — the capture skill was updated with a pointer to it (see "Editing
+  an existing entry, not creating one" in `capture/SKILL.md`) so it's a
+  documented pattern, not a one-off carve-out. Full flow lives in the `books`
+  skill.
 
 ## Covers
 
@@ -136,6 +167,82 @@ rot-proof.
   capturing a new film/book, run `pnpm fetch-covers` to give it a cover (until
   the skills are updated to do it inline). See PLAN.md.
 
+## Credits & synopses
+
+Both are produced by **`pnpm --dir web enrich`**
+(`web/scripts/enrich.mjs`) — one command, three idempotent steps
+(`--only covers|credits|synopses`), scoped with `--category`, `--slug`,
+`--limit`, `--force`, previewable with `--dry-run`.
+
+- **Credits** live in `properties.director` (films) / `properties.author`
+  (books), registered `hidden: true` in `content/_properties.json` so they
+  display everywhere but never become a filter chip (hundreds of distinct
+  values would be useless as a facet). Sources: TMDb `credits.crew` where
+  `job == "Director"`; Google Books `volumeInfo.authors` with a keyless
+  **Open Library** fallback (`bookMeta()`), which rescues ~15% of books whose
+  ISBN Google can't resolve. Coverage today: **358/358 films, 73/75 books** —
+  the 2 holdouts have ISBNs neither source knows, and degrade to no credit line.
+- **Synopses** are sidecar files at `content/<category>/synopses/<slug>.md`
+  (same convention as `covers/`). Read straight from `content/` by
+  `readSynopsisFile()` in `web/lib/archive.ts` — **no `public/` sync needed**,
+  unlike covers, because they're text rendered server-side, not static assets.
+- **Grounding is two-tier**, in `web/scripts/lib/synopsis.mjs`: tier 1 is the
+  trusted APIs already in use (TMDb overview + credits, Google Books/Open
+  Library description); tier 2 kicks in only when that text is under `THIN_WORDS` (25, tuned against the real archive — see the comment there)
+  and uses Claude's server-side `web_search_20260209` tool restricted to
+  `WEB_SEARCH_DOMAINS`. Tier-2 sources are taken from the actual
+  `web_search_tool_result` blocks, not from the model's self-report.
+- **It is a synopsis, never a review.** The system prompt forbids verdicts,
+  praise, criticism and rating language — opinions on this site are the user's,
+  in the entry body. It also requires original wording rather than a close
+  paraphrase, because TMDb/Google Books text is copyrighted and this site is
+  public. The UI labels the block "AI-generated" with its sources linked; don't
+  quietly drop that label.
+- **`ANTHROPIC_API_KEY`** goes in `web/.env.local` beside the other keys. Model
+  is `claude-opus-5` at `effort: "low"`. Don't pass `temperature` or
+  `budget_tokens` and don't prefill the assistant turn — all three are 400s on
+  Opus 5.
+
+## Editorial design system (books/films pages)
+
+Settled after several mockup rounds (published as Claude artifacts, reviewed
+with inline comments) — see PLAN.md "Rejected directions" for what was tried
+and cut, so it doesn't get re-proposed without new information.
+
+- **Type pairing: Fraunces (display) + Inter (UI), used narrowly.** Fraunces
+  is loaded via `next/font/google` in `web/app/layout.tsx` as `--font-fraunces`,
+  exposed as the `--font-display` token in `globals.css` (Tailwind's
+  `font-display` utility). It's used *only* for the wordmark, the shelf
+  eyebrows ("Currently reading", "Featured"), and the "reading" badge —
+  italic, restrained. Everything data-dense (titles, captions, controls,
+  filter/sort UI) stays Inter. This supersedes an earlier, now-stale decision
+  that had rejected a serif entirely — don't revert to Inter-only citing that
+  old decision.
+- **The "shelf" panel** (`.shelf` in `globals.css`) is the warm-tinted raised
+  surface used for both Currently Reading and Featured — a gradient
+  background plus a soft gold bottom-edge glow (`.shelf::after`), visually
+  distinct from the plain-dark grid below. Both shelves render *above* the
+  header line, first thing under the masthead — not between the header and
+  the grid, which is where they used to sit.
+- **View toggle and filter/sort are two separate bordered pill groups, never
+  merged into one.** Deliberate: the view toggle reflects passive display
+  state, filter/sort trigger action menus. They live together on one
+  consolidated header line (`{category} · {count}` + both pills), which
+  replaced a three-mismatched-shapes header and, before that, a second
+  control row that had nothing else on it (read as an orphaned floating
+  control — the fix was removing the second row entirely, not styling around
+  it).
+- **Grid rating badge is a star glyph + number** (`★ 4.5`), not a bare
+  decimal — a bare number was tried and rejected for not speaking the same
+  visual language as the stars used everywhere else on the site. Whole
+  numbers render without a trailing `.0`.
+- **Grid dateline** shows `numProp(e, "year")` when the category has one
+  (films); otherwise falls back to `formatMonthYear(e.date)` (books, and any
+  future category with no `year` property) — see `web/lib/format.ts`. This is
+  a judgment call, not a firm rule: if books ever want a "year published"
+  distinct from "when I logged it," that needs a real `year` property, not a
+  repurposed `date`.
+
 ## Gotchas
 
 - **Covers serve through `next/image`, which caches hard.** After refetching a
@@ -157,6 +264,39 @@ rot-proof.
   pattern can eat an adjacent key like `metadata:`. Re-validate after bulk edits
   by parsing every file with gray-matter (the same parser `web/lib/archive.ts`
   uses).
+- **A poster-tile overlay badge must come *after* `<Cover>` in JSX, not
+  before.** Both are absolutely positioned in the same stacking context, so
+  DOM order decides paint order — a badge placed before `<Cover>` renders
+  fine while the cover is still loading (nothing to cover it yet) and then
+  silently disappears the moment the real image loads on top of it. Bit both
+  the "reading" badge and the grid rating badge during the redesign; fixed by
+  reordering, not by adding z-index. Easy to miss because it looks correct in
+  a screenshot taken before images finish loading.
+- **`hidden: true` removes a property from the filter bar *and* from the list
+  view.** `getFilters()` skips hidden keys (`web/lib/archive.ts`), and the list
+  row's caption is built from `summaryDefs`, which is derived from
+  `getFilters()` — so a hidden property silently disappears there too. The
+  detail page's `<dl>` iterates `entry.properties` raw and is unaffected. That's
+  why `director`/`author` are rendered explicitly in the grid tile, the list row
+  and the currently-reading strip, via `creditOf()` in
+  `web/app/[category]/rowHelpers.ts`.
+- **A new line in the grid caption must render for every tile or the grid goes
+  ragged.** Tiles align because the title div carries `min-h-[calc(1.32em*2)]`.
+  The credit line follows the same rule: it renders whenever the *category* has
+  any credits at all (`anyCredit`, computed over all rows, not the filtered
+  view), so a missing credit leaves a gap instead of pulling that tile's
+  dateline up. Computing it over the filtered view instead would make the line
+  appear and vanish while filtering.
+- **Upstream credit data is dirty.** Google Books returns `"B.R. Ambedkar,"`
+  with a trailing comma; multi-author records include editors and translators.
+  `cleanName()` in `web/scripts/lib/sources.mjs` strips surrounding
+  commas/semicolons but deliberately leaves trailing periods alone, so
+  "Martin Luther King Jr." survives.
+- **Page width is intentionally split.** The root shell
+  (`web/app/layout.tsx`) is `max-w-6xl` (1152px) so the poster grid gets real
+  columns; entry detail pages (`web/app/[category]/[slug]/page.tsx`)
+  override to `max-w-2xl` on purpose so prose doesn't stretch full-width.
+  Don't "fix" the detail page to match the shell width.
 
 ## Deployment (Vercel + Netlify DNS)
 
@@ -180,3 +320,17 @@ Not derivable from the code — recorded here so a fresh session doesn't redisco
   has the project/team IDs (gitignored).
 
 See [PLAN.md](PLAN.md) for current status and what's next.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live as GitHub Issues in this repo (`gh` CLI). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default canonical labels used as-is (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout (`CONTEXT.md` + `docs/adr/` at repo root, created lazily). See `docs/agents/domain.md`.

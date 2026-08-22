@@ -65,6 +65,14 @@ properties are the facets you'd filter by — `rating`, `language`, `year`,
 - **Filters are derived from the data.** A property becomes a filter the moment
   one entry uses it — no separate registration. Type is inferred (all-numeric →
   range, all-boolean → toggle, else multi-select).
+- **Machine-resolved facets are still properties.** `year`, `language`,
+  `director` (films) and `author` (books) are looked up, not typed by the user,
+  but they're user-facing facets so they live in `properties`, not `metadata`.
+  `metadata` stays reserved for opaque IDs.
+- **A property can be display-only.** `"hidden": true` in `_properties.json`
+  keeps a key out of the filter bar while the entry page still shows it —
+  that's how `director` and `author` are rendered without adding a filter chip
+  with hundreds of values.
 - **`content/_properties.json` is the optional override** for labels, types, and
   numeric range when inference isn't enough (e.g. `rating` is pinned to a 1–5
   scale, `language` gets the "Language" label). Store **full language names**
@@ -93,6 +101,42 @@ category with no per-category setup.
   by the registry name. No code changes per list.
 - **To add a list:** register it in `_lists.json` (once), then add its slug to
   each member entry's `lists` property. See the `lists` skill.
+
+## Sidecar files: covers and synopses
+
+Two things hang off an entry by **filename convention**, not by a frontmatter
+field — in both cases the presence of the file *is* the data:
+
+```
+content/<category>/covers/<slug>.<jpg|webp|png>   # cover image
+content/<category>/synopses/<slug>.md             # AI-written "About this…"
+```
+
+`<slug>` matches the entry file's slug. Covers are copied into `web/public/` at
+build time (they're served as static assets); synopses are read straight from
+`content/` by the site, so they need no sync step.
+
+A synopsis sidecar carries its own provenance frontmatter, and its body is the
+blurb:
+
+```markdown
+---
+generated: 2026-08-22
+model: claude-opus-5
+grounding: tmdb          # tmdb | google-books | web-search
+sources:
+  - https://www.themoviedb.org/movie/575351
+---
+
+Four half-brothers share a crumbling house by the Kerala backwaters...
+```
+
+Both are produced by `pnpm --dir web enrich` (see the category skills).
+
+**A synopsis is not the user's note and never merges into one.** It describes
+the work; it never carries an opinion, a verdict, or rating language. The site
+renders it in a separate block, below the body, labelled as AI-generated with
+its sources linked.
 
 ## Body
 

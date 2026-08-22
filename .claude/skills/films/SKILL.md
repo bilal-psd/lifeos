@@ -41,11 +41,34 @@ Set these under `properties:` when the info is available (see
   `rating: 3` (the midpoint) and **tell them you defaulted it** so they can
   change it. Never silently invent a non-midpoint rating.
 - `year` — release year (number), when known from the lookup.
+- `director` — **don't fill this in by hand.** The enrichment step below reads
+  it from TMDb's credits and writes it. Never guess a director.
 - `lists` — set when the user says they're adding it to a named list.
 
 Follow the one-question rule: infer what you can; the rating is the one thing
 always worth asking, because it's required — prompt for it, and fall back to the
 midpoint only if the user won't give one.
+
+## Enrich the entry (cover, director, synopsis)
+
+After the markdown file is written and **before you commit**, run:
+
+```bash
+pnpm --dir web enrich --category films --slug <YYYY-MM-DD-slug>
+```
+
+That one command downloads the cover, writes `properties.director` from TMDb
+credits, and generates the "About this film" synopsis. It is idempotent, so a
+re-run is harmless.
+
+Then commit the entry **and** what enrichment produced, together:
+
+```bash
+git add content/films/<slug>.md content/films/covers/<slug>.* content/films/synopses/<slug>.md
+```
+
+If a key is missing the script says so and skips that step — the entry is still
+valid, so commit it and tell the user which step didn't run.
 
 ## Filing notes
 
@@ -67,6 +90,11 @@ category: films
 date: 2026-08-14
 tags: [sci-fi, rewatch]
 public: true
+properties:
+  rating: 5
+  year: 2024
+  language: English
+  director: "Denis Villeneuve"   # written by the enrichment step, not by hand
 metadata:
   tmdb_id: 693134
   imdb_id: tt15239678
